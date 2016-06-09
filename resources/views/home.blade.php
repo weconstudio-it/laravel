@@ -1,9 +1,9 @@
 @extends('ace')
 
 @section('application_title')
-    Idea Web TV
+    Application
 @endsection
 
 @section('title')
-    Idea Web TV
+    Application
 @endsection

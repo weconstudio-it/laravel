@@ -10,7 +10,7 @@
                         <span class="red">Salesforce</span>
                         <span class="white" id="id-text2"> Management</span>
                     </h1>
-                    <h4 class="blue" id="id-company-text">&copy; Idea Web TV</h4>
+                    <h4 class="blue" id="id-company-text">&copy; Application</h4>
                 </div>
 
                 <div class="space-6"></div>
