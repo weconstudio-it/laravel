@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<database name="default" defaultIdMethod="native" defaultPhpNamingMethod="underscore" namespace="App\Models">
+    <table name="user" idMethod="native" >
+        <column name="id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="id_user_group" type="INTEGER" required="true"/>
+        <column name="name" type="VARCHAR" size="255" required="true"/>
+        <column name="email" type="VARCHAR" size="255" required="true"/>
+        <column name="username" type="VARCHAR" size="255" required="true"/>
+        <column name="password" type="VARCHAR" size="255" required="true"/>
+        <column name="remember_token" type="VARCHAR" size="100"/>
+        <column name="enabled" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+        <behavior name="timestampable" />
+
+        <foreign-key foreignTable="user_group" name="user_user_group_fk" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference local="id_user_group" foreign="id"/>
+        </foreign-key>
+        <index name="user_user_group_idx">
+            <index-column name="id_user_group"/>
+        </index>
+
+        <unique name="user_username_uq">
+            <unique-column name="username"/>
+        </unique>
+
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+    </table>
+
+    <table name="user_group" idMethod="native" >
+        <column name="id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="label" type="VARCHAR" size="45" required="true"/>
+        <column name="level" type="INTEGER" required="true"/>
+        <column name="visible" type="BOOLEAN"  size="1" required="true" defaultValue="true"/>
+        <column name="enabled" type="BOOLEAN"  size="1" required="true" defaultValue="true"/>
+        <behavior name="timestampable" />
+
+        <unique name="user_group_level_uq">
+            <unique-column name="level"/>
+        </unique>
+
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+    </table>
+
+    <table name="jobs" idMethod="native">
+        <column name="id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="queue" type="VARCHAR" size="255" required="true"/>
+        <column name="payload" type="CLOB" required="true"/>
+        <column name="attempts" type="TINYINT" size="3" sqlType="tinyint(3) unsigned" required="true"/>
+        <column name="reserved" type="TINYINT" size="3" sqlType="tinyint(3) unsigned" required="true"/>
+        <column name="reserved_at" type="INTEGER" size="10" sqlType="int(10) unsigned"/>
+        <column name="available_at" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+        <behavior name="timestampable"/>
+        <index name="jobs_queue_reserved_reserved_at_index">
+            <index-column name="queue"/>
+            <index-column name="reserved"/>
+            <index-column name="reserved_at"/>
+        </index>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+    </table>
+
+    <table name="failed_jobs" idMethod="native" phpName="FailedJobs">
+        <column name="id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="connection" type="LONGVARCHAR" required="true"/>
+        <column name="queue" type="LONGVARCHAR" required="true"/>
+        <column name="payload" type="CLOB" required="true"/>
+        <column name="failed_at" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+    </table>
+</database>
