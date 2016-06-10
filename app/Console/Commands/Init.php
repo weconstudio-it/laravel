@@ -57,7 +57,7 @@ class Init extends Command
 		$this->setEnv('DB_USERNAME', 'database.connections.mysql.username', $username);
 		$this->setEnv('DB_PASSWORD', 'database.connections.mysql.password', $password);
 	
-		if ($this->confirm('Do you wish to create database? (warning! no: use preesistent database) [y|N]')) {
+		if ($this->confirm("Do you wish to create database? \n <comment>(choose no to use preesistent database)</comment>")) {
 			$this->comment('Check database...');
 			try {
 				\DB::table('user')->get();
@@ -77,23 +77,50 @@ class Init extends Command
 
 		}
 
-		$this->comment('php artisan propel:migration:migrate');
-		$this->call("propel:migration:migrate");
+		if ($this->confirm('Do you wish to run migrations and seed database?')) {
+			$this->comment('php artisan propel:migration:migrate');
+			$this->call("propel:migration:migrate");
 
-		$this->comment('php artisan propel:model:build');
-		$this->call("propel:model:build");
+			$this->comment('php artisan propel:model:build');
+			$this->call("propel:model:build");
 
-		$this->comment('php artisan db:seed');
-		$this->info(shell_exec('php artisan db:seed'));
+			$this->comment('php artisan db:seed');
+			$this->info(shell_exec('php artisan db:seed'));
+		}
 
-		$this->comment('npm install');
-		$this->info(shell_exec('npm install'));
+		if ($this->confirm('Do you wish to run npm install?')) {
+			$this->comment('npm install');
+			$this->info(shell_exec('npm install'));
+		}
 
-		$this->comment('bower update');
-		$this->info(shell_exec('bower update'));
+		if ($this->confirm('Do you wish to run bower update?')) {
+			$this->comment('bower update');
+			$this->info(shell_exec('bower update'));
+		}
 
-		$this->comment('gulp');
-		$this->info(shell_exec('gulp'));
+		if ($this->confirm('Do you wish to run gulp?')) {
+			$this->comment('gulp');
+			$this->info(shell_exec('gulp'));
+		}
+
+		if ($this->confirm("Do you wish to init git repository?\n <comment>Add readme.md, commit, add remote origin and push</comment>")) {
+			$url = $this->ask("Repository URL");
+
+			$this->comment('git init');
+			$this->info(shell_exec('git init'));
+
+			$this->comment('git add readme.md');
+			$this->info(shell_exec('git add readme.md'));
+
+			$this->comment('git commit -m "first commit"');
+			$this->info(shell_exec('git commit -m "first commit"'));
+
+			$this->comment("git remote add origin {$url}");
+			$this->info(shell_exec("git remote add origin {$url}"));
+
+			$this->comment("git push -u origin master");
+			$this->info(shell_exec("git push -u origin master"));
+		}
 
 		$this->info("Done!");
     }
