@@ -4,7 +4,7 @@ return [
     'propel' => [
         'general' => [
             # The name of your project.
-            'project' => 'ideawebtv',
+            'project' => 'Application',
             'version' => '1.0',
         ],
         'exclude_tables' => [

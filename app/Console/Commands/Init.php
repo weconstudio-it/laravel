@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use PDO;
+use Propel\PropelLaravel\PropelIntegrationServiceProvider;
+use Propel\Runtime\Propel;
 
 class Init extends Command
 {
@@ -54,7 +56,7 @@ class Init extends Command
 		$this->setEnv('DB_DATABASE', 'database.connections.mysql.database', $database);
 		$this->setEnv('DB_USERNAME', 'database.connections.mysql.username', $username);
 		$this->setEnv('DB_PASSWORD', 'database.connections.mysql.password', $password);
-
+	
 		if ($this->confirm('Do you wish to create database? (warning! no: use preesistent database) [y|N]')) {
 			$this->comment('Check database...');
 			try {
@@ -74,7 +76,7 @@ class Init extends Command
 			}
 
 		}
-		
+
 		$this->comment('php artisan propel:migration:migrate');
 		$this->call("propel:migration:migrate");
 
@@ -82,7 +84,7 @@ class Init extends Command
 		$this->call("propel:model:build");
 
 		$this->comment('php artisan db:seed');
-		$this->call("db:seed");
+		$this->info(shell_exec('php artisan db:seed'));
 
 		$this->comment('npm install');
 		$this->info(shell_exec('npm install'));
@@ -109,5 +111,6 @@ class Init extends Command
         ));
 
 		$this->laravel['config'][$from] = $to;
+		putenv($key . '=' . $to);
     }
 }
