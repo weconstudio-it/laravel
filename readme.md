@@ -37,3 +37,13 @@ You are ready:
 ## Usage with composer
 
     composer create-project weconstudio/laravel --repository=/Users/snake/.composer/packages.json <project>
+    
+## Features
+
+    init database
+    migrations
+    seed
+    npm install
+    bower update
+    gulp
+    git init repository
