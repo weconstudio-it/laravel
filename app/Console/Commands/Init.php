@@ -40,7 +40,7 @@ class Init extends Command
     {
 		$this->comment($this->description);
 
-		$this->line("<info>Rrequirements:</info>\n<question>*</question> npm\n<question>*</question> bower");
+		$this->line("<info>Rrequirements:</info>\n<question>*</question> npm\n<question>*</question> bower\n<question>*</question> gulp");
 		if(!$this->confirm('Do you wish to continue? [y|N]')) dd();
 
 		$this->comment("Database connection...");
@@ -91,6 +91,9 @@ class Init extends Command
 
 		$this->comment('bower update');
 		$this->info(shell_exec('bower update'));
+
+		$this->comment('gulp');
+		$this->info(shell_exec('gulp'));
 
 		$this->info("Done!");
     }
