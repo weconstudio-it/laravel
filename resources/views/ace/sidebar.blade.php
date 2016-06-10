@@ -4,11 +4,6 @@ $menu_items = [
         'href' => 'dashboard',
         'icon' => 'fa-tachometer',
         'minimum_level' => 0
-    ],
-    'Popup' => [
-        'href' => 'popup',
-        'icon' => 'fa-comments',
-        'minimum_level' => 0
     ]
 ];
 
