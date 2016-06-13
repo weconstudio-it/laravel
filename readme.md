@@ -40,6 +40,11 @@ You are ready to create a new project:
 
     composer create-project weconstudio/laravel --repository=~/.composer/packages.json <project>
     
+## After create project
+
+    cd <project>
+    php artisan weconstudio:init
+
 ## Features
 
     init database
