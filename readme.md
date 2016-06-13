@@ -1,7 +1,7 @@
 # Weconstudio Laravel PHP Framework
 
 ## Requirements
-Create ~/.composer/packages.json like:
+Create a file named ~/.composer/packages.json containing:
     
     {
         "package": {
@@ -16,27 +16,29 @@ Create ~/.composer/packages.json like:
     }
 
 ## Usage with weconstudio
-In your .bash_profile add this lines:
+In your .bash_profile add these lines:
 
     function weconstudio() {
+        HOME_TMP=$(echo ~)
+    
         if [ "$1" == "new" ]; then
-            composer create-project weconstudio/laravel --repository=/Users/snake/.composer/packages.json $2
+            composer create-project weconstudio/laravel --repository=${HOME_TMP}/.composer/packages.json $2
         else
             echo "use weconstudio new <project>"
         fi
     }
     
-Run:
+Source your bash profile file or restart your terminal:
     
     source ~/.bash_profile
     
-You are ready:
+You are ready to create a new project:
 
     weconstudio new <project>
 
 ## Usage with composer
 
-    composer create-project weconstudio/laravel --repository=/Users/snake/.composer/packages.json <project>
+    composer create-project weconstudio/laravel --repository=~/.composer/packages.json <project>
     
 ## Features
 
