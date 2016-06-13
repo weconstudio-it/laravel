@@ -3,6 +3,7 @@
 namespace App\Http\Traits;
 
 use Illuminate\Http\Request;
+use Weconstudio\Grid\GridColumnConfiguration;
 use Weconstudio\Grid\GridConfiguration;
 
 trait GridOperations {
@@ -24,7 +25,7 @@ trait GridOperations {
 
                 $ret = null;
                 if (!is_null($instanceToDel) && method_exists($instanceToDel, 'delete')) {
-                   $ret  = $instanceToDel->delete();
+                    $ret  = $instanceToDel->delete();
                 }
 
                 return [
@@ -350,6 +351,8 @@ trait GridOperations {
                     $aOrderField[$sortColumn] = $sortOrder;
                 }
             }
+        }else{
+            $aOrderField[$sortColumn] = $sord;
         }
 
         $staticModel = $staticModelName::create();
@@ -357,13 +360,13 @@ trait GridOperations {
         if (strlen($sqlConditions) > 0)
             $staticModel->where($sqlConditions);
 
-        $searchObj = $staticModel
-                        ->limit($row_num)
-                        ->offset(($page - 1) * $row_num);
+        $staticModel
+            ->limit($row_num)
+            ->offset(($page - 1) * $row_num);
 
         if(count($aOrderField)){
             foreach ($aOrderField as $orderField=>$orderOrder){
-                $searchObj->orderBy($orderField, $orderOrder);
+                $staticModel->orderBy($orderField, $orderOrder);
             }
         }else{
             // TODO PD desbrick $searchObj->orderBy($sortColumn, $sortOrder);
@@ -372,7 +375,9 @@ trait GridOperations {
         // per ogni record estraggo le informazioni richieste
         $keyField = $primaryKeys[0];
 
-        foreach ($searchObj->find() as $row) {
+
+
+        foreach ($staticModel->find() as $row) {
             $cell       = array();
             $skipRow    = false;
 
