@@ -12,10 +12,10 @@
 
                 <div class="space-6"></div>
                 <?php if(old('message')) : ?>
-                <div class="alert alert-danger text-center">
-                    <?php echo old('message'); ?>
-                </div>
-                <div class="space-6"></div>
+                    <div class="alert alert-<?php echo old('status') ? old('status') : 'danger'; ?> text-center">
+                        <?php echo old('message'); ?>
+                    </div>
+                    <div class="space-6"></div>
                 <?php endif; ?>
                 <div class="position-relative">
                     <div id="login-box" class="login-box visible widget-box no-border">

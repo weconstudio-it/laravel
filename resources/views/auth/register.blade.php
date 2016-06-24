@@ -26,7 +26,7 @@
                                     <fieldset>
                                         <label class="block clearfix">
                                             <span class="block input-icon input-icon-right">
-                                                <input type="text" name="name" class="form-control" placeholder="Name"/>
+                                                <input type="text" name="name" class="form-control" placeholder="Name" value="{{ old('name') }}"/>
                                                 @if ($errors->has('name'))
                                                     <span class="help-block">
                                                         <strong>{{ $errors->first('name') }}</strong>
@@ -36,7 +36,7 @@
                                         </label>
                                         <label class="block clearfix">
                                             <span class="block input-icon input-icon-right">
-                                                <input type="email" name="email" class="form-control" placeholder="E-mail"/>
+                                                <input type="email" name="email" class="form-control" placeholder="E-mail" value="{{ old('email') }}"/>
                                                 @if ($errors->has('email'))
                                                     <span class="help-block">
                                                         <strong>{{ $errors->first('email') }}</strong>
@@ -47,7 +47,7 @@
                                         </label>
                                         <label class="block clearfix">
                                             <span class="block input-icon input-icon-right">
-                                                <input type="text" name="username" class="form-control" placeholder="Username"/>
+                                                <input type="text" name="username" class="form-control" placeholder="Username" value="{{ old('username') }}"/>
                                                 @if ($errors->has('username'))
                                                     <span class="help-block">
                                                         <strong>{{ $errors->first('username') }}</strong>

@@ -76,7 +76,7 @@ class AuthController extends Controller
 		try {
             $user = new User();
             $user->fromArray($data);
-            $userGroup = UserGroupQuery::create()->findOneByLabel('User');
+            $userGroup = UserGroupQuery::create()->findOneByLevel(UserGroup::LEVEL_USER);
 			if(!$userGroup instanceof UserGroup) {
 				$userGroup = UserGroupQuery::create()->findOne();
 			}
@@ -119,18 +119,21 @@ class AuthController extends Controller
 		if($request->has('username') and $request->has('token')) {
 			$user = UserQuery::create()->findOneByUsername($request->input('username', ''));
 			if($user instanceof User) {
-				if($user->getEnabled()) return redirect('/dashboard');
+				if($user->getEnabled()) return redirect('/login')->withInput([
+					'message' => 'Account already confirmed!',
+					'status' => 'success'
+				]);
 				if(\Hash::check($user->getUsername() . $user->getPassword(), $request->input('token', ''))) {
-					\Auth::login($user);
-					if(\Auth::check()) {
-						try {
-							$user->setEnabled(1);
-							$user->save();
-						} catch(\Exception $e) {
-							Log::e("$e");
-						}
-						return redirect('/dashboard');
+					try {
+						$user->setEnabled(1);
+						$user->save();
+					} catch(\Exception $e) {
+						Log::e("$e");
 					}
+					return redirect('/login')->withInput([
+						'message' => 'Account confirmed!',
+						'status' => 'success'
+					]);
 				}
 			}
 		}
