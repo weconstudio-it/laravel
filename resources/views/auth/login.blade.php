@@ -6,11 +6,8 @@
             <div class="login-container">
                 <div class="center">
                     <h1>
-                        <i class="ace-icon fa fa-bolt green"></i>
-                        <span class="red">Salesforce</span>
-                        <span class="white" id="id-text2"> Management</span>
+                        <span class="_red">App Platform</span>
                     </h1>
-                    <h4 class="blue" id="id-company-text">&copy; Application</h4>
                 </div>
 
                 <div class="space-6"></div>
@@ -25,8 +22,7 @@
                         <div class="widget-body">
                             <div class="widget-main">
                                 <h4 class="header blue lighter bigger">
-                                    <i class="ace-icon fa fa-lightbulb-o green"></i>
-                                    Inserisci le tue credenziali
+                                    Please enter your credentials
                                 </h4>
 
                                 <div class="space-6"></div>
@@ -65,7 +61,7 @@
                                         <div class="clearfix">
                                             <label class="inline">
                                                 <input type="checkbox" class="ace" name="remember" />
-                                                <span class="lbl"> Ricordami</span>
+                                                <span class="lbl"> Remember me</span>
                                             </label>
 
                                             <button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
@@ -77,6 +73,22 @@
                                         <div class="space-4"></div>
                                     </fieldset>
                                 </form>
+                                <div id="footer" class="text-center"><br><hr>
+                                    App - VAT
+                                </div>
+                            </div>
+                            <div class="toolbar clearfix">
+                                <div>
+                                    <a class="forgot-password-link" data-target="#forgot-box" href="#">
+                                        Reset password
+                                    </a>
+                                </div>
+
+                                <div>
+                                    <a class="user-signup-link" data-target="#signup-box" href="#">
+                                        Sign-up
+                                    </a>
+                                </div>
                             </div>
                         </div><!-- /.widget-body -->
                     </div><!-- /.login-box -->
@@ -85,28 +97,27 @@
                         <div class="widget-body">
                             <div class="widget-main">
                                 <h4 class="header red lighter bigger">
-                                    <i class="ace-icon fa fa-key"></i>
-                                    Retrieve Password
+                                    Reset Password
                                 </h4>
 
                                 <div class="space-6"></div>
                                 <p>
-                                    Enter your email and to receive instructions
+                                    Enter the email used during registration process:
                                 </p>
 
                                 <form>
                                     <fieldset>
                                         <label class="block clearfix">
-                                                        <span class="block input-icon input-icon-right">
-                                                            <input type="email" class="form-control" placeholder="Email" />
-                                                            <i class="ace-icon fa fa-envelope"></i>
-                                                        </span>
+                                            <span class="block input-icon input-icon-right">
+                                                <input type="email" class="form-control" placeholder="Email" />
+                                                <i class="ace-icon fa fa-envelope"></i>
+                                            </span>
                                         </label>
-
+                                        <small>An e-mail containing a 'reset password' link will be forwarder to you.</small>
                                         <div class="clearfix">
                                             <button type="button" class="width-35 pull-right btn btn-sm btn-danger">
                                                 <i class="ace-icon fa fa-lightbulb-o"></i>
-                                                <span class="bigger-110">Send Me!</span>
+                                                <span class="bigger-110">Submit</span>
                                             </button>
                                         </div>
                                     </fieldset>
@@ -115,8 +126,8 @@
 
                             <div class="toolbar center">
                                 <a href="#" data-target="#login-box" class="back-to-login-link">
+                                    <i class="ace-icon fa fa-arrow-left"></i>
                                     Back to login
-                                    <i class="ace-icon fa fa-arrow-right"></i>
                                 </a>
                             </div>
                         </div><!-- /.widget-body -->
@@ -126,8 +137,7 @@
                         <div class="widget-body">
                             <div class="widget-main">
                                 <h4 class="header green lighter bigger">
-                                    <i class="ace-icon fa fa-users blue"></i>
-                                    New User Registration
+                                    Registration form
                                 </h4>
 
                                 <div class="space-6"></div>
@@ -136,39 +146,42 @@
                                 <form>
                                     <fieldset>
                                         <label class="block clearfix">
-                                                        <span class="block input-icon input-icon-right">
-                                                            <input type="email" class="form-control" placeholder="Email" />
-                                                            <i class="ace-icon fa fa-envelope"></i>
-                                                        </span>
+                                            <span class="block input-icon input-icon-right">
+                                                <input type="text" name="name" class="form-control" placeholder="Name" />
+                                                <i class="ace-icon fa fa-user"></i>
+                                            </span>
                                         </label>
-
                                         <label class="block clearfix">
-                                                        <span class="block input-icon input-icon-right">
-                                                            <input type="text" class="form-control" placeholder="Username" />
-                                                            <i class="ace-icon fa fa-user"></i>
-                                                        </span>
+                                            <span class="block input-icon input-icon-right">
+                                                <input type="email" name="email" class="form-control" placeholder="E-mail" />
+                                                <i class="ace-icon fa fa-envelope"></i>
+                                            </span>
                                         </label>
-
                                         <label class="block clearfix">
-                                                        <span class="block input-icon input-icon-right">
-                                                            <input type="password" class="form-control" placeholder="Password" />
-                                                            <i class="ace-icon fa fa-lock"></i>
-                                                        </span>
+                                            <span class="block input-icon input-icon-right">
+                                                <input type="text" name="username" class="form-control" placeholder="Username" />
+                                                <i class="ace-icon fa fa-envelope"></i>
+                                            </span>
                                         </label>
-
                                         <label class="block clearfix">
-                                                        <span class="block input-icon input-icon-right">
-                                                            <input type="password" class="form-control" placeholder="Repeat password" />
-                                                            <i class="ace-icon fa fa-retweet"></i>
-                                                        </span>
+                                            <span class="block input-icon input-icon-right">
+                                                <input type="password" name="password" class="form-control" placeholder="Password" />
+                                                <i class="ace-icon fa fa-envelope"></i>
+                                            </span>
+                                        </label>
+                                        <label class="block clearfix">
+                                            <span class="block input-icon input-icon-right">
+                                                <input type="text" name="password_confirmation" class="form-control" placeholder="Repeat password" />
+                                                <i class="ace-icon fa fa-envelope"></i>
+                                            </span>
                                         </label>
 
                                         <label class="block">
                                             <input type="checkbox" class="ace" />
-                                                        <span class="lbl">
-                                                            I accept the
-                                                            <a href="#">User Agreement</a>
-                                                        </span>
+                                                <span class="lbl">
+                                                    I accept the
+                                                    <a href="#">User Agreement</a>
+                                                </span>
                                         </label>
 
                                         <div class="space-24"></div>
@@ -181,8 +194,6 @@
 
                                             <button type="button" class="width-65 pull-right btn btn-sm btn-success">
                                                 <span class="bigger-110">Register</span>
-
-                                                <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
                                             </button>
                                         </div>
                                     </fieldset>
@@ -201,4 +212,12 @@
             </div>
         </div><!-- /.col -->
     </div><!-- /.row -->
+@endsection
+
+@section('script')
+    <script>
+        $(function() {
+
+        });
+    </script>
 @endsection
