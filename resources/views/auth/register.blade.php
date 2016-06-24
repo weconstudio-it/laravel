@@ -27,70 +27,70 @@
                                         <label class="block clearfix">
                                             <span class="block input-icon input-icon-right">
                                                 <input type="text" name="name" class="form-control" placeholder="Name"/>
+                                                @if ($errors->has('name'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('name') }}</strong>
+                                                    </span>
+                                                @endif
                                             </span>
                                         </label>
-                                        @if ($errors->has('name'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->first('name') }}</strong>
-                                            </span>
-                                        @endif
                                         <label class="block clearfix">
                                             <span class="block input-icon input-icon-right">
                                                 <input type="email" name="email" class="form-control" placeholder="E-mail"/>
+                                                @if ($errors->has('email'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('email') }}</strong>
+                                                    </span>
+                                                @endif
                                                 <i class="ace-icon fa fa-envelope"></i>
                                             </span>
                                         </label>
-                                        @if ($errors->has('email'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->first('email') }}</strong>
-                                            </span>
-                                        @endif
                                         <label class="block clearfix">
                                             <span class="block input-icon input-icon-right">
                                                 <input type="text" name="username" class="form-control" placeholder="Username"/>
+                                                @if ($errors->has('username'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('username') }}</strong>
+                                                    </span>
+                                                @endif
                                                 <i class="ace-icon fa fa-user"></i>
                                             </span>
                                         </label>
-                                        @if ($errors->has('username'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->first('username') }}</strong>
-                                            </span>
-                                        @endif
                                         <label class="block clearfix">
                                             <span class="block input-icon input-icon-right">
                                                 <input type="password" name="password" class="form-control" placeholder="Password"/>
+                                                @if ($errors->has('password'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('password') }}</strong>
+                                                    </span>
+                                                @endif
                                                 <i class="ace-icon fa fa-key"></i>
                                             </span>
                                         </label>
-                                        @if ($errors->has('password'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->first('password') }}</strong>
-                                            </span>
-                                        @endif
                                         <label class="block clearfix">
                                             <span class="block input-icon input-icon-right">
                                                 <input type="password" name="password_confirmation" class="form-control" placeholder="Repeat password"/>
+                                                @if ($errors->has('password_confirmation'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('password_confirmation') }}</strong>
+                                                    </span>
+                                                @endif
                                                 <i class="ace-icon fa fa-key"></i>
                                             </span>
                                         </label>
-                                        @if ($errors->has('password_confirmation'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->first('password_confirmation') }}</strong>
-                                            </span>
-                                        @endif
 
                                         <label class="block">
                                             <input type="checkbox" name="agree" class="ace"/>
                                             <span class="lbl">
                                                 I accept the
                                                 <a href="#">User Agreement</a>
+                                                @if ($errors->has('agree'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('agree') }}</strong>
+                                                    </span>
+                                                @endif
                                             </span>
                                         </label>
-                                        @if ($errors->has('agree'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->first('agree') }}</strong>
-                                            </span>
-                                        @endif
 
                                         <div class="space-24"></div>
 

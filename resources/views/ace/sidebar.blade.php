@@ -25,7 +25,7 @@ function canIAccess($item = []) {
     } else {
         $minimum = (isset($item['minimum_level'])) ? intval($item['minimum_level']) : 0;
         if($minimum) {
-            if($level <= $minimum) {
+            if($level >= $minimum) {
                 $ret = true;
             } else {
                 $ret = false;
