@@ -162,6 +162,7 @@ return [
          */
         Propel\PropelLaravel\PropelIntegrationServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        Weconstudio\WeconstudioServiceProvider::class,
 
     ],
 
