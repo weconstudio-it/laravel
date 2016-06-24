@@ -8,6 +8,10 @@ use App\Http\Requests;
 
 class HomeController extends Controller
 {
+	public function home() {
+		return redirect('/#dashboard');
+	}
+
 	public function index() {
 		return view('home');
     }

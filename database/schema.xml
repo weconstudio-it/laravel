@@ -44,6 +44,24 @@
         </vendor>
     </table>
 
+    <table name="password_resets" idMethod="native" >
+        <column name="id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="email" type="VARCHAR" size="255" required="true"/>
+        <column name="token" type="VARCHAR" size="255" required="true"/>
+        <behavior name="timestampable" />
+
+        <index name="password_resets_email_idx">
+            <index-column name="email"/>
+        </index>
+        <index name="password_resets_token_idx">
+            <index-column name="token"/>
+        </index>
+
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+    </table>
+
     <table name="jobs" idMethod="native">
         <column name="id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
         <column name="queue" type="VARCHAR" size="255" required="true"/>

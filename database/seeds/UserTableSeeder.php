@@ -11,20 +11,33 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
-		$userGroup = new \App\Models\UserGroup();
-		$userGroup->setLabel('Admin');
-		$userGroup->setLevel(10);
-		$userGroup->setVisible(1);
-		$userGroup->setEnabled(1);
-		$userGroup->save();
+		$groups = [
+			['label' => 'Admin', 'level' => 999, 'visible' => 1, 'enabled' => 1],
+			['label' => 'Manager', 'level' => 500, 'visible' => 1, 'enabled' => 1],
+			['label' => 'User', 'level' => 100, 'visible' => 1, 'enabled' => 1],
+		];
 
-		$user = new \App\Models\User();
-        $user->setName('Admin');
-        $user->setEmail('info@weconstudio.it');
-        $user->setUsername('admin');
-        $user->setPassword(bcrypt('admin'));
-        $user->setEnabled(1);
-		$user->setIdUserGroup($userGroup->getId());
-        $user->save();
+		$users = [
+			['name' => 'Admin', 'email' => 'info@weconstudio.it', 'username' => 'admin', 'password' => bcrypt('admin'), 'enabled' => 1],
+			['name' => 'Manager', 'email' => 'info@weconstudio.it', 'username' => 'manager', 'password' => bcrypt('manager'), 'enabled' => 1],
+			['name' => 'User', 'email' => 'info@weconstudio.it', 'username' => 'user', 'password' => bcrypt('user'), 'enabled' => 1],
+		];
+
+		$gp = [];
+		$i = 0;
+		foreach ($groups as $group) {
+			$userGroup = new \App\Models\UserGroup();
+			$userGroup->fromArray($group);
+			$userGroup->save();
+
+			$gp[] = $userGroup->getId();
+		}
+
+		foreach ($users as $user) {
+			$u = new \App\Models\User();
+			$u->fromArray($user);
+			$u->setIdUserGroup($gp[$i++]);
+			$u->save();
+		}
     }
 }

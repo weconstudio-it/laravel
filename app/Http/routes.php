@@ -12,11 +12,15 @@
 */
 
 Route::auth();
+Route::get('/register/success', 'Auth\AuthController@success');
+Route::get('/register/error', 'Auth\AuthController@error');
+Route::get('/confirm', 'Auth\AuthController@confirm');
 Route::get("/error", "ErrorController@index");
 
-Route::group(['middleware' => ['auth']], function() {
+Route::group(['middleware' => ['auth', 'enable']], function() {
 	Route::group(['middleware' => ['ajax']], function() {
 		Route::get('/', 'HomeController@index');
+		Route::get('/home', 'HomeController@home');
 		Route::get('/dashboard', 'DashboardController@index');
 	});
 });
