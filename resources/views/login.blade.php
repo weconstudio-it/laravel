@@ -57,12 +57,19 @@
         <script src="{{ url('js/ace-elements.min.js') }}"></script>
 
         <?php if (app('env') == 'local'): ?>
-        <script src="{{ url('js/custom-all.js') }}"></script>
+            <script src="{{ url('js/custom-all.js') }}"></script>
         <?php else: ?>
-        <script src="{{ url(elixir('js/custom-all.js')) }}"></script>
+            <script src="{{ url(elixir('js/custom-all.js')) }}"></script>
         <?php endif; ?>
+        <script>
+            $(function() {
+                app.baseUrl = "{{ url('/') }}";
+                app.init();
+            });
+        </script>
 
-    <!-- inline scripts related to this page -->
+
+        <!-- inline scripts related to this page -->
         <script type="text/javascript">
             jQuery(function($) {
                 $(document).on('click', '.toolbar a[data-target]', function(e) {
