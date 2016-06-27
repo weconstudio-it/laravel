@@ -73,22 +73,17 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
-		try {
-            $user = new User();
-            $user->fromArray($data);
-            $userGroup = UserGroupQuery::create()->findOneByLevel(UserGroup::LEVEL_USER);
-			if(!$userGroup instanceof UserGroup) {
-				$userGroup = UserGroupQuery::create()->findOne();
-			}
-			$user->setPassword(bcrypt($data['password']));
-			$user->setIdUserGroup($userGroup->getId());
-            $user->save();
-            return $user;
-        } catch(\Exception $e) {
-            Log::e("$e");
-        }
+		$user = new User();
+		$user->fromArray($data);
+		$userGroup = UserGroupQuery::create()->findOneByLevel(UserGroup::LEVEL_USER);
+		if(!$userGroup instanceof UserGroup) {
+			$userGroup = UserGroupQuery::create()->findOne();
+		}
+		$user->setPassword(bcrypt($data['password']));
+		$user->setIdUserGroup($userGroup->getId());
+		$user->save();
 
-        return null;
+		return $user;
     }
 	
 	public function register(Request $request) {
@@ -100,10 +95,14 @@ class AuthController extends Controller
 			);
 		}
 		
-		$user = $this->create($request->all());
-		if(is_null($user)) return redirect('/register/error')->withInput([
-			'message' => 'Retry later!'
-		]);
+		try {
+			$user = $this->create($request->all());
+		} catch(\Exception $e) {
+			Log::e($e->getMessage() . "\n$e");
+			return redirect('/register/error')->withInput([
+				'message' => 'Failed create account. Retry later!'
+			]);
+		}
 		
 		// Send email to confirm account
 		$token = bcrypt($user->getUsername() . $user->getPassword());
