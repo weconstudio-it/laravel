@@ -86,6 +86,12 @@ class AuthController extends Controller
 		return $user;
     }
 	
+	/**
+	 * Processo di registrazione
+	 *
+	 * @param Request $request
+	 * @return mixed
+	 */
 	public function register(Request $request) {
 		$validator = $this->validator($request->all());
 		
@@ -114,6 +120,12 @@ class AuthController extends Controller
 		return redirect('/register/success');
 	}
 	
+	/**
+	 * Conferma un account dopo la registrazione e dopo il link dalla email
+	 *
+	 * @param Request $request
+	 * @return mixed
+	 */
 	public function confirm(Request $request) {
 		if($request->has('username') and $request->has('token')) {
 			$user = UserQuery::create()->findOneByUsername($request->input('username', ''));
@@ -142,10 +154,20 @@ class AuthController extends Controller
 		]);
 	}
 
+	/**
+	 * Pagina di successo registrazione generica
+	 *
+	 * @return mixed
+	 */
 	public function success() {
 		return view('auth.success');
 	}
 
+	/**
+	 * Pagina di errore registrazione generica
+	 *
+	 * @return mixed
+	 */
 	public function error() {
 		return view('auth.error');
 	}
