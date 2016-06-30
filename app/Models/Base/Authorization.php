@@ -5,9 +5,9 @@ namespace App\Models\Base;
 use \DateTime;
 use \Exception;
 use \PDO;
-use App\Models\Variable as ChildVariable;
-use App\Models\VariableQuery as ChildVariableQuery;
-use App\Models\Map\VariableTableMap;
+use App\Models\Authorization as ChildAuthorization;
+use App\Models\AuthorizationQuery as ChildAuthorizationQuery;
+use App\Models\Map\AuthorizationTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -22,18 +22,18 @@ use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
 
 /**
- * Base class that represents a row from the 'variable' table.
+ * Base class that represents a row from the 'authorization' table.
  *
  *
  *
 * @package    propel.generator..Base
 */
-abstract class Variable implements ActiveRecordInterface
+abstract class Authorization implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\App\\Models\\Map\\VariableTableMap';
+    const TABLE_MAP = '\\App\\Models\\Map\\AuthorizationTableMap';
 
 
     /**
@@ -69,41 +69,47 @@ abstract class Variable implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the group field.
-     * Note: this column has a database default value of: 'generic'
+     * The value for the uri field.
      * @var        string
      */
-    protected $group;
+    protected $uri;
 
     /**
-     * The value for the name field.
+     * The value for the method field.
      * @var        string
      */
-    protected $name;
+    protected $method;
 
     /**
-     * The value for the value field.
+     * The value for the id_user field.
+     * @var        int
+     */
+    protected $id_user;
+
+    /**
+     * The value for the id_user_group field.
+     * @var        int
+     */
+    protected $id_user_group;
+
+    /**
+     * The value for the order field.
+     * @var        int
+     */
+    protected $order;
+
+    /**
+     * The value for the policy field.
+     * Note: this column has a database default value of: true
+     * @var        boolean
+     */
+    protected $policy;
+
+    /**
+     * The value for the label field.
      * @var        string
      */
-    protected $value;
-
-    /**
-     * The value for the validfrom field.
-     * @var        \DateTime
-     */
-    protected $validfrom;
-
-    /**
-     * The value for the validto field.
-     * @var        \DateTime
-     */
-    protected $validto;
-
-    /**
-     * The value for the description field.
-     * @var        string
-     */
-    protected $description;
+    protected $label;
 
     /**
      * The value for the enabled field.
@@ -140,12 +146,12 @@ abstract class Variable implements ActiveRecordInterface
      */
     public function applyDefaultValues()
     {
-        $this->group = 'generic';
+        $this->policy = true;
         $this->enabled = true;
     }
 
     /**
-     * Initializes internal state of App\Models\Base\Variable object.
+     * Initializes internal state of App\Models\Base\Authorization object.
      * @see applyDefaults()
      */
     public function __construct()
@@ -242,9 +248,9 @@ abstract class Variable implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>Variable</code> instance.  If
-     * <code>obj</code> is an instance of <code>Variable</code>, delegates to
-     * <code>equals(Variable)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>Authorization</code> instance.  If
+     * <code>obj</code> is an instance of <code>Authorization</code>, delegates to
+     * <code>equals(Authorization)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param  mixed   $obj The object to compare to.
      * @return boolean Whether equal to the object specified.
@@ -310,7 +316,7 @@ abstract class Variable implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|Variable The current object, for fluid interface
+     * @return $this|Authorization The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -374,83 +380,83 @@ abstract class Variable implements ActiveRecordInterface
     }
 
     /**
-     * Get the [group] column value.
+     * Get the [uri] column value.
      *
      * @return string
      */
-    public function getGroup()
+    public function getUri()
     {
-        return $this->group;
+        return $this->uri;
     }
 
     /**
-     * Get the [name] column value.
+     * Get the [method] column value.
      *
      * @return string
      */
-    public function getName()
+    public function getMethod()
     {
-        return $this->name;
+        return $this->method;
     }
 
     /**
-     * Get the [value] column value.
+     * Get the [id_user] column value.
+     *
+     * @return int
+     */
+    public function getIdUser()
+    {
+        return $this->id_user;
+    }
+
+    /**
+     * Get the [id_user_group] column value.
+     *
+     * @return int
+     */
+    public function getIdUserGroup()
+    {
+        return $this->id_user_group;
+    }
+
+    /**
+     * Get the [order] column value.
+     *
+     * @return int
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * Get the [policy] column value.
+     *
+     * @return boolean
+     */
+    public function getPolicy()
+    {
+        return $this->policy;
+    }
+
+    /**
+     * Get the [policy] column value.
+     *
+     * @return boolean
+     */
+    public function isPolicy()
+    {
+        return $this->getPolicy();
+    }
+
+    /**
+     * Get the [label] column value.
      *
      * @return string
      */
-    public function getValue()
+    public function getLabel()
     {
-        return $this->value;
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [validfrom] column value.
-     *
-     *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
-     *
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getValidfrom($format = 'Y-m-d H:i:s')
-    {
-        if ($format === null) {
-            return $this->validfrom;
-        } else {
-            return $this->validfrom instanceof \DateTime ? $this->validfrom->format($format) : null;
-        }
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [validto] column value.
-     *
-     *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
-     *
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getValidto($format = 'Y-m-d H:i:s')
-    {
-        if ($format === null) {
-            return $this->validto;
-        } else {
-            return $this->validto instanceof \DateTime ? $this->validto->format($format) : null;
-        }
-    }
-
-    /**
-     * Get the [description] column value.
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
+        return $this->label;
     }
 
     /**
@@ -517,7 +523,7 @@ abstract class Variable implements ActiveRecordInterface
      * Set the value of [id] column.
      *
      * @param int $v new value
-     * @return $this|\App\Models\Variable The current object (for fluent API support)
+     * @return $this|\App\Models\Authorization The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -527,131 +533,159 @@ abstract class Variable implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[VariableTableMap::COL_ID] = true;
+            $this->modifiedColumns[AuthorizationTableMap::COL_ID] = true;
         }
 
         return $this;
     } // setId()
 
     /**
-     * Set the value of [group] column.
+     * Set the value of [uri] column.
      *
      * @param string $v new value
-     * @return $this|\App\Models\Variable The current object (for fluent API support)
+     * @return $this|\App\Models\Authorization The current object (for fluent API support)
      */
-    public function setGroup($v)
+    public function setUri($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->group !== $v) {
-            $this->group = $v;
-            $this->modifiedColumns[VariableTableMap::COL_GROUP] = true;
+        if ($this->uri !== $v) {
+            $this->uri = $v;
+            $this->modifiedColumns[AuthorizationTableMap::COL_URI] = true;
         }
 
         return $this;
-    } // setGroup()
+    } // setUri()
 
     /**
-     * Set the value of [name] column.
+     * Set the value of [method] column.
      *
      * @param string $v new value
-     * @return $this|\App\Models\Variable The current object (for fluent API support)
+     * @return $this|\App\Models\Authorization The current object (for fluent API support)
      */
-    public function setName($v)
+    public function setMethod($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->name !== $v) {
-            $this->name = $v;
-            $this->modifiedColumns[VariableTableMap::COL_NAME] = true;
+        if ($this->method !== $v) {
+            $this->method = $v;
+            $this->modifiedColumns[AuthorizationTableMap::COL_METHOD] = true;
         }
 
         return $this;
-    } // setName()
+    } // setMethod()
 
     /**
-     * Set the value of [value] column.
+     * Set the value of [id_user] column.
      *
-     * @param string $v new value
-     * @return $this|\App\Models\Variable The current object (for fluent API support)
+     * @param int $v new value
+     * @return $this|\App\Models\Authorization The current object (for fluent API support)
      */
-    public function setValue($v)
+    public function setIdUser($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
-        if ($this->value !== $v) {
-            $this->value = $v;
-            $this->modifiedColumns[VariableTableMap::COL_VALUE] = true;
+        if ($this->id_user !== $v) {
+            $this->id_user = $v;
+            $this->modifiedColumns[AuthorizationTableMap::COL_ID_USER] = true;
         }
 
         return $this;
-    } // setValue()
+    } // setIdUser()
 
     /**
-     * Sets the value of [validfrom] column to a normalized version of the date/time value specified.
+     * Set the value of [id_user_group] column.
      *
-     * @param  mixed $v string, integer (timestamp), or \DateTime value.
-     *               Empty strings are treated as NULL.
-     * @return $this|\App\Models\Variable The current object (for fluent API support)
+     * @param int $v new value
+     * @return $this|\App\Models\Authorization The current object (for fluent API support)
      */
-    public function setValidfrom($v)
+    public function setIdUserGroup($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->validfrom !== null || $dt !== null) {
-            if ($this->validfrom === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->validfrom->format("Y-m-d H:i:s")) {
-                $this->validfrom = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[VariableTableMap::COL_VALIDFROM] = true;
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->id_user_group !== $v) {
+            $this->id_user_group = $v;
+            $this->modifiedColumns[AuthorizationTableMap::COL_ID_USER_GROUP] = true;
+        }
+
+        return $this;
+    } // setIdUserGroup()
+
+    /**
+     * Set the value of [order] column.
+     *
+     * @param int $v new value
+     * @return $this|\App\Models\Authorization The current object (for fluent API support)
+     */
+    public function setOrder($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->order !== $v) {
+            $this->order = $v;
+            $this->modifiedColumns[AuthorizationTableMap::COL_ORDER] = true;
+        }
+
+        return $this;
+    } // setOrder()
+
+    /**
+     * Sets the value of the [policy] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param  boolean|integer|string $v The new value
+     * @return $this|\App\Models\Authorization The current object (for fluent API support)
+     */
+    public function setPolicy($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
             }
-        } // if either are not null
+        }
+
+        if ($this->policy !== $v) {
+            $this->policy = $v;
+            $this->modifiedColumns[AuthorizationTableMap::COL_POLICY] = true;
+        }
 
         return $this;
-    } // setValidfrom()
+    } // setPolicy()
 
     /**
-     * Sets the value of [validto] column to a normalized version of the date/time value specified.
-     *
-     * @param  mixed $v string, integer (timestamp), or \DateTime value.
-     *               Empty strings are treated as NULL.
-     * @return $this|\App\Models\Variable The current object (for fluent API support)
-     */
-    public function setValidto($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->validto !== null || $dt !== null) {
-            if ($this->validto === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->validto->format("Y-m-d H:i:s")) {
-                $this->validto = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[VariableTableMap::COL_VALIDTO] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    } // setValidto()
-
-    /**
-     * Set the value of [description] column.
+     * Set the value of [label] column.
      *
      * @param string $v new value
-     * @return $this|\App\Models\Variable The current object (for fluent API support)
+     * @return $this|\App\Models\Authorization The current object (for fluent API support)
      */
-    public function setDescription($v)
+    public function setLabel($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->description !== $v) {
-            $this->description = $v;
-            $this->modifiedColumns[VariableTableMap::COL_DESCRIPTION] = true;
+        if ($this->label !== $v) {
+            $this->label = $v;
+            $this->modifiedColumns[AuthorizationTableMap::COL_LABEL] = true;
         }
 
         return $this;
-    } // setDescription()
+    } // setLabel()
 
     /**
      * Sets the value of the [enabled] column.
@@ -661,7 +695,7 @@ abstract class Variable implements ActiveRecordInterface
      * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      *
      * @param  boolean|integer|string $v The new value
-     * @return $this|\App\Models\Variable The current object (for fluent API support)
+     * @return $this|\App\Models\Authorization The current object (for fluent API support)
      */
     public function setEnabled($v)
     {
@@ -675,7 +709,7 @@ abstract class Variable implements ActiveRecordInterface
 
         if ($this->enabled !== $v) {
             $this->enabled = $v;
-            $this->modifiedColumns[VariableTableMap::COL_ENABLED] = true;
+            $this->modifiedColumns[AuthorizationTableMap::COL_ENABLED] = true;
         }
 
         return $this;
@@ -686,7 +720,7 @@ abstract class Variable implements ActiveRecordInterface
      *
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
      *               Empty strings are treated as NULL.
-     * @return $this|\App\Models\Variable The current object (for fluent API support)
+     * @return $this|\App\Models\Authorization The current object (for fluent API support)
      */
     public function setCreatedAt($v)
     {
@@ -694,7 +728,7 @@ abstract class Variable implements ActiveRecordInterface
         if ($this->created_at !== null || $dt !== null) {
             if ($this->created_at === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->created_at->format("Y-m-d H:i:s")) {
                 $this->created_at = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[VariableTableMap::COL_CREATED_AT] = true;
+                $this->modifiedColumns[AuthorizationTableMap::COL_CREATED_AT] = true;
             }
         } // if either are not null
 
@@ -706,7 +740,7 @@ abstract class Variable implements ActiveRecordInterface
      *
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
      *               Empty strings are treated as NULL.
-     * @return $this|\App\Models\Variable The current object (for fluent API support)
+     * @return $this|\App\Models\Authorization The current object (for fluent API support)
      */
     public function setUpdatedAt($v)
     {
@@ -714,7 +748,7 @@ abstract class Variable implements ActiveRecordInterface
         if ($this->updated_at !== null || $dt !== null) {
             if ($this->updated_at === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->updated_at->format("Y-m-d H:i:s")) {
                 $this->updated_at = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[VariableTableMap::COL_UPDATED_AT] = true;
+                $this->modifiedColumns[AuthorizationTableMap::COL_UPDATED_AT] = true;
             }
         } // if either are not null
 
@@ -731,7 +765,7 @@ abstract class Variable implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues()
     {
-            if ($this->group !== 'generic') {
+            if ($this->policy !== true) {
                 return false;
             }
 
@@ -765,43 +799,40 @@ abstract class Variable implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : VariableTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : AuthorizationTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : VariableTableMap::translateFieldName('Group', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->group = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : AuthorizationTableMap::translateFieldName('Uri', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->uri = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : VariableTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->name = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : AuthorizationTableMap::translateFieldName('Method', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->method = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : VariableTableMap::translateFieldName('Value', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->value = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : AuthorizationTableMap::translateFieldName('IdUser', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id_user = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : VariableTableMap::translateFieldName('Validfrom', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->validfrom = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : AuthorizationTableMap::translateFieldName('IdUserGroup', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id_user_group = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : VariableTableMap::translateFieldName('Validto', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->validto = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : AuthorizationTableMap::translateFieldName('Order', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->order = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : VariableTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->description = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : AuthorizationTableMap::translateFieldName('Policy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->policy = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : VariableTableMap::translateFieldName('Enabled', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : AuthorizationTableMap::translateFieldName('Label', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->label = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : AuthorizationTableMap::translateFieldName('Enabled', TableMap::TYPE_PHPNAME, $indexType)];
             $this->enabled = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : VariableTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : AuthorizationTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : VariableTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : AuthorizationTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -814,10 +845,10 @@ abstract class Variable implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 10; // 10 = VariableTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 11; // 11 = AuthorizationTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\App\\Models\\Variable'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\App\\Models\\Authorization'), 0, $e);
         }
     }
 
@@ -859,13 +890,13 @@ abstract class Variable implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(VariableTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(AuthorizationTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildVariableQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildAuthorizationQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -884,8 +915,8 @@ abstract class Variable implements ActiveRecordInterface
      * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
-     * @see Variable::setDeleted()
-     * @see Variable::isDeleted()
+     * @see Authorization::setDeleted()
+     * @see Authorization::isDeleted()
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -894,11 +925,11 @@ abstract class Variable implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(VariableTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(AuthorizationTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildVariableQuery::create()
+            $deleteQuery = ChildAuthorizationQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -929,7 +960,7 @@ abstract class Variable implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(VariableTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(AuthorizationTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -939,16 +970,16 @@ abstract class Variable implements ActiveRecordInterface
                 $ret = $ret && $this->preInsert($con);
                 // timestampable behavior
 
-                if (!$this->isColumnModified(VariableTableMap::COL_CREATED_AT)) {
+                if (!$this->isColumnModified(AuthorizationTableMap::COL_CREATED_AT)) {
                     $this->setCreatedAt(time());
                 }
-                if (!$this->isColumnModified(VariableTableMap::COL_UPDATED_AT)) {
+                if (!$this->isColumnModified(AuthorizationTableMap::COL_UPDATED_AT)) {
                     $this->setUpdatedAt(time());
                 }
             } else {
                 $ret = $ret && $this->preUpdate($con);
                 // timestampable behavior
-                if ($this->isModified() && !$this->isColumnModified(VariableTableMap::COL_UPDATED_AT)) {
+                if ($this->isModified() && !$this->isColumnModified(AuthorizationTableMap::COL_UPDATED_AT)) {
                     $this->setUpdatedAt(time());
                 }
             }
@@ -960,7 +991,7 @@ abstract class Variable implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                VariableTableMap::addInstanceToPool($this);
+                AuthorizationTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -1017,45 +1048,48 @@ abstract class Variable implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[VariableTableMap::COL_ID] = true;
+        $this->modifiedColumns[AuthorizationTableMap::COL_ID] = true;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . VariableTableMap::COL_ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . AuthorizationTableMap::COL_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(VariableTableMap::COL_ID)) {
+        if ($this->isColumnModified(AuthorizationTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(VariableTableMap::COL_GROUP)) {
-            $modifiedColumns[':p' . $index++]  = 'group';
+        if ($this->isColumnModified(AuthorizationTableMap::COL_URI)) {
+            $modifiedColumns[':p' . $index++]  = 'uri';
         }
-        if ($this->isColumnModified(VariableTableMap::COL_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'name';
+        if ($this->isColumnModified(AuthorizationTableMap::COL_METHOD)) {
+            $modifiedColumns[':p' . $index++]  = 'method';
         }
-        if ($this->isColumnModified(VariableTableMap::COL_VALUE)) {
-            $modifiedColumns[':p' . $index++]  = 'value';
+        if ($this->isColumnModified(AuthorizationTableMap::COL_ID_USER)) {
+            $modifiedColumns[':p' . $index++]  = 'id_user';
         }
-        if ($this->isColumnModified(VariableTableMap::COL_VALIDFROM)) {
-            $modifiedColumns[':p' . $index++]  = 'validFrom';
+        if ($this->isColumnModified(AuthorizationTableMap::COL_ID_USER_GROUP)) {
+            $modifiedColumns[':p' . $index++]  = 'id_user_group';
         }
-        if ($this->isColumnModified(VariableTableMap::COL_VALIDTO)) {
-            $modifiedColumns[':p' . $index++]  = 'validTo';
+        if ($this->isColumnModified(AuthorizationTableMap::COL_ORDER)) {
+            $modifiedColumns[':p' . $index++]  = 'order';
         }
-        if ($this->isColumnModified(VariableTableMap::COL_DESCRIPTION)) {
-            $modifiedColumns[':p' . $index++]  = 'description';
+        if ($this->isColumnModified(AuthorizationTableMap::COL_POLICY)) {
+            $modifiedColumns[':p' . $index++]  = 'policy';
         }
-        if ($this->isColumnModified(VariableTableMap::COL_ENABLED)) {
+        if ($this->isColumnModified(AuthorizationTableMap::COL_LABEL)) {
+            $modifiedColumns[':p' . $index++]  = 'label';
+        }
+        if ($this->isColumnModified(AuthorizationTableMap::COL_ENABLED)) {
             $modifiedColumns[':p' . $index++]  = 'enabled';
         }
-        if ($this->isColumnModified(VariableTableMap::COL_CREATED_AT)) {
+        if ($this->isColumnModified(AuthorizationTableMap::COL_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'created_at';
         }
-        if ($this->isColumnModified(VariableTableMap::COL_UPDATED_AT)) {
+        if ($this->isColumnModified(AuthorizationTableMap::COL_UPDATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'updated_at';
         }
 
         $sql = sprintf(
-            'INSERT INTO variable (%s) VALUES (%s)',
+            'INSERT INTO authorization (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1067,23 +1101,26 @@ abstract class Variable implements ActiveRecordInterface
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'group':
-                        $stmt->bindValue($identifier, $this->group, PDO::PARAM_STR);
+                    case 'uri':
+                        $stmt->bindValue($identifier, $this->uri, PDO::PARAM_STR);
                         break;
-                    case 'name':
-                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                    case 'method':
+                        $stmt->bindValue($identifier, $this->method, PDO::PARAM_STR);
                         break;
-                    case 'value':
-                        $stmt->bindValue($identifier, $this->value, PDO::PARAM_STR);
+                    case 'id_user':
+                        $stmt->bindValue($identifier, $this->id_user, PDO::PARAM_INT);
                         break;
-                    case 'validFrom':
-                        $stmt->bindValue($identifier, $this->validfrom ? $this->validfrom->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                    case 'id_user_group':
+                        $stmt->bindValue($identifier, $this->id_user_group, PDO::PARAM_INT);
                         break;
-                    case 'validTo':
-                        $stmt->bindValue($identifier, $this->validto ? $this->validto->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                    case 'order':
+                        $stmt->bindValue($identifier, $this->order, PDO::PARAM_INT);
                         break;
-                    case 'description':
-                        $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
+                    case 'policy':
+                        $stmt->bindValue($identifier, (int) $this->policy, PDO::PARAM_INT);
+                        break;
+                    case 'label':
+                        $stmt->bindValue($identifier, $this->label, PDO::PARAM_STR);
                         break;
                     case 'enabled':
                         $stmt->bindValue($identifier, (int) $this->enabled, PDO::PARAM_INT);
@@ -1140,7 +1177,7 @@ abstract class Variable implements ActiveRecordInterface
      */
     public function getByName($name, $type = TableMap::TYPE_FIELDNAME)
     {
-        $pos = VariableTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = AuthorizationTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -1160,30 +1197,33 @@ abstract class Variable implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getGroup();
+                return $this->getUri();
                 break;
             case 2:
-                return $this->getName();
+                return $this->getMethod();
                 break;
             case 3:
-                return $this->getValue();
+                return $this->getIdUser();
                 break;
             case 4:
-                return $this->getValidfrom();
+                return $this->getIdUserGroup();
                 break;
             case 5:
-                return $this->getValidto();
+                return $this->getOrder();
                 break;
             case 6:
-                return $this->getDescription();
+                return $this->getPolicy();
                 break;
             case 7:
-                return $this->getEnabled();
+                return $this->getLabel();
                 break;
             case 8:
-                return $this->getCreatedAt();
+                return $this->getEnabled();
                 break;
             case 9:
+                return $this->getCreatedAt();
+                break;
+            case 10:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1209,47 +1249,36 @@ abstract class Variable implements ActiveRecordInterface
     public function toArray($keyType = TableMap::TYPE_FIELDNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
     {
 
-        if (isset($alreadyDumpedObjects['Variable'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['Authorization'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Variable'][$this->hashCode()] = true;
-        $keys = VariableTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['Authorization'][$this->hashCode()] = true;
+        $keys = AuthorizationTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getGroup(),
-            $keys[2] => $this->getName(),
-            $keys[3] => $this->getValue(),
-            $keys[4] => $this->getValidfrom(),
-            $keys[5] => $this->getValidto(),
-            $keys[6] => $this->getDescription(),
-            $keys[7] => $this->getEnabled(),
-            $keys[8] => $this->getCreatedAt(),
-            $keys[9] => $this->getUpdatedAt(),
+            $keys[1] => $this->getUri(),
+            $keys[2] => $this->getMethod(),
+            $keys[3] => $this->getIdUser(),
+            $keys[4] => $this->getIdUserGroup(),
+            $keys[5] => $this->getOrder(),
+            $keys[6] => $this->getPolicy(),
+            $keys[7] => $this->getLabel(),
+            $keys[8] => $this->getEnabled(),
+            $keys[9] => $this->getCreatedAt(),
+            $keys[10] => $this->getUpdatedAt(),
         );
 
         $utc = new \DateTimeZone('utc');
-        if ($result[$keys[4]] instanceof \DateTime) {
-            // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[4]];
-            $result[$keys[4]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
-        }
-
-        if ($result[$keys[5]] instanceof \DateTime) {
-            // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[5]];
-            $result[$keys[5]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
-        }
-
-        if ($result[$keys[8]] instanceof \DateTime) {
-            // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[8]];
-            $result[$keys[8]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
-        }
-
         if ($result[$keys[9]] instanceof \DateTime) {
             // When changing timezone we don't want to change existing instances
             $dateTime = clone $result[$keys[9]];
             $result[$keys[9]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+
+        if ($result[$keys[10]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[10]];
+            $result[$keys[10]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1270,11 +1299,11 @@ abstract class Variable implements ActiveRecordInterface
      *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_FIELDNAME.
-     * @return $this|\App\Models\Variable
+     * @return $this|\App\Models\Authorization
      */
     public function setByName($name, $value, $type = TableMap::TYPE_FIELDNAME)
     {
-        $pos = VariableTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = AuthorizationTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         return $this->setByPosition($pos, $value);
     }
@@ -1285,7 +1314,7 @@ abstract class Variable implements ActiveRecordInterface
      *
      * @param  int $pos position in xml schema
      * @param  mixed $value field value
-     * @return $this|\App\Models\Variable
+     * @return $this|\App\Models\Authorization
      */
     public function setByPosition($pos, $value)
     {
@@ -1294,30 +1323,33 @@ abstract class Variable implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setGroup($value);
+                $this->setUri($value);
                 break;
             case 2:
-                $this->setName($value);
+                $this->setMethod($value);
                 break;
             case 3:
-                $this->setValue($value);
+                $this->setIdUser($value);
                 break;
             case 4:
-                $this->setValidfrom($value);
+                $this->setIdUserGroup($value);
                 break;
             case 5:
-                $this->setValidto($value);
+                $this->setOrder($value);
                 break;
             case 6:
-                $this->setDescription($value);
+                $this->setPolicy($value);
                 break;
             case 7:
-                $this->setEnabled($value);
+                $this->setLabel($value);
                 break;
             case 8:
-                $this->setCreatedAt($value);
+                $this->setEnabled($value);
                 break;
             case 9:
+                $this->setCreatedAt($value);
+                break;
+            case 10:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -1344,37 +1376,40 @@ abstract class Variable implements ActiveRecordInterface
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_FIELDNAME)
     {
-        $keys = VariableTableMap::getFieldNames($keyType);
+        $keys = AuthorizationTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setGroup($arr[$keys[1]]);
+            $this->setUri($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setName($arr[$keys[2]]);
+            $this->setMethod($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setValue($arr[$keys[3]]);
+            $this->setIdUser($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setValidfrom($arr[$keys[4]]);
+            $this->setIdUserGroup($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setValidto($arr[$keys[5]]);
+            $this->setOrder($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setDescription($arr[$keys[6]]);
+            $this->setPolicy($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setEnabled($arr[$keys[7]]);
+            $this->setLabel($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setCreatedAt($arr[$keys[8]]);
+            $this->setEnabled($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setUpdatedAt($arr[$keys[9]]);
+            $this->setCreatedAt($arr[$keys[9]]);
+        }
+        if (array_key_exists($keys[10], $arr)) {
+            $this->setUpdatedAt($arr[$keys[10]]);
         }
     }
 
@@ -1395,7 +1430,7 @@ abstract class Variable implements ActiveRecordInterface
      * @param string $data The source data to import from
      * @param string $keyType The type of keys the array uses.
      *
-     * @return $this|\App\Models\Variable The current object, for fluid interface
+     * @return $this|\App\Models\Authorization The current object, for fluid interface
      */
     public function importFrom($parser, $data, $keyType = TableMap::TYPE_FIELDNAME)
     {
@@ -1415,37 +1450,40 @@ abstract class Variable implements ActiveRecordInterface
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(VariableTableMap::DATABASE_NAME);
+        $criteria = new Criteria(AuthorizationTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(VariableTableMap::COL_ID)) {
-            $criteria->add(VariableTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(AuthorizationTableMap::COL_ID)) {
+            $criteria->add(AuthorizationTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(VariableTableMap::COL_GROUP)) {
-            $criteria->add(VariableTableMap::COL_GROUP, $this->group);
+        if ($this->isColumnModified(AuthorizationTableMap::COL_URI)) {
+            $criteria->add(AuthorizationTableMap::COL_URI, $this->uri);
         }
-        if ($this->isColumnModified(VariableTableMap::COL_NAME)) {
-            $criteria->add(VariableTableMap::COL_NAME, $this->name);
+        if ($this->isColumnModified(AuthorizationTableMap::COL_METHOD)) {
+            $criteria->add(AuthorizationTableMap::COL_METHOD, $this->method);
         }
-        if ($this->isColumnModified(VariableTableMap::COL_VALUE)) {
-            $criteria->add(VariableTableMap::COL_VALUE, $this->value);
+        if ($this->isColumnModified(AuthorizationTableMap::COL_ID_USER)) {
+            $criteria->add(AuthorizationTableMap::COL_ID_USER, $this->id_user);
         }
-        if ($this->isColumnModified(VariableTableMap::COL_VALIDFROM)) {
-            $criteria->add(VariableTableMap::COL_VALIDFROM, $this->validfrom);
+        if ($this->isColumnModified(AuthorizationTableMap::COL_ID_USER_GROUP)) {
+            $criteria->add(AuthorizationTableMap::COL_ID_USER_GROUP, $this->id_user_group);
         }
-        if ($this->isColumnModified(VariableTableMap::COL_VALIDTO)) {
-            $criteria->add(VariableTableMap::COL_VALIDTO, $this->validto);
+        if ($this->isColumnModified(AuthorizationTableMap::COL_ORDER)) {
+            $criteria->add(AuthorizationTableMap::COL_ORDER, $this->order);
         }
-        if ($this->isColumnModified(VariableTableMap::COL_DESCRIPTION)) {
-            $criteria->add(VariableTableMap::COL_DESCRIPTION, $this->description);
+        if ($this->isColumnModified(AuthorizationTableMap::COL_POLICY)) {
+            $criteria->add(AuthorizationTableMap::COL_POLICY, $this->policy);
         }
-        if ($this->isColumnModified(VariableTableMap::COL_ENABLED)) {
-            $criteria->add(VariableTableMap::COL_ENABLED, $this->enabled);
+        if ($this->isColumnModified(AuthorizationTableMap::COL_LABEL)) {
+            $criteria->add(AuthorizationTableMap::COL_LABEL, $this->label);
         }
-        if ($this->isColumnModified(VariableTableMap::COL_CREATED_AT)) {
-            $criteria->add(VariableTableMap::COL_CREATED_AT, $this->created_at);
+        if ($this->isColumnModified(AuthorizationTableMap::COL_ENABLED)) {
+            $criteria->add(AuthorizationTableMap::COL_ENABLED, $this->enabled);
         }
-        if ($this->isColumnModified(VariableTableMap::COL_UPDATED_AT)) {
-            $criteria->add(VariableTableMap::COL_UPDATED_AT, $this->updated_at);
+        if ($this->isColumnModified(AuthorizationTableMap::COL_CREATED_AT)) {
+            $criteria->add(AuthorizationTableMap::COL_CREATED_AT, $this->created_at);
+        }
+        if ($this->isColumnModified(AuthorizationTableMap::COL_UPDATED_AT)) {
+            $criteria->add(AuthorizationTableMap::COL_UPDATED_AT, $this->updated_at);
         }
 
         return $criteria;
@@ -1463,8 +1501,8 @@ abstract class Variable implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = ChildVariableQuery::create();
-        $criteria->add(VariableTableMap::COL_ID, $this->id);
+        $criteria = ChildAuthorizationQuery::create();
+        $criteria->add(AuthorizationTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1526,19 +1564,20 @@ abstract class Variable implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \App\Models\Variable (or compatible) type.
+     * @param      object $copyObj An object of \App\Models\Authorization (or compatible) type.
      * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setGroup($this->getGroup());
-        $copyObj->setName($this->getName());
-        $copyObj->setValue($this->getValue());
-        $copyObj->setValidfrom($this->getValidfrom());
-        $copyObj->setValidto($this->getValidto());
-        $copyObj->setDescription($this->getDescription());
+        $copyObj->setUri($this->getUri());
+        $copyObj->setMethod($this->getMethod());
+        $copyObj->setIdUser($this->getIdUser());
+        $copyObj->setIdUserGroup($this->getIdUserGroup());
+        $copyObj->setOrder($this->getOrder());
+        $copyObj->setPolicy($this->getPolicy());
+        $copyObj->setLabel($this->getLabel());
         $copyObj->setEnabled($this->getEnabled());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
@@ -1557,7 +1596,7 @@ abstract class Variable implements ActiveRecordInterface
      * objects.
      *
      * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \App\Models\Variable Clone of current object.
+     * @return \App\Models\Authorization Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1578,12 +1617,13 @@ abstract class Variable implements ActiveRecordInterface
     public function clear()
     {
         $this->id = null;
-        $this->group = null;
-        $this->name = null;
-        $this->value = null;
-        $this->validfrom = null;
-        $this->validto = null;
-        $this->description = null;
+        $this->uri = null;
+        $this->method = null;
+        $this->id_user = null;
+        $this->id_user_group = null;
+        $this->order = null;
+        $this->policy = null;
+        $this->label = null;
         $this->enabled = null;
         $this->created_at = null;
         $this->updated_at = null;
@@ -1617,7 +1657,7 @@ abstract class Variable implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(VariableTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(AuthorizationTableMap::DEFAULT_STRING_FORMAT);
     }
 
     // timestampable behavior
@@ -1625,11 +1665,11 @@ abstract class Variable implements ActiveRecordInterface
     /**
      * Mark the current object so that the update date doesn't get updated during next save
      *
-     * @return     $this|ChildVariable The current object (for fluent API support)
+     * @return     $this|ChildAuthorization The current object (for fluent API support)
      */
     public function keepUpdateDateUnchanged()
     {
-        $this->modifiedColumns[VariableTableMap::COL_UPDATED_AT] = true;
+        $this->modifiedColumns[AuthorizationTableMap::COL_UPDATED_AT] = true;
 
         return $this;
     }

@@ -115,10 +115,24 @@ elixir(function(mix) {
     // LEAFLET
     //mix.copy('resources/components/leaflet/dist/images/*.*', 'public/imgs/leaflet/');
 
+    // script applicazione
     mix.scriptsIn('resources/assets/js', 'public/js/custom-all.js');
+    mix.scriptsIn('resources/assets/js/user', 'public/js/user-all.js');
+    mix.scriptsIn('resources/assets/js/manager', 'public/js/manager-all.js');
+    mix.scriptsIn('resources/assets/js/admin', 'public/js/admin-all.js');
+    mix.scriptsIn('resources/assets/js/superadmin', 'public/js/superadmin-all.js');
+
+    mix.copy('resources/assets/js/user/*.*', 'public/js/');
+    mix.copy('resources/assets/js/manager/*.*', 'public/js/');
+    mix.copy('resources/assets/js/admin/*.*', 'public/js/');
+    mix.copy('resources/assets/js/superadmin/*.*', 'public/js/');
 
     mix.version([
         'css/app.css',
-        'js/custom-all.js'
+        'js/custom-all.js',
+        'js/user-all.js',
+        'js/manager-all.js',
+        'js/admin-all.js',
+        'js/superadmin-all.js'
     ]);
 });

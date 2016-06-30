@@ -17,4 +17,25 @@ use App\Models\Base\Variable as BaseVariable;
 class Variable extends BaseVariable
 {
 
+	/**
+	 * Torna l'oggetto al tag e gruppo corrispondente se esiste
+	 *
+	 * @param $name
+	 * @param string $group
+	 * @param $default
+	 * @return Variable
+	 */
+	public static function getTagValue($name, $group = "generic" , $default = "") {
+		$ret = VariableQuery::create()
+			->filterByGroup($group)
+			->filterByName($name)
+			->filterByEnabled(1)
+			->findOne();
+
+		if($ret instanceof Variable)
+			return $ret->getValue();
+		else
+			return $default;
+	}
+
 }

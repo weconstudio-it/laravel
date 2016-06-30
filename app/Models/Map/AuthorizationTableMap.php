@@ -2,8 +2,8 @@
 
 namespace App\Models\Map;
 
-use App\Models\Variable;
-use App\Models\VariableQuery;
+use App\Models\Authorization;
+use App\Models\AuthorizationQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'variable' table.
+ * This class defines the structure of the 'authorization' table.
  *
  *
  *
@@ -26,7 +26,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * (i.e. if it's a text column type).
  *
  */
-class VariableTableMap extends TableMap
+class AuthorizationTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -34,7 +34,7 @@ class VariableTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.VariableTableMap';
+    const CLASS_NAME = '.Map.AuthorizationTableMap';
 
     /**
      * The default database name for this class
@@ -44,22 +44,22 @@ class VariableTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'variable';
+    const TABLE_NAME = 'authorization';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\App\\Models\\Variable';
+    const OM_CLASS = '\\App\\Models\\Authorization';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'Variable';
+    const CLASS_DEFAULT = 'Authorization';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 10;
+    const NUM_COLUMNS = 11;
 
     /**
      * The number of lazy-loaded columns
@@ -69,57 +69,62 @@ class VariableTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 10;
+    const NUM_HYDRATE_COLUMNS = 11;
 
     /**
      * the column name for the id field
      */
-    const COL_ID = 'variable.id';
+    const COL_ID = 'authorization.id';
 
     /**
-     * the column name for the group field
+     * the column name for the uri field
      */
-    const COL_GROUP = 'variable.group';
+    const COL_URI = 'authorization.uri';
 
     /**
-     * the column name for the name field
+     * the column name for the method field
      */
-    const COL_NAME = 'variable.name';
+    const COL_METHOD = 'authorization.method';
 
     /**
-     * the column name for the value field
+     * the column name for the id_user field
      */
-    const COL_VALUE = 'variable.value';
+    const COL_ID_USER = 'authorization.id_user';
 
     /**
-     * the column name for the validFrom field
+     * the column name for the id_user_group field
      */
-    const COL_VALIDFROM = 'variable.validFrom';
+    const COL_ID_USER_GROUP = 'authorization.id_user_group';
 
     /**
-     * the column name for the validTo field
+     * the column name for the order field
      */
-    const COL_VALIDTO = 'variable.validTo';
+    const COL_ORDER = 'authorization.order';
 
     /**
-     * the column name for the description field
+     * the column name for the policy field
      */
-    const COL_DESCRIPTION = 'variable.description';
+    const COL_POLICY = 'authorization.policy';
+
+    /**
+     * the column name for the label field
+     */
+    const COL_LABEL = 'authorization.label';
 
     /**
      * the column name for the enabled field
      */
-    const COL_ENABLED = 'variable.enabled';
+    const COL_ENABLED = 'authorization.enabled';
 
     /**
      * the column name for the created_at field
      */
-    const COL_CREATED_AT = 'variable.created_at';
+    const COL_CREATED_AT = 'authorization.created_at';
 
     /**
      * the column name for the updated_at field
      */
-    const COL_UPDATED_AT = 'variable.updated_at';
+    const COL_UPDATED_AT = 'authorization.updated_at';
 
     /**
      * The default string format for model objects of the related table
@@ -133,11 +138,11 @@ class VariableTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Group', 'Name', 'Value', 'Validfrom', 'Validto', 'Description', 'Enabled', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('id', 'group', 'name', 'value', 'validfrom', 'validto', 'description', 'enabled', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(VariableTableMap::COL_ID, VariableTableMap::COL_GROUP, VariableTableMap::COL_NAME, VariableTableMap::COL_VALUE, VariableTableMap::COL_VALIDFROM, VariableTableMap::COL_VALIDTO, VariableTableMap::COL_DESCRIPTION, VariableTableMap::COL_ENABLED, VariableTableMap::COL_CREATED_AT, VariableTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('id', 'group', 'name', 'value', 'validFrom', 'validTo', 'description', 'enabled', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+        self::TYPE_PHPNAME       => array('Id', 'Uri', 'Method', 'IdUser', 'IdUserGroup', 'Order', 'Policy', 'Label', 'Enabled', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_CAMELNAME     => array('id', 'uri', 'method', 'idUser', 'idUserGroup', 'order', 'policy', 'label', 'enabled', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(AuthorizationTableMap::COL_ID, AuthorizationTableMap::COL_URI, AuthorizationTableMap::COL_METHOD, AuthorizationTableMap::COL_ID_USER, AuthorizationTableMap::COL_ID_USER_GROUP, AuthorizationTableMap::COL_ORDER, AuthorizationTableMap::COL_POLICY, AuthorizationTableMap::COL_LABEL, AuthorizationTableMap::COL_ENABLED, AuthorizationTableMap::COL_CREATED_AT, AuthorizationTableMap::COL_UPDATED_AT, ),
+        self::TYPE_FIELDNAME     => array('id', 'uri', 'method', 'id_user', 'id_user_group', 'order', 'policy', 'label', 'enabled', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
     );
 
     /**
@@ -147,11 +152,11 @@ class VariableTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Group' => 1, 'Name' => 2, 'Value' => 3, 'Validfrom' => 4, 'Validto' => 5, 'Description' => 6, 'Enabled' => 7, 'CreatedAt' => 8, 'UpdatedAt' => 9, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'group' => 1, 'name' => 2, 'value' => 3, 'validfrom' => 4, 'validto' => 5, 'description' => 6, 'enabled' => 7, 'createdAt' => 8, 'updatedAt' => 9, ),
-        self::TYPE_COLNAME       => array(VariableTableMap::COL_ID => 0, VariableTableMap::COL_GROUP => 1, VariableTableMap::COL_NAME => 2, VariableTableMap::COL_VALUE => 3, VariableTableMap::COL_VALIDFROM => 4, VariableTableMap::COL_VALIDTO => 5, VariableTableMap::COL_DESCRIPTION => 6, VariableTableMap::COL_ENABLED => 7, VariableTableMap::COL_CREATED_AT => 8, VariableTableMap::COL_UPDATED_AT => 9, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'group' => 1, 'name' => 2, 'value' => 3, 'validFrom' => 4, 'validTo' => 5, 'description' => 6, 'enabled' => 7, 'created_at' => 8, 'updated_at' => 9, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Uri' => 1, 'Method' => 2, 'IdUser' => 3, 'IdUserGroup' => 4, 'Order' => 5, 'Policy' => 6, 'Label' => 7, 'Enabled' => 8, 'CreatedAt' => 9, 'UpdatedAt' => 10, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'uri' => 1, 'method' => 2, 'idUser' => 3, 'idUserGroup' => 4, 'order' => 5, 'policy' => 6, 'label' => 7, 'enabled' => 8, 'createdAt' => 9, 'updatedAt' => 10, ),
+        self::TYPE_COLNAME       => array(AuthorizationTableMap::COL_ID => 0, AuthorizationTableMap::COL_URI => 1, AuthorizationTableMap::COL_METHOD => 2, AuthorizationTableMap::COL_ID_USER => 3, AuthorizationTableMap::COL_ID_USER_GROUP => 4, AuthorizationTableMap::COL_ORDER => 5, AuthorizationTableMap::COL_POLICY => 6, AuthorizationTableMap::COL_LABEL => 7, AuthorizationTableMap::COL_ENABLED => 8, AuthorizationTableMap::COL_CREATED_AT => 9, AuthorizationTableMap::COL_UPDATED_AT => 10, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'uri' => 1, 'method' => 2, 'id_user' => 3, 'id_user_group' => 4, 'order' => 5, 'policy' => 6, 'label' => 7, 'enabled' => 8, 'created_at' => 9, 'updated_at' => 10, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
     );
 
     /**
@@ -164,20 +169,21 @@ class VariableTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('variable');
-        $this->setPhpName('Variable');
+        $this->setName('authorization');
+        $this->setPhpName('Authorization');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\App\\Models\\Variable');
+        $this->setClassName('\\App\\Models\\Authorization');
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('group', 'Group', 'VARCHAR', false, 255, 'generic');
-        $this->addColumn('name', 'Name', 'VARCHAR', false, 255, null);
-        $this->addColumn('value', 'Value', 'VARCHAR', false, 255, null);
-        $this->addColumn('validFrom', 'Validfrom', 'TIMESTAMP', false, null, null);
-        $this->addColumn('validTo', 'Validto', 'TIMESTAMP', false, null, null);
-        $this->addColumn('description', 'Description', 'VARCHAR', false, 255, null);
+        $this->addColumn('uri', 'Uri', 'VARCHAR', true, 255, null);
+        $this->addColumn('method', 'Method', 'VARCHAR', false, 255, null);
+        $this->addColumn('id_user', 'IdUser', 'INTEGER', false, null, null);
+        $this->addColumn('id_user_group', 'IdUserGroup', 'INTEGER', false, null, null);
+        $this->addColumn('order', 'Order', 'INTEGER', false, null, null);
+        $this->addColumn('policy', 'Policy', 'BOOLEAN', true, 1, true);
+        $this->addColumn('label', 'Label', 'VARCHAR', false, 255, null);
         $this->addColumn('enabled', 'Enabled', 'BOOLEAN', true, 1, true);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
@@ -260,7 +266,7 @@ class VariableTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? VariableTableMap::CLASS_DEFAULT : VariableTableMap::OM_CLASS;
+        return $withPrefix ? AuthorizationTableMap::CLASS_DEFAULT : AuthorizationTableMap::OM_CLASS;
     }
 
     /**
@@ -274,22 +280,22 @@ class VariableTableMap extends TableMap
      *
      * @throws PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (Variable object, last column rank)
+     * @return array           (Authorization object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = VariableTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = VariableTableMap::getInstanceFromPool($key))) {
+        $key = AuthorizationTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = AuthorizationTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + VariableTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + AuthorizationTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = VariableTableMap::OM_CLASS;
-            /** @var Variable $obj */
+            $cls = AuthorizationTableMap::OM_CLASS;
+            /** @var Authorization $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            VariableTableMap::addInstanceToPool($obj, $key);
+            AuthorizationTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -312,18 +318,18 @@ class VariableTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = VariableTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = VariableTableMap::getInstanceFromPool($key))) {
+            $key = AuthorizationTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = AuthorizationTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Variable $obj */
+                /** @var Authorization $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                VariableTableMap::addInstanceToPool($obj, $key);
+                AuthorizationTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -344,24 +350,26 @@ class VariableTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(VariableTableMap::COL_ID);
-            $criteria->addSelectColumn(VariableTableMap::COL_GROUP);
-            $criteria->addSelectColumn(VariableTableMap::COL_NAME);
-            $criteria->addSelectColumn(VariableTableMap::COL_VALUE);
-            $criteria->addSelectColumn(VariableTableMap::COL_VALIDFROM);
-            $criteria->addSelectColumn(VariableTableMap::COL_VALIDTO);
-            $criteria->addSelectColumn(VariableTableMap::COL_DESCRIPTION);
-            $criteria->addSelectColumn(VariableTableMap::COL_ENABLED);
-            $criteria->addSelectColumn(VariableTableMap::COL_CREATED_AT);
-            $criteria->addSelectColumn(VariableTableMap::COL_UPDATED_AT);
+            $criteria->addSelectColumn(AuthorizationTableMap::COL_ID);
+            $criteria->addSelectColumn(AuthorizationTableMap::COL_URI);
+            $criteria->addSelectColumn(AuthorizationTableMap::COL_METHOD);
+            $criteria->addSelectColumn(AuthorizationTableMap::COL_ID_USER);
+            $criteria->addSelectColumn(AuthorizationTableMap::COL_ID_USER_GROUP);
+            $criteria->addSelectColumn(AuthorizationTableMap::COL_ORDER);
+            $criteria->addSelectColumn(AuthorizationTableMap::COL_POLICY);
+            $criteria->addSelectColumn(AuthorizationTableMap::COL_LABEL);
+            $criteria->addSelectColumn(AuthorizationTableMap::COL_ENABLED);
+            $criteria->addSelectColumn(AuthorizationTableMap::COL_CREATED_AT);
+            $criteria->addSelectColumn(AuthorizationTableMap::COL_UPDATED_AT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.group');
-            $criteria->addSelectColumn($alias . '.name');
-            $criteria->addSelectColumn($alias . '.value');
-            $criteria->addSelectColumn($alias . '.validFrom');
-            $criteria->addSelectColumn($alias . '.validTo');
-            $criteria->addSelectColumn($alias . '.description');
+            $criteria->addSelectColumn($alias . '.uri');
+            $criteria->addSelectColumn($alias . '.method');
+            $criteria->addSelectColumn($alias . '.id_user');
+            $criteria->addSelectColumn($alias . '.id_user_group');
+            $criteria->addSelectColumn($alias . '.order');
+            $criteria->addSelectColumn($alias . '.policy');
+            $criteria->addSelectColumn($alias . '.label');
             $criteria->addSelectColumn($alias . '.enabled');
             $criteria->addSelectColumn($alias . '.created_at');
             $criteria->addSelectColumn($alias . '.updated_at');
@@ -377,7 +385,7 @@ class VariableTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(VariableTableMap::DATABASE_NAME)->getTable(VariableTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(AuthorizationTableMap::DATABASE_NAME)->getTable(AuthorizationTableMap::TABLE_NAME);
     }
 
     /**
@@ -385,16 +393,16 @@ class VariableTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(VariableTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(VariableTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new VariableTableMap());
+        $dbMap = Propel::getServiceContainer()->getDatabaseMap(AuthorizationTableMap::DATABASE_NAME);
+        if (!$dbMap->hasTable(AuthorizationTableMap::TABLE_NAME)) {
+            $dbMap->addTableObject(new AuthorizationTableMap());
         }
     }
 
     /**
-     * Performs a DELETE on the database, given a Variable or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Authorization or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or Variable object or primary key or array of primary keys
+     * @param mixed               $values Criteria or Authorization object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param  ConnectionInterface $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -405,27 +413,27 @@ class VariableTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(VariableTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(AuthorizationTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \App\Models\Variable) { // it's a model object
+        } elseif ($values instanceof \App\Models\Authorization) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(VariableTableMap::DATABASE_NAME);
-            $criteria->add(VariableTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(AuthorizationTableMap::DATABASE_NAME);
+            $criteria->add(AuthorizationTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = VariableQuery::create()->mergeWith($criteria);
+        $query = AuthorizationQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            VariableTableMap::clearInstancePool();
+            AuthorizationTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                VariableTableMap::removeInstanceFromPool($singleval);
+                AuthorizationTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -433,20 +441,20 @@ class VariableTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the variable table.
+     * Deletes all rows from the authorization table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return VariableQuery::create()->doDeleteAll($con);
+        return AuthorizationQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Variable or Criteria object.
+     * Performs an INSERT on the database, given a Authorization or Criteria object.
      *
-     * @param mixed               $criteria Criteria or Variable object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or Authorization object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -455,22 +463,22 @@ class VariableTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(VariableTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(AuthorizationTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Variable object
+            $criteria = $criteria->buildCriteria(); // build Criteria from Authorization object
         }
 
-        if ($criteria->containsKey(VariableTableMap::COL_ID) && $criteria->keyContainsValue(VariableTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.VariableTableMap::COL_ID.')');
+        if ($criteria->containsKey(AuthorizationTableMap::COL_ID) && $criteria->keyContainsValue(AuthorizationTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.AuthorizationTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = VariableQuery::create()->mergeWith($criteria);
+        $query = AuthorizationQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)
@@ -479,7 +487,7 @@ class VariableTableMap extends TableMap
         });
     }
 
-} // VariableTableMap
+} // AuthorizationTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-VariableTableMap::buildTableMap();
+AuthorizationTableMap::buildTableMap();

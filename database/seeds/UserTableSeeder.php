@@ -12,12 +12,14 @@ class UserTableSeeder extends Seeder
     public function run()
     {
 		$groups = [
-			['label' => 'Admin', 'level' => 999, 'visible' => 1, 'enabled' => 1],
+			['label' => 'SuperAdmin', 'level' => 999, 'visible' => 1, 'enabled' => 1],
+			['label' => 'Admin', 'level' => 900, 'visible' => 1, 'enabled' => 1],
 			['label' => 'Manager', 'level' => 500, 'visible' => 1, 'enabled' => 1],
 			['label' => 'User', 'level' => 100, 'visible' => 1, 'enabled' => 1],
 		];
 
 		$users = [
+			['name' => 'SuperAdmin', 'email' => 'info@weconstudio.it', 'username' => 'superadmin', 'password' => bcrypt('superadmin'), 'enabled' => 1],
 			['name' => 'Admin', 'email' => 'info@weconstudio.it', 'username' => 'admin', 'password' => bcrypt('admin'), 'enabled' => 1],
 			['name' => 'Manager', 'email' => 'info@weconstudio.it', 'username' => 'manager', 'password' => bcrypt('manager'), 'enabled' => 1],
 			['name' => 'User', 'email' => 'info@weconstudio.it', 'username' => 'user', 'password' => bcrypt('user'), 'enabled' => 1],

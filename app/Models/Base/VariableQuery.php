@@ -20,20 +20,24 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  * @method     ChildVariableQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method     ChildVariableQuery orderByGroup($order = Criteria::ASC) Order by the group column
  * @method     ChildVariableQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method     ChildVariableQuery orderByValue($order = Criteria::ASC) Order by the value column
  * @method     ChildVariableQuery orderByValidfrom($order = Criteria::ASC) Order by the validFrom column
  * @method     ChildVariableQuery orderByValidto($order = Criteria::ASC) Order by the validTo column
  * @method     ChildVariableQuery orderByDescription($order = Criteria::ASC) Order by the description column
+ * @method     ChildVariableQuery orderByEnabled($order = Criteria::ASC) Order by the enabled column
  * @method     ChildVariableQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildVariableQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
  * @method     ChildVariableQuery groupById() Group by the id column
+ * @method     ChildVariableQuery groupByGroup() Group by the group column
  * @method     ChildVariableQuery groupByName() Group by the name column
  * @method     ChildVariableQuery groupByValue() Group by the value column
  * @method     ChildVariableQuery groupByValidfrom() Group by the validFrom column
  * @method     ChildVariableQuery groupByValidto() Group by the validTo column
  * @method     ChildVariableQuery groupByDescription() Group by the description column
+ * @method     ChildVariableQuery groupByEnabled() Group by the enabled column
  * @method     ChildVariableQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildVariableQuery groupByUpdatedAt() Group by the updated_at column
  *
@@ -45,11 +49,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVariable findOneOrCreate(ConnectionInterface $con = null) Return the first ChildVariable matching the query, or a new ChildVariable object populated from the query conditions when no match is found
  *
  * @method     ChildVariable findOneById(int $id) Return the first ChildVariable filtered by the id column
+ * @method     ChildVariable findOneByGroup(string $group) Return the first ChildVariable filtered by the group column
  * @method     ChildVariable findOneByName(string $name) Return the first ChildVariable filtered by the name column
  * @method     ChildVariable findOneByValue(string $value) Return the first ChildVariable filtered by the value column
  * @method     ChildVariable findOneByValidfrom(string $validFrom) Return the first ChildVariable filtered by the validFrom column
  * @method     ChildVariable findOneByValidto(string $validTo) Return the first ChildVariable filtered by the validTo column
  * @method     ChildVariable findOneByDescription(string $description) Return the first ChildVariable filtered by the description column
+ * @method     ChildVariable findOneByEnabled(boolean $enabled) Return the first ChildVariable filtered by the enabled column
  * @method     ChildVariable findOneByCreatedAt(string $created_at) Return the first ChildVariable filtered by the created_at column
  * @method     ChildVariable findOneByUpdatedAt(string $updated_at) Return the first ChildVariable filtered by the updated_at column *
 
@@ -57,21 +63,25 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVariable requireOne(ConnectionInterface $con = null) Return the first ChildVariable matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildVariable requireOneById(int $id) Return the first ChildVariable filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildVariable requireOneByGroup(string $group) Return the first ChildVariable filtered by the group column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVariable requireOneByName(string $name) Return the first ChildVariable filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVariable requireOneByValue(string $value) Return the first ChildVariable filtered by the value column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVariable requireOneByValidfrom(string $validFrom) Return the first ChildVariable filtered by the validFrom column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVariable requireOneByValidto(string $validTo) Return the first ChildVariable filtered by the validTo column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVariable requireOneByDescription(string $description) Return the first ChildVariable filtered by the description column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildVariable requireOneByEnabled(boolean $enabled) Return the first ChildVariable filtered by the enabled column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVariable requireOneByCreatedAt(string $created_at) Return the first ChildVariable filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVariable requireOneByUpdatedAt(string $updated_at) Return the first ChildVariable filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildVariable[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildVariable objects based on current ModelCriteria
  * @method     ChildVariable[]|ObjectCollection findById(int $id) Return ChildVariable objects filtered by the id column
+ * @method     ChildVariable[]|ObjectCollection findByGroup(string $group) Return ChildVariable objects filtered by the group column
  * @method     ChildVariable[]|ObjectCollection findByName(string $name) Return ChildVariable objects filtered by the name column
  * @method     ChildVariable[]|ObjectCollection findByValue(string $value) Return ChildVariable objects filtered by the value column
  * @method     ChildVariable[]|ObjectCollection findByValidfrom(string $validFrom) Return ChildVariable objects filtered by the validFrom column
  * @method     ChildVariable[]|ObjectCollection findByValidto(string $validTo) Return ChildVariable objects filtered by the validTo column
  * @method     ChildVariable[]|ObjectCollection findByDescription(string $description) Return ChildVariable objects filtered by the description column
+ * @method     ChildVariable[]|ObjectCollection findByEnabled(boolean $enabled) Return ChildVariable objects filtered by the enabled column
  * @method     ChildVariable[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildVariable objects filtered by the created_at column
  * @method     ChildVariable[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildVariable objects filtered by the updated_at column
  * @method     ChildVariable[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
@@ -166,7 +176,7 @@ abstract class VariableQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, name, value, validFrom, validTo, description, created_at, updated_at FROM variable WHERE id = :p0';
+        $sql = 'SELECT id, group, name, value, validFrom, validTo, description, enabled, created_at, updated_at FROM variable WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -295,6 +305,35 @@ abstract class VariableQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(VariableTableMap::COL_ID, $id, $comparison);
+    }
+
+    /**
+     * Filter the query on the group column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByGroup('fooValue');   // WHERE group = 'fooValue'
+     * $query->filterByGroup('%fooValue%'); // WHERE group LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $group The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildVariableQuery The current query, for fluid interface
+     */
+    public function filterByGroup($group = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($group)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $group)) {
+                $group = str_replace('*', '%', $group);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(VariableTableMap::COL_GROUP, $group, $comparison);
     }
 
     /**
@@ -468,6 +507,33 @@ abstract class VariableQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(VariableTableMap::COL_DESCRIPTION, $description, $comparison);
+    }
+
+    /**
+     * Filter the query on the enabled column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByEnabled(true); // WHERE enabled = true
+     * $query->filterByEnabled('yes'); // WHERE enabled = true
+     * </code>
+     *
+     * @param     boolean|string $enabled The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildVariableQuery The current query, for fluid interface
+     */
+    public function filterByEnabled($enabled = null, $comparison = null)
+    {
+        if (is_string($enabled)) {
+            $enabled = in_array(strtolower($enabled), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(VariableTableMap::COL_ENABLED, $enabled, $comparison);
     }
 
     /**

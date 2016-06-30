@@ -95,11 +95,30 @@
 
     <table name="variable" idMethod="native">
         <column name="id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-        <column name="name" phpName="Name" type="VARCHAR" size="255"/>
-        <column name="value" phpName="Value" type="VARCHAR" size="255"/>
-        <column name="validFrom" phpName="Validfrom" type="TIMESTAMP"/>
-        <column name="validTo" phpName="Validto" type="TIMESTAMP"/>
-        <column name="description" phpName="Description" type="VARCHAR" size="255"/>
+        <column name="group" type="VARCHAR" size="255" defaultValue="generic"/>
+        <column name="name" type="VARCHAR" size="255"/>
+        <column name="value" type="VARCHAR" size="255"/>
+        <column name="validFrom" type="TIMESTAMP"/>
+        <column name="validTo" type="TIMESTAMP"/>
+        <column name="description" type="VARCHAR" size="255"/>
+        <column name="enabled" type="BOOLEAN"  size="1" required="true" defaultValue="true"/>
+        <behavior name="timestampable"/>
+
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+    </table>
+
+    <table name="authorization" idMethod="native">
+        <column name="id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+        <column name="uri" type="VARCHAR" size="255" required="true"/>
+        <column name="method" type="VARCHAR" size="255"/>
+        <column name="id_user" type="INTEGER"/>
+        <column name="id_user_group" type="INTEGER"/>
+        <column name="order" type="INTEGER"/>
+        <column name="policy" type="BOOLEAN"  size="1" required="true" defaultValue="true"/>
+        <column name="label" type="VARCHAR" size="255"/>
+        <column name="enabled" type="BOOLEAN"  size="1" required="true" defaultValue="true"/>
         <behavior name="timestampable"/>
 
         <vendor type="mysql">

@@ -138,12 +138,16 @@ class AuthController extends Controller
 					try {
 						$user->setEnabled(1);
 						$user->save();
+						$status = 'success';
+						$message = 'Email confirmed! You can login!';
 					} catch(\Exception $e) {
 						Log::e("$e");
+						$status = 'danger';
+						$message = 'Error during email confirmation!';
 					}
 					return redirect('/login')->withInput([
-						'message' => 'Account confirmed!',
-						'status' => 'success'
+						'message' => $message,
+						'status' => $status
 					]);
 				}
 			}
