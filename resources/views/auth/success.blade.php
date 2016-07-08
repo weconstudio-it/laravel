@@ -1,3 +1,4 @@
+<?php use Weconstudio\Misc\U; ?>
 @extends('login')
 
 @section('content')
@@ -19,7 +20,7 @@
 
                                 <div class="space-6"></div>
                                 <p>
-                                    You receive an email to confirm your account.
+                                    <?php echo U::T_("Riceverai un'email per confermare il tuo account."); ?>
                                 </p>
                                 <div class="clearfix">
                                     <a href="{{ url('/login') }}" class="width-100 pull-right btn btn-sm btn-success">

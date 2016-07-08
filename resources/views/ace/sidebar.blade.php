@@ -4,6 +4,11 @@ $menu_items = [
         'href' => 'dashboard',
         'icon' => 'fa-tachometer',
         'minimum_level' => 0
+    ],
+    'User' => [
+        'href' => 'user',
+        'icon' => 'fa-users',
+        'minimum_level' => \App\Models\UserGroup::LEVEL_SUPER_ADMIN
     ]
 ];
 

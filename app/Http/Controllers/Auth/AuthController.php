@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Http\Request;
+use App\Models\Subject;
 use App\Models\User;
 use App\Models\UserGroup;
 use App\Models\UserGroupQuery;
 use App\Models\UserQuery;
+use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
+use Propel\Runtime\Propel;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Weconstudio\Log\Log;
+use Weconstudio\Misc\U;
 
 class AuthController extends Controller
 {
@@ -38,11 +41,9 @@ class AuthController extends Controller
 
     protected $username = 'username';
 
-    /**
-     * Create a new authentication controller instance.
-     *
-     * @return void
-     */
+	/**
+	 * Create a new authentication controller instance.
+	 */
     public function __construct()
     {
         $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
@@ -57,10 +58,18 @@ class AuthController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|max:255',
+			'iso' => 'required',
+			'first_name' => 'required|max:255',
+			'last_name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:user',
             'username' => 'required|max:255|unique:user',
             'password' => 'required|min:6|confirmed',
+			'country' => 'required',
+			'address' => 'required',
+			'city' => 'required',
+			'province' => 'required',
+			'zip' => 'required',
+			'phone' => 'required',
 			'agree' => 'required'
         ]);
     }
@@ -101,10 +110,23 @@ class AuthController extends Controller
 			);
 		}
 		
+		$con = Propel::getConnection();
+		$con->beginTransaction();
 		try {
-			$user = $this->create($request->all());
+			// creo il profilo da legare all'account
+			$subject = new Subject();
+			$subject->fromArray($request->all());
+			$subject->save();
+
+			// creo l'utente
+			$data = $request->all();
+			$data['id_subject'] = $subject->getId();
+			$data['name'] = $request->input('first_name', '') . " " . $request->input('last_name', '');
+			$user = $this->create($data);
+			$con->commit();
 		} catch(\Exception $e) {
-			Log::e($e->getMessage() . "\n$e");
+			Log::e("\n$e");
+			$con->rollBack();
 			return redirect('/register/error')->withInput([
 				'message' => 'Failed create account. Retry later!'
 			]);
@@ -131,19 +153,20 @@ class AuthController extends Controller
 			$user = UserQuery::create()->findOneByUsername($request->input('username', ''));
 			if($user instanceof User) {
 				if($user->getEnabled()) return redirect('/login')->withInput([
-					'message' => 'Account already confirmed!',
+					'message' => U::T_("Account già confermato"),
 					'status' => 'success'
 				]);
 				if(\Hash::check($user->getUsername() . $user->getPassword(), $request->input('token', ''))) {
 					try {
+						$user->setEmailConfirmed(1);
 						$user->setEnabled(1);
 						$user->save();
 						$status = 'success';
-						$message = 'Email confirmed! You can login!';
+						$message = U::T_("Email confermata. Effettua il login.");
 					} catch(\Exception $e) {
 						Log::e("$e");
 						$status = 'danger';
-						$message = 'Error during email confirmation!';
+						$message = U::T_("Errore durante la conferma dell'email.");
 					}
 					return redirect('/login')->withInput([
 						'message' => $message,
@@ -154,7 +177,7 @@ class AuthController extends Controller
 		}
 		
 		return redirect('/register/error')->withInput([
-			'message' => 'Bad token or email not found!'
+			'message' => U::T_("Token o email non valida.")
 		]);
 	}
 

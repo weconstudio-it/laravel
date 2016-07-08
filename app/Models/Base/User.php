@@ -5,6 +5,8 @@ namespace App\Models\Base;
 use \DateTime;
 use \Exception;
 use \PDO;
+use App\Models\Subject as ChildSubject;
+use App\Models\SubjectQuery as ChildSubjectQuery;
 use App\Models\User as ChildUser;
 use App\Models\UserGroup as ChildUserGroup;
 use App\Models\UserGroupQuery as ChildUserGroupQuery;
@@ -114,6 +116,19 @@ abstract class User implements ActiveRecordInterface
     protected $enabled;
 
     /**
+     * The value for the email_confirmed field.
+     * Note: this column has a database default value of: false
+     * @var        boolean
+     */
+    protected $email_confirmed;
+
+    /**
+     * The value for the id_subject field.
+     * @var        int
+     */
+    protected $id_subject;
+
+    /**
      * The value for the created_at field.
      * @var        \DateTime
      */
@@ -129,6 +144,11 @@ abstract class User implements ActiveRecordInterface
      * @var        ChildUserGroup
      */
     protected $aUserGroup;
+
+    /**
+     * @var        ChildSubject
+     */
+    protected $aSubject;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -147,6 +167,7 @@ abstract class User implements ActiveRecordInterface
     public function applyDefaultValues()
     {
         $this->enabled = false;
+        $this->email_confirmed = false;
     }
 
     /**
@@ -459,6 +480,36 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
+     * Get the [email_confirmed] column value.
+     *
+     * @return boolean
+     */
+    public function getEmailConfirmed()
+    {
+        return $this->email_confirmed;
+    }
+
+    /**
+     * Get the [email_confirmed] column value.
+     *
+     * @return boolean
+     */
+    public function isEmailConfirmed()
+    {
+        return $this->getEmailConfirmed();
+    }
+
+    /**
+     * Get the [id_subject] column value.
+     *
+     * @return int
+     */
+    public function getIdSubject()
+    {
+        return $this->id_subject;
+    }
+
+    /**
      * Get the [optionally formatted] temporal [created_at] column value.
      *
      *
@@ -671,6 +722,58 @@ abstract class User implements ActiveRecordInterface
     } // setEnabled()
 
     /**
+     * Sets the value of the [email_confirmed] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param  boolean|integer|string $v The new value
+     * @return $this|\App\Models\User The current object (for fluent API support)
+     */
+    public function setEmailConfirmed($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->email_confirmed !== $v) {
+            $this->email_confirmed = $v;
+            $this->modifiedColumns[UserTableMap::COL_EMAIL_CONFIRMED] = true;
+        }
+
+        return $this;
+    } // setEmailConfirmed()
+
+    /**
+     * Set the value of [id_subject] column.
+     *
+     * @param int $v new value
+     * @return $this|\App\Models\User The current object (for fluent API support)
+     */
+    public function setIdSubject($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->id_subject !== $v) {
+            $this->id_subject = $v;
+            $this->modifiedColumns[UserTableMap::COL_ID_SUBJECT] = true;
+        }
+
+        if ($this->aSubject !== null && $this->aSubject->getId() !== $v) {
+            $this->aSubject = null;
+        }
+
+        return $this;
+    } // setIdSubject()
+
+    /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
@@ -724,6 +827,10 @@ abstract class User implements ActiveRecordInterface
                 return false;
             }
 
+            if ($this->email_confirmed !== false) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     } // hasOnlyDefaultValues()
@@ -774,13 +881,19 @@ abstract class User implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UserTableMap::translateFieldName('Enabled', TableMap::TYPE_PHPNAME, $indexType)];
             $this->enabled = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : UserTableMap::translateFieldName('EmailConfirmed', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->email_confirmed = (null !== $col) ? (boolean) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : UserTableMap::translateFieldName('IdSubject', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id_subject = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -793,7 +906,7 @@ abstract class User implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 10; // 10 = UserTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 12; // 12 = UserTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\App\\Models\\User'), 0, $e);
@@ -817,6 +930,9 @@ abstract class User implements ActiveRecordInterface
     {
         if ($this->aUserGroup !== null && $this->id_user_group !== $this->aUserGroup->getId()) {
             $this->aUserGroup = null;
+        }
+        if ($this->aSubject !== null && $this->id_subject !== $this->aSubject->getId()) {
+            $this->aSubject = null;
         }
     } // ensureConsistency
 
@@ -858,6 +974,7 @@ abstract class User implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aUserGroup = null;
+            $this->aSubject = null;
         } // if (deep)
     }
 
@@ -981,6 +1098,13 @@ abstract class User implements ActiveRecordInterface
                 $this->setUserGroup($this->aUserGroup);
             }
 
+            if ($this->aSubject !== null) {
+                if ($this->aSubject->isModified() || $this->aSubject->isNew()) {
+                    $affectedRows += $this->aSubject->save($con);
+                }
+                $this->setSubject($this->aSubject);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -1042,6 +1166,12 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_ENABLED)) {
             $modifiedColumns[':p' . $index++]  = 'enabled';
         }
+        if ($this->isColumnModified(UserTableMap::COL_EMAIL_CONFIRMED)) {
+            $modifiedColumns[':p' . $index++]  = 'email_confirmed';
+        }
+        if ($this->isColumnModified(UserTableMap::COL_ID_SUBJECT)) {
+            $modifiedColumns[':p' . $index++]  = 'id_subject';
+        }
         if ($this->isColumnModified(UserTableMap::COL_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'created_at';
         }
@@ -1082,6 +1212,12 @@ abstract class User implements ActiveRecordInterface
                         break;
                     case 'enabled':
                         $stmt->bindValue($identifier, (int) $this->enabled, PDO::PARAM_INT);
+                        break;
+                    case 'email_confirmed':
+                        $stmt->bindValue($identifier, (int) $this->email_confirmed, PDO::PARAM_INT);
+                        break;
+                    case 'id_subject':
+                        $stmt->bindValue($identifier, $this->id_subject, PDO::PARAM_INT);
                         break;
                     case 'created_at':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
@@ -1176,9 +1312,15 @@ abstract class User implements ActiveRecordInterface
                 return $this->getEnabled();
                 break;
             case 8:
-                return $this->getCreatedAt();
+                return $this->getEmailConfirmed();
                 break;
             case 9:
+                return $this->getIdSubject();
+                break;
+            case 10:
+                return $this->getCreatedAt();
+                break;
+            case 11:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1219,21 +1361,23 @@ abstract class User implements ActiveRecordInterface
             $keys[5] => $this->getPassword(),
             $keys[6] => $this->getRememberToken(),
             $keys[7] => $this->getEnabled(),
-            $keys[8] => $this->getCreatedAt(),
-            $keys[9] => $this->getUpdatedAt(),
+            $keys[8] => $this->getEmailConfirmed(),
+            $keys[9] => $this->getIdSubject(),
+            $keys[10] => $this->getCreatedAt(),
+            $keys[11] => $this->getUpdatedAt(),
         );
 
         $utc = new \DateTimeZone('utc');
-        if ($result[$keys[8]] instanceof \DateTime) {
+        if ($result[$keys[10]] instanceof \DateTime) {
             // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[8]];
-            $result[$keys[8]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+            $dateTime = clone $result[$keys[10]];
+            $result[$keys[10]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
 
-        if ($result[$keys[9]] instanceof \DateTime) {
+        if ($result[$keys[11]] instanceof \DateTime) {
             // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[9]];
-            $result[$keys[9]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+            $dateTime = clone $result[$keys[11]];
+            $result[$keys[11]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1256,6 +1400,21 @@ abstract class User implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aUserGroup->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aSubject) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'subject';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'subject';
+                        break;
+                    default:
+                        $key = 'Subject';
+                }
+
+                $result[$key] = $this->aSubject->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1316,9 +1475,15 @@ abstract class User implements ActiveRecordInterface
                 $this->setEnabled($value);
                 break;
             case 8:
-                $this->setCreatedAt($value);
+                $this->setEmailConfirmed($value);
                 break;
             case 9:
+                $this->setIdSubject($value);
+                break;
+            case 10:
+                $this->setCreatedAt($value);
+                break;
+            case 11:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -1372,10 +1537,16 @@ abstract class User implements ActiveRecordInterface
             $this->setEnabled($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setCreatedAt($arr[$keys[8]]);
+            $this->setEmailConfirmed($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setUpdatedAt($arr[$keys[9]]);
+            $this->setIdSubject($arr[$keys[9]]);
+        }
+        if (array_key_exists($keys[10], $arr)) {
+            $this->setCreatedAt($arr[$keys[10]]);
+        }
+        if (array_key_exists($keys[11], $arr)) {
+            $this->setUpdatedAt($arr[$keys[11]]);
         }
     }
 
@@ -1441,6 +1612,12 @@ abstract class User implements ActiveRecordInterface
         }
         if ($this->isColumnModified(UserTableMap::COL_ENABLED)) {
             $criteria->add(UserTableMap::COL_ENABLED, $this->enabled);
+        }
+        if ($this->isColumnModified(UserTableMap::COL_EMAIL_CONFIRMED)) {
+            $criteria->add(UserTableMap::COL_EMAIL_CONFIRMED, $this->email_confirmed);
+        }
+        if ($this->isColumnModified(UserTableMap::COL_ID_SUBJECT)) {
+            $criteria->add(UserTableMap::COL_ID_SUBJECT, $this->id_subject);
         }
         if ($this->isColumnModified(UserTableMap::COL_CREATED_AT)) {
             $criteria->add(UserTableMap::COL_CREATED_AT, $this->created_at);
@@ -1541,6 +1718,8 @@ abstract class User implements ActiveRecordInterface
         $copyObj->setPassword($this->getPassword());
         $copyObj->setRememberToken($this->getRememberToken());
         $copyObj->setEnabled($this->getEnabled());
+        $copyObj->setEmailConfirmed($this->getEmailConfirmed());
+        $copyObj->setIdSubject($this->getIdSubject());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
         if ($makeNew) {
@@ -1623,6 +1802,57 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildSubject object.
+     *
+     * @param  ChildSubject $v
+     * @return $this|\App\Models\User The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setSubject(ChildSubject $v = null)
+    {
+        if ($v === null) {
+            $this->setIdSubject(NULL);
+        } else {
+            $this->setIdSubject($v->getId());
+        }
+
+        $this->aSubject = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildSubject object, it will not be re-added.
+        if ($v !== null) {
+            $v->addUser($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildSubject object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildSubject The associated ChildSubject object.
+     * @throws PropelException
+     */
+    public function getSubject(ConnectionInterface $con = null)
+    {
+        if ($this->aSubject === null && ($this->id_subject !== null)) {
+            $this->aSubject = ChildSubjectQuery::create()->findPk($this->id_subject, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aSubject->addUsers($this);
+             */
+        }
+
+        return $this->aSubject;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -1632,6 +1862,9 @@ abstract class User implements ActiveRecordInterface
         if (null !== $this->aUserGroup) {
             $this->aUserGroup->removeUser($this);
         }
+        if (null !== $this->aSubject) {
+            $this->aSubject->removeUser($this);
+        }
         $this->id = null;
         $this->id_user_group = null;
         $this->name = null;
@@ -1640,6 +1873,8 @@ abstract class User implements ActiveRecordInterface
         $this->password = null;
         $this->remember_token = null;
         $this->enabled = null;
+        $this->email_confirmed = null;
+        $this->id_subject = null;
         $this->created_at = null;
         $this->updated_at = null;
         $this->alreadyInSave = false;
@@ -1664,6 +1899,7 @@ abstract class User implements ActiveRecordInterface
         } // if ($deep)
 
         $this->aUserGroup = null;
+        $this->aSubject = null;
     }
 
     /**

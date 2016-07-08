@@ -1,4 +1,8 @@
 {
   "css/app.css": "css/app-aa3c9d985b.css",
-  "js/custom-all.js": "js/custom-all-a0f85b8bbc.js"
+  "js/admin-all.js": "js/admin-all-7c65be2caa.js",
+  "js/custom-all.js": "js/custom-all-92be411dc7.js",
+  "js/manager-all.js": "js/manager-all-9ba8c7522d.js",
+  "js/superadmin-all.js": "js/superadmin-all-50241d4049.js",
+  "js/user-all.js": "js/user-all-54a1feaf5c.js"
 }

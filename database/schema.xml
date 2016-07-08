@@ -9,6 +9,8 @@
         <column name="password" type="VARCHAR" size="255" required="true"/>
         <column name="remember_token" type="VARCHAR" size="100"/>
         <column name="enabled" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+        <column name="email_confirmed" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+        <column name="id_subject" type="INTEGER" required="true"/>
         <behavior name="timestampable" />
 
         <foreign-key foreignTable="user_group" name="user_user_group_fk" onDelete="CASCADE" onUpdate="CASCADE">
@@ -16,6 +18,13 @@
         </foreign-key>
         <index name="user_user_group_idx">
             <index-column name="id_user_group"/>
+        </index>
+
+        <foreign-key foreignTable="subject" name="user_subject_fk" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference local="id_subject" foreign="id"/>
+        </foreign-key>
+        <index name="user_subject_idx">
+            <index-column name="id_subject"/>
         </index>
 
         <unique name="user_username_uq">
@@ -50,12 +59,12 @@
         <column name="iso" type="VARCHAR" size="50" required="true"/>
         <column name="first_name" type="VARCHAR" size="255" required="true"/>
         <column name="last_name" type="VARCHAR" size="255" required="true"/>
-        <column name="address" type="VARCHAR" size="255" required="true"/>
-        <column name="zip" type="VARCHAR" size="20" required="true"/>
-        <column name="city" type="VARCHAR" size="100" required="true"/>
-        <column name="province" type="VARCHAR" size="100" required="true"/>
-        <column name="country" type="VARCHAR" size="100" required="true"/>
-        <column name="phone" type="VARCHAR" size="100" required="true"/>
+        <column name="address" type="VARCHAR" size="255"/>
+        <column name="zip" type="VARCHAR" size="20"/>
+        <column name="city" type="VARCHAR" size="100"/>
+        <column name="province" type="VARCHAR" size="100"/>
+        <column name="country" type="VARCHAR" size="100"/>
+        <column name="phone" type="VARCHAR" size="100"/>
         <column name="fax" type="VARCHAR" size="100"/>
         <column name="notes" type="LONGVARCHAR"/>
 

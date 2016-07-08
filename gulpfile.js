@@ -41,7 +41,9 @@ elixir(function(mix) {
         '../../components/leaflet-geosearch/src/css/l.geosearch.css',
         '../../components/dropzone/dist/min/dropzone.min.css',
         '../../components/_mod/jqgrid/ui.jqgrid.css',
-        '../../components/fuelux/dist/css/fuelux.min.css'
+        '../../components/fuelux/dist/css/fuelux.min.css',
+        '../../components/select2/dist/css/select2.min.css',
+        '../../components/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css'
     ], 'public/css/components-all.css');
 
     // basic CSS components - IE lte9 version
@@ -84,7 +86,9 @@ elixir(function(mix) {
         '../../components/leaflet-geosearch/src/js/l.geosearch.provider.google.js',
         '../../components/blockUI/jquery.blockUI.js',
         '../../components/dropzone/dist/min/dropzone.min.js',
-        '../../components/_mod/fuelux/tree.js'
+        '../../components/_mod/fuelux/tree.js',
+		'../../components/select2/dist/js/select2.full.min.js',
+		'../../components/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js'
     ], 'public/js/components-all.js');
 
     // it localization scripts

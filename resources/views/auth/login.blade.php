@@ -1,3 +1,5 @@
+<?php use Weconstudio\Misc\U; ?>
+
 @extends('login')
 
 @section('content')
@@ -22,7 +24,7 @@
                         <div class="widget-body">
                             <div class="widget-main">
                                 <h4 class="header blue lighter bigger">
-                                    Please enter your credentials
+                                    <?php echo U::T_("Inserisci le tue credenziali"); ?>
                                 </h4>
 
                                 <div class="space-6"></div>
@@ -61,7 +63,7 @@
                                         <div class="clearfix">
                                             <label class="inline">
                                                 <input type="checkbox" class="ace" name="remember" />
-                                                <span class="lbl"> Remember me</span>
+                                                <span class="lbl"> <?php echo U::T_("Ricordami"); ?></span>
                                             </label>
 
                                             <button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
@@ -80,13 +82,13 @@
                             <div class="toolbar clearfix">
                                 <div>
                                     <a class="forgot-password-link" href="{{ url('/password/reset') }}">
-                                        Reset password
+										<?php echo U::T_("Reset password"); ?>
                                     </a>
                                 </div>
 
                                 <div>
                                     <a class="user-signup-link" href="{{ url('/register') }}">
-                                        Sign-up
+										<?php echo U::T_("Registrazione"); ?>
                                     </a>
                                 </div>
                             </div>

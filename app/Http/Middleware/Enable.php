@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Subject;
 use Closure;
 
 class Enable
@@ -19,7 +20,14 @@ class Enable
 			// effettuo il logout
 			\Auth::logout();
 			return redirect('/login')->withInput([
-				'message' => 'User not enabled. Please confirm your account.'
+				'message' => 'Utente non abilitato. Conferma il tuo account.'
+			]);
+		}
+		
+		if(!\Auth::user()->getSubject() instanceof Subject) {
+			\Auth::logout();
+			return redirect('/login')->withInput([
+				'message' => 'Soggetto non valido.'
 			]);
 		}
 

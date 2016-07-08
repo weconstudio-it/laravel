@@ -201,12 +201,12 @@ class SubjectTableMap extends TableMap
         $this->addColumn('iso', 'Iso', 'VARCHAR', true, 50, null);
         $this->addColumn('first_name', 'FirstName', 'VARCHAR', true, 255, null);
         $this->addColumn('last_name', 'LastName', 'VARCHAR', true, 255, null);
-        $this->addColumn('address', 'Address', 'VARCHAR', true, 255, null);
-        $this->addColumn('zip', 'Zip', 'VARCHAR', true, 20, null);
-        $this->addColumn('city', 'City', 'VARCHAR', true, 100, null);
-        $this->addColumn('province', 'Province', 'VARCHAR', true, 100, null);
-        $this->addColumn('country', 'Country', 'VARCHAR', true, 100, null);
-        $this->addColumn('phone', 'Phone', 'VARCHAR', true, 100, null);
+        $this->addColumn('address', 'Address', 'VARCHAR', false, 255, null);
+        $this->addColumn('zip', 'Zip', 'VARCHAR', false, 20, null);
+        $this->addColumn('city', 'City', 'VARCHAR', false, 100, null);
+        $this->addColumn('province', 'Province', 'VARCHAR', false, 100, null);
+        $this->addColumn('country', 'Country', 'VARCHAR', false, 100, null);
+        $this->addColumn('phone', 'Phone', 'VARCHAR', false, 100, null);
         $this->addColumn('fax', 'Fax', 'VARCHAR', false, 100, null);
         $this->addColumn('notes', 'Notes', 'LONGVARCHAR', false, null, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
@@ -218,6 +218,13 @@ class SubjectTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('User', '\\App\\Models\\User', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id_subject',
+    1 => ':id',
+  ),
+), 'CASCADE', 'CASCADE', 'Users', false);
     } // buildRelations()
 
     /**
@@ -232,6 +239,15 @@ class SubjectTableMap extends TableMap
             'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
         );
     } // getBehaviors()
+    /**
+     * Method to invalidate the instance pool of all tables related to subject     * by a foreign key with ON DELETE CASCADE
+     */
+    public static function clearRelatedInstancePool()
+    {
+        // Invalidate objects in related instance pools,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        UserTableMap::clearInstancePool();
+    }
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
