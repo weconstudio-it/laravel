@@ -16,7 +16,10 @@ use App\Models\Base\UserGroup as BaseUserGroup;
  */
 class UserGroup extends BaseUserGroup
 {
+
 	const LEVEL_USER = 100;
 	const LEVEL_MANAGER = 500;
-	const LEVEL_ADMIN = 999;
+	const LEVEL_ADMIN = 900;
+	const LEVEL_SUPER_ADMIN = 999;
+
 }
