@@ -1,10 +1,10 @@
-var user = function() {
+var user = function(ajaxUrl) {
 
 	this.bindEvents = function() {
 		$('[data-interaction=enable]').unbind('click').bind('click', function() {
 			var id = $(this).closest('tr').attr('data-id');
 			var disable = $(this).attr('data-disable');
-			var url = dt.ajaxUrl + "/enable/" + id + (disable ? "/0" : "");
+			var url = ajaxUrl + "/enable/" + id + (disable ? "/0" : "");
 
 			app.block(1);
 			$.post(url)

@@ -76,7 +76,7 @@
                                     </fieldset>
                                 </form>
                                 <div id="footer" class="text-center"><br><hr>
-                                    App - VAT
+                                    Application
                                 </div>
                             </div>
                             <div class="toolbar clearfix">

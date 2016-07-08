@@ -38,10 +38,10 @@ use Weconstudio\Misc\U;
 
 	<script>
 		$(function () {
-			var u = new user();
 			var dt = new dataTable({
 				idTable: "tblUser"
 			});
+			var u = new user(dt.ajaxUrl);
 			dt.DTfnDrawCallback = function() {
 				dt.bindEvents();
 				u.bindEvents();
