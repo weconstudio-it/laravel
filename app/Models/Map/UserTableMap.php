@@ -59,7 +59,7 @@ class UserTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 12;
+    const NUM_COLUMNS = 14;
 
     /**
      * The number of lazy-loaded columns
@@ -69,12 +69,7 @@ class UserTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 12;
-
-    /**
-     * the column name for the id field
-     */
-    const COL_ID = 'user.id';
+    const NUM_HYDRATE_COLUMNS = 14;
 
     /**
      * the column name for the id_user_group field
@@ -122,6 +117,16 @@ class UserTableMap extends TableMap
     const COL_ID_SUBJECT = 'user.id_subject';
 
     /**
+     * the column name for the id_language field
+     */
+    const COL_ID_LANGUAGE = 'user.id_language';
+
+    /**
+     * the column name for the id_currency field
+     */
+    const COL_ID_CURRENCY = 'user.id_currency';
+
+    /**
      * the column name for the created_at field
      */
     const COL_CREATED_AT = 'user.created_at';
@@ -130,6 +135,11 @@ class UserTableMap extends TableMap
      * the column name for the updated_at field
      */
     const COL_UPDATED_AT = 'user.updated_at';
+
+    /**
+     * the column name for the id field
+     */
+    const COL_ID = 'user.id';
 
     /**
      * The default string format for model objects of the related table
@@ -143,11 +153,11 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'IdUserGroup', 'Name', 'Email', 'Username', 'Password', 'RememberToken', 'Enabled', 'EmailConfirmed', 'IdSubject', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('id', 'idUserGroup', 'name', 'email', 'username', 'password', 'rememberToken', 'enabled', 'emailConfirmed', 'idSubject', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_ID, UserTableMap::COL_ID_USER_GROUP, UserTableMap::COL_NAME, UserTableMap::COL_EMAIL, UserTableMap::COL_USERNAME, UserTableMap::COL_PASSWORD, UserTableMap::COL_REMEMBER_TOKEN, UserTableMap::COL_ENABLED, UserTableMap::COL_EMAIL_CONFIRMED, UserTableMap::COL_ID_SUBJECT, UserTableMap::COL_CREATED_AT, UserTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('id', 'id_user_group', 'name', 'email', 'username', 'password', 'remember_token', 'enabled', 'email_confirmed', 'id_subject', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
+        self::TYPE_PHPNAME       => array('IdUserGroup', 'Name', 'Email', 'Username', 'Password', 'RememberToken', 'Enabled', 'EmailConfirmed', 'IdSubject', 'IdLanguage', 'IdCurrency', 'CreatedAt', 'UpdatedAt', 'Id', ),
+        self::TYPE_CAMELNAME     => array('idUserGroup', 'name', 'email', 'username', 'password', 'rememberToken', 'enabled', 'emailConfirmed', 'idSubject', 'idLanguage', 'idCurrency', 'createdAt', 'updatedAt', 'id', ),
+        self::TYPE_COLNAME       => array(UserTableMap::COL_ID_USER_GROUP, UserTableMap::COL_NAME, UserTableMap::COL_EMAIL, UserTableMap::COL_USERNAME, UserTableMap::COL_PASSWORD, UserTableMap::COL_REMEMBER_TOKEN, UserTableMap::COL_ENABLED, UserTableMap::COL_EMAIL_CONFIRMED, UserTableMap::COL_ID_SUBJECT, UserTableMap::COL_ID_LANGUAGE, UserTableMap::COL_ID_CURRENCY, UserTableMap::COL_CREATED_AT, UserTableMap::COL_UPDATED_AT, UserTableMap::COL_ID, ),
+        self::TYPE_FIELDNAME     => array('id_user_group', 'name', 'email', 'username', 'password', 'remember_token', 'enabled', 'email_confirmed', 'id_subject', 'id_language', 'id_currency', 'created_at', 'updated_at', 'id', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
     );
 
     /**
@@ -157,11 +167,11 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'IdUserGroup' => 1, 'Name' => 2, 'Email' => 3, 'Username' => 4, 'Password' => 5, 'RememberToken' => 6, 'Enabled' => 7, 'EmailConfirmed' => 8, 'IdSubject' => 9, 'CreatedAt' => 10, 'UpdatedAt' => 11, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'idUserGroup' => 1, 'name' => 2, 'email' => 3, 'username' => 4, 'password' => 5, 'rememberToken' => 6, 'enabled' => 7, 'emailConfirmed' => 8, 'idSubject' => 9, 'createdAt' => 10, 'updatedAt' => 11, ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_ID => 0, UserTableMap::COL_ID_USER_GROUP => 1, UserTableMap::COL_NAME => 2, UserTableMap::COL_EMAIL => 3, UserTableMap::COL_USERNAME => 4, UserTableMap::COL_PASSWORD => 5, UserTableMap::COL_REMEMBER_TOKEN => 6, UserTableMap::COL_ENABLED => 7, UserTableMap::COL_EMAIL_CONFIRMED => 8, UserTableMap::COL_ID_SUBJECT => 9, UserTableMap::COL_CREATED_AT => 10, UserTableMap::COL_UPDATED_AT => 11, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'id_user_group' => 1, 'name' => 2, 'email' => 3, 'username' => 4, 'password' => 5, 'remember_token' => 6, 'enabled' => 7, 'email_confirmed' => 8, 'id_subject' => 9, 'created_at' => 10, 'updated_at' => 11, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
+        self::TYPE_PHPNAME       => array('IdUserGroup' => 0, 'Name' => 1, 'Email' => 2, 'Username' => 3, 'Password' => 4, 'RememberToken' => 5, 'Enabled' => 6, 'EmailConfirmed' => 7, 'IdSubject' => 8, 'IdLanguage' => 9, 'IdCurrency' => 10, 'CreatedAt' => 11, 'UpdatedAt' => 12, 'Id' => 13, ),
+        self::TYPE_CAMELNAME     => array('idUserGroup' => 0, 'name' => 1, 'email' => 2, 'username' => 3, 'password' => 4, 'rememberToken' => 5, 'enabled' => 6, 'emailConfirmed' => 7, 'idSubject' => 8, 'idLanguage' => 9, 'idCurrency' => 10, 'createdAt' => 11, 'updatedAt' => 12, 'id' => 13, ),
+        self::TYPE_COLNAME       => array(UserTableMap::COL_ID_USER_GROUP => 0, UserTableMap::COL_NAME => 1, UserTableMap::COL_EMAIL => 2, UserTableMap::COL_USERNAME => 3, UserTableMap::COL_PASSWORD => 4, UserTableMap::COL_REMEMBER_TOKEN => 5, UserTableMap::COL_ENABLED => 6, UserTableMap::COL_EMAIL_CONFIRMED => 7, UserTableMap::COL_ID_SUBJECT => 8, UserTableMap::COL_ID_LANGUAGE => 9, UserTableMap::COL_ID_CURRENCY => 10, UserTableMap::COL_CREATED_AT => 11, UserTableMap::COL_UPDATED_AT => 12, UserTableMap::COL_ID => 13, ),
+        self::TYPE_FIELDNAME     => array('id_user_group' => 0, 'name' => 1, 'email' => 2, 'username' => 3, 'password' => 4, 'remember_token' => 5, 'enabled' => 6, 'email_confirmed' => 7, 'id_subject' => 8, 'id_language' => 9, 'id_currency' => 10, 'created_at' => 11, 'updated_at' => 12, 'id' => 13, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
     );
 
     /**
@@ -181,7 +191,6 @@ class UserTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('id_user_group', 'IdUserGroup', 'INTEGER', 'user_group', 'id', true, null, null);
         $this->addColumn('name', 'Name', 'VARCHAR', true, 255, null);
         $this->addColumn('email', 'Email', 'VARCHAR', true, 255, null);
@@ -191,8 +200,11 @@ class UserTableMap extends TableMap
         $this->addColumn('enabled', 'Enabled', 'BOOLEAN', true, 1, false);
         $this->addColumn('email_confirmed', 'EmailConfirmed', 'BOOLEAN', true, 1, false);
         $this->addForeignKey('id_subject', 'IdSubject', 'INTEGER', 'subject', 'id', true, null, null);
+        $this->addForeignKey('id_language', 'IdLanguage', 'INTEGER', 'language', 'id', false, null, null);
+        $this->addForeignKey('id_currency', 'IdCurrency', 'INTEGER', 'currency', 'id', false, null, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
     } // initialize()
 
     /**
@@ -214,6 +226,20 @@ class UserTableMap extends TableMap
     1 => ':id',
   ),
 ), 'CASCADE', 'CASCADE', null, false);
+        $this->addRelation('Language', '\\App\\Models\\Language', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':id_language',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('Currency', '\\App\\Models\\Currency', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':id_currency',
+    1 => ':id',
+  ),
+), null, null, null, false);
     } // buildRelations()
 
     /**
@@ -226,6 +252,7 @@ class UserTableMap extends TableMap
     {
         return array(
             'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
+            'auto_add_pk' => array('name' => 'id', 'autoIncrement' => 'true', 'type' => 'INTEGER', ),
         );
     } // getBehaviors()
 
@@ -245,11 +272,11 @@ class UserTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 13 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 13 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -268,7 +295,7 @@ class UserTableMap extends TableMap
     {
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 0 + $offset
+                ? 13 + $offset
                 : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
@@ -370,7 +397,6 @@ class UserTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(UserTableMap::COL_ID);
             $criteria->addSelectColumn(UserTableMap::COL_ID_USER_GROUP);
             $criteria->addSelectColumn(UserTableMap::COL_NAME);
             $criteria->addSelectColumn(UserTableMap::COL_EMAIL);
@@ -380,10 +406,12 @@ class UserTableMap extends TableMap
             $criteria->addSelectColumn(UserTableMap::COL_ENABLED);
             $criteria->addSelectColumn(UserTableMap::COL_EMAIL_CONFIRMED);
             $criteria->addSelectColumn(UserTableMap::COL_ID_SUBJECT);
+            $criteria->addSelectColumn(UserTableMap::COL_ID_LANGUAGE);
+            $criteria->addSelectColumn(UserTableMap::COL_ID_CURRENCY);
             $criteria->addSelectColumn(UserTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(UserTableMap::COL_UPDATED_AT);
+            $criteria->addSelectColumn(UserTableMap::COL_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.id_user_group');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.email');
@@ -393,8 +421,11 @@ class UserTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.enabled');
             $criteria->addSelectColumn($alias . '.email_confirmed');
             $criteria->addSelectColumn($alias . '.id_subject');
+            $criteria->addSelectColumn($alias . '.id_language');
+            $criteria->addSelectColumn($alias . '.id_currency');
             $criteria->addSelectColumn($alias . '.created_at');
             $criteria->addSelectColumn($alias . '.updated_at');
+            $criteria->addSelectColumn($alias . '.id');
         }
     }
 

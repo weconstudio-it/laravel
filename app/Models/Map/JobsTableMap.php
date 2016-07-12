@@ -72,11 +72,6 @@ class JobsTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 9;
 
     /**
-     * the column name for the id field
-     */
-    const COL_ID = 'jobs.id';
-
-    /**
      * the column name for the queue field
      */
     const COL_QUEUE = 'jobs.queue';
@@ -117,6 +112,11 @@ class JobsTableMap extends TableMap
     const COL_UPDATED_AT = 'jobs.updated_at';
 
     /**
+     * the column name for the id field
+     */
+    const COL_ID = 'jobs.id';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -128,10 +128,10 @@ class JobsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Queue', 'Payload', 'Attempts', 'Reserved', 'ReservedAt', 'AvailableAt', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('id', 'queue', 'payload', 'attempts', 'reserved', 'reservedAt', 'availableAt', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(JobsTableMap::COL_ID, JobsTableMap::COL_QUEUE, JobsTableMap::COL_PAYLOAD, JobsTableMap::COL_ATTEMPTS, JobsTableMap::COL_RESERVED, JobsTableMap::COL_RESERVED_AT, JobsTableMap::COL_AVAILABLE_AT, JobsTableMap::COL_CREATED_AT, JobsTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('id', 'queue', 'payload', 'attempts', 'reserved', 'reserved_at', 'available_at', 'created_at', 'updated_at', ),
+        self::TYPE_PHPNAME       => array('Queue', 'Payload', 'Attempts', 'Reserved', 'ReservedAt', 'AvailableAt', 'CreatedAt', 'UpdatedAt', 'Id', ),
+        self::TYPE_CAMELNAME     => array('queue', 'payload', 'attempts', 'reserved', 'reservedAt', 'availableAt', 'createdAt', 'updatedAt', 'id', ),
+        self::TYPE_COLNAME       => array(JobsTableMap::COL_QUEUE, JobsTableMap::COL_PAYLOAD, JobsTableMap::COL_ATTEMPTS, JobsTableMap::COL_RESERVED, JobsTableMap::COL_RESERVED_AT, JobsTableMap::COL_AVAILABLE_AT, JobsTableMap::COL_CREATED_AT, JobsTableMap::COL_UPDATED_AT, JobsTableMap::COL_ID, ),
+        self::TYPE_FIELDNAME     => array('queue', 'payload', 'attempts', 'reserved', 'reserved_at', 'available_at', 'created_at', 'updated_at', 'id', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
@@ -142,10 +142,10 @@ class JobsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Queue' => 1, 'Payload' => 2, 'Attempts' => 3, 'Reserved' => 4, 'ReservedAt' => 5, 'AvailableAt' => 6, 'CreatedAt' => 7, 'UpdatedAt' => 8, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'queue' => 1, 'payload' => 2, 'attempts' => 3, 'reserved' => 4, 'reservedAt' => 5, 'availableAt' => 6, 'createdAt' => 7, 'updatedAt' => 8, ),
-        self::TYPE_COLNAME       => array(JobsTableMap::COL_ID => 0, JobsTableMap::COL_QUEUE => 1, JobsTableMap::COL_PAYLOAD => 2, JobsTableMap::COL_ATTEMPTS => 3, JobsTableMap::COL_RESERVED => 4, JobsTableMap::COL_RESERVED_AT => 5, JobsTableMap::COL_AVAILABLE_AT => 6, JobsTableMap::COL_CREATED_AT => 7, JobsTableMap::COL_UPDATED_AT => 8, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'queue' => 1, 'payload' => 2, 'attempts' => 3, 'reserved' => 4, 'reserved_at' => 5, 'available_at' => 6, 'created_at' => 7, 'updated_at' => 8, ),
+        self::TYPE_PHPNAME       => array('Queue' => 0, 'Payload' => 1, 'Attempts' => 2, 'Reserved' => 3, 'ReservedAt' => 4, 'AvailableAt' => 5, 'CreatedAt' => 6, 'UpdatedAt' => 7, 'Id' => 8, ),
+        self::TYPE_CAMELNAME     => array('queue' => 0, 'payload' => 1, 'attempts' => 2, 'reserved' => 3, 'reservedAt' => 4, 'availableAt' => 5, 'createdAt' => 6, 'updatedAt' => 7, 'id' => 8, ),
+        self::TYPE_COLNAME       => array(JobsTableMap::COL_QUEUE => 0, JobsTableMap::COL_PAYLOAD => 1, JobsTableMap::COL_ATTEMPTS => 2, JobsTableMap::COL_RESERVED => 3, JobsTableMap::COL_RESERVED_AT => 4, JobsTableMap::COL_AVAILABLE_AT => 5, JobsTableMap::COL_CREATED_AT => 6, JobsTableMap::COL_UPDATED_AT => 7, JobsTableMap::COL_ID => 8, ),
+        self::TYPE_FIELDNAME     => array('queue' => 0, 'payload' => 1, 'attempts' => 2, 'reserved' => 3, 'reserved_at' => 4, 'available_at' => 5, 'created_at' => 6, 'updated_at' => 7, 'id' => 8, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
@@ -166,7 +166,6 @@ class JobsTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('queue', 'Queue', 'VARCHAR', true, 255, null);
         $this->addColumn('payload', 'Payload', 'CLOB', true, null, null);
         $this->addColumn('attempts', 'Attempts', 'TINYINT', true, 3, null);
@@ -175,6 +174,7 @@ class JobsTableMap extends TableMap
         $this->addColumn('available_at', 'AvailableAt', 'INTEGER', true, 10, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
     } // initialize()
 
     /**
@@ -194,6 +194,7 @@ class JobsTableMap extends TableMap
     {
         return array(
             'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
+            'auto_add_pk' => array('name' => 'id', 'autoIncrement' => 'true', 'type' => 'INTEGER', ),
         );
     } // getBehaviors()
 
@@ -213,11 +214,11 @@ class JobsTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 8 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 8 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -236,7 +237,7 @@ class JobsTableMap extends TableMap
     {
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 0 + $offset
+                ? 8 + $offset
                 : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
@@ -338,7 +339,6 @@ class JobsTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(JobsTableMap::COL_ID);
             $criteria->addSelectColumn(JobsTableMap::COL_QUEUE);
             $criteria->addSelectColumn(JobsTableMap::COL_PAYLOAD);
             $criteria->addSelectColumn(JobsTableMap::COL_ATTEMPTS);
@@ -347,8 +347,8 @@ class JobsTableMap extends TableMap
             $criteria->addSelectColumn(JobsTableMap::COL_AVAILABLE_AT);
             $criteria->addSelectColumn(JobsTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(JobsTableMap::COL_UPDATED_AT);
+            $criteria->addSelectColumn(JobsTableMap::COL_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.queue');
             $criteria->addSelectColumn($alias . '.payload');
             $criteria->addSelectColumn($alias . '.attempts');
@@ -357,6 +357,7 @@ class JobsTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.available_at');
             $criteria->addSelectColumn($alias . '.created_at');
             $criteria->addSelectColumn($alias . '.updated_at');
+            $criteria->addSelectColumn($alias . '.id');
         }
     }
 

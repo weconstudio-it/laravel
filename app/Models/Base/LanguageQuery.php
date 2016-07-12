@@ -4,9 +4,9 @@ namespace App\Models\Base;
 
 use \Exception;
 use \PDO;
-use App\Models\UserGroup as ChildUserGroup;
-use App\Models\UserGroupQuery as ChildUserGroupQuery;
-use App\Models\Map\UserGroupTableMap;
+use App\Models\Language as ChildLanguage;
+use App\Models\LanguageQuery as ChildLanguageQuery;
+use App\Models\Map\LanguageTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -16,99 +16,104 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'user_group' table.
+ * Base class that represents a query for the 'language' table.
  *
  *
  *
- * @method     ChildUserGroupQuery orderByLabel($order = Criteria::ASC) Order by the label column
- * @method     ChildUserGroupQuery orderByLevel($order = Criteria::ASC) Order by the level column
- * @method     ChildUserGroupQuery orderByVisible($order = Criteria::ASC) Order by the visible column
- * @method     ChildUserGroupQuery orderByEnabled($order = Criteria::ASC) Order by the enabled column
- * @method     ChildUserGroupQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
- * @method     ChildUserGroupQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
- * @method     ChildUserGroupQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method     ChildLanguageQuery orderByIso6391($order = Criteria::ASC) Order by the iso639_1 column
+ * @method     ChildLanguageQuery orderByI18n($order = Criteria::ASC) Order by the i18n column
+ * @method     ChildLanguageQuery orderByCode($order = Criteria::ASC) Order by the code column
+ * @method     ChildLanguageQuery orderByDescription($order = Criteria::ASC) Order by the description column
+ * @method     ChildLanguageQuery orderByActive($order = Criteria::ASC) Order by the active column
+ * @method     ChildLanguageQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
+ * @method     ChildLanguageQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
+ * @method     ChildLanguageQuery orderById($order = Criteria::ASC) Order by the id column
  *
- * @method     ChildUserGroupQuery groupByLabel() Group by the label column
- * @method     ChildUserGroupQuery groupByLevel() Group by the level column
- * @method     ChildUserGroupQuery groupByVisible() Group by the visible column
- * @method     ChildUserGroupQuery groupByEnabled() Group by the enabled column
- * @method     ChildUserGroupQuery groupByCreatedAt() Group by the created_at column
- * @method     ChildUserGroupQuery groupByUpdatedAt() Group by the updated_at column
- * @method     ChildUserGroupQuery groupById() Group by the id column
+ * @method     ChildLanguageQuery groupByIso6391() Group by the iso639_1 column
+ * @method     ChildLanguageQuery groupByI18n() Group by the i18n column
+ * @method     ChildLanguageQuery groupByCode() Group by the code column
+ * @method     ChildLanguageQuery groupByDescription() Group by the description column
+ * @method     ChildLanguageQuery groupByActive() Group by the active column
+ * @method     ChildLanguageQuery groupByCreatedAt() Group by the created_at column
+ * @method     ChildLanguageQuery groupByUpdatedAt() Group by the updated_at column
+ * @method     ChildLanguageQuery groupById() Group by the id column
  *
- * @method     ChildUserGroupQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
- * @method     ChildUserGroupQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
- * @method     ChildUserGroupQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ * @method     ChildLanguageQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
+ * @method     ChildLanguageQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
+ * @method     ChildLanguageQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildUserGroupQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
- * @method     ChildUserGroupQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
- * @method     ChildUserGroupQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
+ * @method     ChildLanguageQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
+ * @method     ChildLanguageQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
+ * @method     ChildLanguageQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
  *
  * @method     \App\Models\UserQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
- * @method     ChildUserGroup findOne(ConnectionInterface $con = null) Return the first ChildUserGroup matching the query
- * @method     ChildUserGroup findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUserGroup matching the query, or a new ChildUserGroup object populated from the query conditions when no match is found
+ * @method     ChildLanguage findOne(ConnectionInterface $con = null) Return the first ChildLanguage matching the query
+ * @method     ChildLanguage findOneOrCreate(ConnectionInterface $con = null) Return the first ChildLanguage matching the query, or a new ChildLanguage object populated from the query conditions when no match is found
  *
- * @method     ChildUserGroup findOneByLabel(string $label) Return the first ChildUserGroup filtered by the label column
- * @method     ChildUserGroup findOneByLevel(int $level) Return the first ChildUserGroup filtered by the level column
- * @method     ChildUserGroup findOneByVisible(boolean $visible) Return the first ChildUserGroup filtered by the visible column
- * @method     ChildUserGroup findOneByEnabled(boolean $enabled) Return the first ChildUserGroup filtered by the enabled column
- * @method     ChildUserGroup findOneByCreatedAt(string $created_at) Return the first ChildUserGroup filtered by the created_at column
- * @method     ChildUserGroup findOneByUpdatedAt(string $updated_at) Return the first ChildUserGroup filtered by the updated_at column
- * @method     ChildUserGroup findOneById(int $id) Return the first ChildUserGroup filtered by the id column *
+ * @method     ChildLanguage findOneByIso6391(string $iso639_1) Return the first ChildLanguage filtered by the iso639_1 column
+ * @method     ChildLanguage findOneByI18n(string $i18n) Return the first ChildLanguage filtered by the i18n column
+ * @method     ChildLanguage findOneByCode(string $code) Return the first ChildLanguage filtered by the code column
+ * @method     ChildLanguage findOneByDescription(string $description) Return the first ChildLanguage filtered by the description column
+ * @method     ChildLanguage findOneByActive(boolean $active) Return the first ChildLanguage filtered by the active column
+ * @method     ChildLanguage findOneByCreatedAt(string $created_at) Return the first ChildLanguage filtered by the created_at column
+ * @method     ChildLanguage findOneByUpdatedAt(string $updated_at) Return the first ChildLanguage filtered by the updated_at column
+ * @method     ChildLanguage findOneById(int $id) Return the first ChildLanguage filtered by the id column *
 
- * @method     ChildUserGroup requirePk($key, ConnectionInterface $con = null) Return the ChildUserGroup by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUserGroup requireOne(ConnectionInterface $con = null) Return the first ChildUserGroup matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requirePk($key, ConnectionInterface $con = null) Return the ChildLanguage by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requireOne(ConnectionInterface $con = null) Return the first ChildLanguage matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildUserGroup requireOneByLabel(string $label) Return the first ChildUserGroup filtered by the label column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUserGroup requireOneByLevel(int $level) Return the first ChildUserGroup filtered by the level column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUserGroup requireOneByVisible(boolean $visible) Return the first ChildUserGroup filtered by the visible column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUserGroup requireOneByEnabled(boolean $enabled) Return the first ChildUserGroup filtered by the enabled column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUserGroup requireOneByCreatedAt(string $created_at) Return the first ChildUserGroup filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUserGroup requireOneByUpdatedAt(string $updated_at) Return the first ChildUserGroup filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUserGroup requireOneById(int $id) Return the first ChildUserGroup filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requireOneByIso6391(string $iso639_1) Return the first ChildLanguage filtered by the iso639_1 column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requireOneByI18n(string $i18n) Return the first ChildLanguage filtered by the i18n column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requireOneByCode(string $code) Return the first ChildLanguage filtered by the code column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requireOneByDescription(string $description) Return the first ChildLanguage filtered by the description column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requireOneByActive(boolean $active) Return the first ChildLanguage filtered by the active column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requireOneByCreatedAt(string $created_at) Return the first ChildLanguage filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requireOneByUpdatedAt(string $updated_at) Return the first ChildLanguage filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildLanguage requireOneById(int $id) Return the first ChildLanguage filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildUserGroup[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildUserGroup objects based on current ModelCriteria
- * @method     ChildUserGroup[]|ObjectCollection findByLabel(string $label) Return ChildUserGroup objects filtered by the label column
- * @method     ChildUserGroup[]|ObjectCollection findByLevel(int $level) Return ChildUserGroup objects filtered by the level column
- * @method     ChildUserGroup[]|ObjectCollection findByVisible(boolean $visible) Return ChildUserGroup objects filtered by the visible column
- * @method     ChildUserGroup[]|ObjectCollection findByEnabled(boolean $enabled) Return ChildUserGroup objects filtered by the enabled column
- * @method     ChildUserGroup[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildUserGroup objects filtered by the created_at column
- * @method     ChildUserGroup[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildUserGroup objects filtered by the updated_at column
- * @method     ChildUserGroup[]|ObjectCollection findById(int $id) Return ChildUserGroup objects filtered by the id column
- * @method     ChildUserGroup[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @method     ChildLanguage[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildLanguage objects based on current ModelCriteria
+ * @method     ChildLanguage[]|ObjectCollection findByIso6391(string $iso639_1) Return ChildLanguage objects filtered by the iso639_1 column
+ * @method     ChildLanguage[]|ObjectCollection findByI18n(string $i18n) Return ChildLanguage objects filtered by the i18n column
+ * @method     ChildLanguage[]|ObjectCollection findByCode(string $code) Return ChildLanguage objects filtered by the code column
+ * @method     ChildLanguage[]|ObjectCollection findByDescription(string $description) Return ChildLanguage objects filtered by the description column
+ * @method     ChildLanguage[]|ObjectCollection findByActive(boolean $active) Return ChildLanguage objects filtered by the active column
+ * @method     ChildLanguage[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildLanguage objects filtered by the created_at column
+ * @method     ChildLanguage[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildLanguage objects filtered by the updated_at column
+ * @method     ChildLanguage[]|ObjectCollection findById(int $id) Return ChildLanguage objects filtered by the id column
+ * @method     ChildLanguage[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
-abstract class UserGroupQuery extends ModelCriteria
+abstract class LanguageQuery extends ModelCriteria
 {
     protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
-     * Initializes internal state of \App\Models\Base\UserGroupQuery object.
+     * Initializes internal state of \App\Models\Base\LanguageQuery object.
      *
      * @param     string $dbName The database name
      * @param     string $modelName The phpName of a model, e.g. 'Book'
      * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'default', $modelName = '\\App\\Models\\UserGroup', $modelAlias = null)
+    public function __construct($dbName = 'default', $modelName = '\\App\\Models\\Language', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
 
     /**
-     * Returns a new ChildUserGroupQuery object.
+     * Returns a new ChildLanguageQuery object.
      *
      * @param     string $modelAlias The alias of a model in the query
      * @param     Criteria $criteria Optional Criteria to build the query from
      *
-     * @return ChildUserGroupQuery
+     * @return ChildLanguageQuery
      */
     public static function create($modelAlias = null, Criteria $criteria = null)
     {
-        if ($criteria instanceof ChildUserGroupQuery) {
+        if ($criteria instanceof ChildLanguageQuery) {
             return $criteria;
         }
-        $query = new ChildUserGroupQuery();
+        $query = new ChildLanguageQuery();
         if (null !== $modelAlias) {
             $query->setModelAlias($modelAlias);
         }
@@ -131,19 +136,19 @@ abstract class UserGroupQuery extends ModelCriteria
      * @param mixed $key Primary key to use for the query
      * @param ConnectionInterface $con an optional connection object
      *
-     * @return ChildUserGroup|array|mixed the result, formatted by the current formatter
+     * @return ChildLanguage|array|mixed the result, formatted by the current formatter
      */
     public function findPk($key, ConnectionInterface $con = null)
     {
         if ($key === null) {
             return null;
         }
-        if ((null !== ($obj = UserGroupTableMap::getInstanceFromPool((string) $key))) && !$this->formatter) {
+        if ((null !== ($obj = LanguageTableMap::getInstanceFromPool((string) $key))) && !$this->formatter) {
             // the object is already in the instance pool
             return $obj;
         }
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(UserGroupTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(LanguageTableMap::DATABASE_NAME);
         }
         $this->basePreSelect($con);
         if ($this->formatter || $this->modelAlias || $this->with || $this->select
@@ -164,11 +169,11 @@ abstract class UserGroupQuery extends ModelCriteria
      *
      * @throws \Propel\Runtime\Exception\PropelException
      *
-     * @return ChildUserGroup A model object, or null if the key is not found
+     * @return ChildLanguage A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT label, level, visible, enabled, created_at, updated_at, id FROM user_group WHERE id = :p0';
+        $sql = 'SELECT iso639_1, i18n, code, description, active, created_at, updated_at, id FROM language WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -179,10 +184,10 @@ abstract class UserGroupQuery extends ModelCriteria
         }
         $obj = null;
         if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
-            /** @var ChildUserGroup $obj */
-            $obj = new ChildUserGroup();
+            /** @var ChildLanguage $obj */
+            $obj = new ChildLanguage();
             $obj->hydrate($row);
-            UserGroupTableMap::addInstanceToPool($obj, (string) $key);
+            LanguageTableMap::addInstanceToPool($obj, (string) $key);
         }
         $stmt->closeCursor();
 
@@ -195,7 +200,7 @@ abstract class UserGroupQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
-     * @return ChildUserGroup|array|mixed the result, formatted by the current formatter
+     * @return ChildLanguage|array|mixed the result, formatted by the current formatter
      */
     protected function findPkComplex($key, ConnectionInterface $con)
     {
@@ -237,12 +242,12 @@ abstract class UserGroupQuery extends ModelCriteria
      *
      * @param     mixed $key Primary key to use for the query
      *
-     * @return $this|ChildUserGroupQuery The current query, for fluid interface
+     * @return $this|ChildLanguageQuery The current query, for fluid interface
      */
     public function filterByPrimaryKey($key)
     {
 
-        return $this->addUsingAlias(UserGroupTableMap::COL_ID, $key, Criteria::EQUAL);
+        return $this->addUsingAlias(LanguageTableMap::COL_ID, $key, Criteria::EQUAL);
     }
 
     /**
@@ -250,136 +255,155 @@ abstract class UserGroupQuery extends ModelCriteria
      *
      * @param     array $keys The list of primary key to use for the query
      *
-     * @return $this|ChildUserGroupQuery The current query, for fluid interface
+     * @return $this|ChildLanguageQuery The current query, for fluid interface
      */
     public function filterByPrimaryKeys($keys)
     {
 
-        return $this->addUsingAlias(UserGroupTableMap::COL_ID, $keys, Criteria::IN);
+        return $this->addUsingAlias(LanguageTableMap::COL_ID, $keys, Criteria::IN);
     }
 
     /**
-     * Filter the query on the label column
+     * Filter the query on the iso639_1 column
      *
      * Example usage:
      * <code>
-     * $query->filterByLabel('fooValue');   // WHERE label = 'fooValue'
-     * $query->filterByLabel('%fooValue%'); // WHERE label LIKE '%fooValue%'
+     * $query->filterByIso6391('fooValue');   // WHERE iso639_1 = 'fooValue'
+     * $query->filterByIso6391('%fooValue%'); // WHERE iso639_1 LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $label The value to use as filter.
+     * @param     string $iso6391 The value to use as filter.
      *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildUserGroupQuery The current query, for fluid interface
+     * @return $this|ChildLanguageQuery The current query, for fluid interface
      */
-    public function filterByLabel($label = null, $comparison = null)
+    public function filterByIso6391($iso6391 = null, $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($label)) {
+            if (is_array($iso6391)) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $label)) {
-                $label = str_replace('*', '%', $label);
+            } elseif (preg_match('/[\%\*]/', $iso6391)) {
+                $iso6391 = str_replace('*', '%', $iso6391);
                 $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(UserGroupTableMap::COL_LABEL, $label, $comparison);
+        return $this->addUsingAlias(LanguageTableMap::COL_ISO639_1, $iso6391, $comparison);
     }
 
     /**
-     * Filter the query on the level column
+     * Filter the query on the i18n column
      *
      * Example usage:
      * <code>
-     * $query->filterByLevel(1234); // WHERE level = 1234
-     * $query->filterByLevel(array(12, 34)); // WHERE level IN (12, 34)
-     * $query->filterByLevel(array('min' => 12)); // WHERE level > 12
+     * $query->filterByI18n('fooValue');   // WHERE i18n = 'fooValue'
+     * $query->filterByI18n('%fooValue%'); // WHERE i18n LIKE '%fooValue%'
      * </code>
      *
-     * @param     mixed $level The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $i18n The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildUserGroupQuery The current query, for fluid interface
+     * @return $this|ChildLanguageQuery The current query, for fluid interface
      */
-    public function filterByLevel($level = null, $comparison = null)
+    public function filterByI18n($i18n = null, $comparison = null)
     {
-        if (is_array($level)) {
-            $useMinMax = false;
-            if (isset($level['min'])) {
-                $this->addUsingAlias(UserGroupTableMap::COL_LEVEL, $level['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($level['max'])) {
-                $this->addUsingAlias(UserGroupTableMap::COL_LEVEL, $level['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
+        if (null === $comparison) {
+            if (is_array($i18n)) {
                 $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $i18n)) {
+                $i18n = str_replace('*', '%', $i18n);
+                $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(UserGroupTableMap::COL_LEVEL, $level, $comparison);
+        return $this->addUsingAlias(LanguageTableMap::COL_I18N, $i18n, $comparison);
     }
 
     /**
-     * Filter the query on the visible column
+     * Filter the query on the code column
      *
      * Example usage:
      * <code>
-     * $query->filterByVisible(true); // WHERE visible = true
-     * $query->filterByVisible('yes'); // WHERE visible = true
+     * $query->filterByCode('fooValue');   // WHERE code = 'fooValue'
+     * $query->filterByCode('%fooValue%'); // WHERE code LIKE '%fooValue%'
      * </code>
      *
-     * @param     boolean|string $visible The value to use as filter.
+     * @param     string $code The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildLanguageQuery The current query, for fluid interface
+     */
+    public function filterByCode($code = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($code)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $code)) {
+                $code = str_replace('*', '%', $code);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(LanguageTableMap::COL_CODE, $code, $comparison);
+    }
+
+    /**
+     * Filter the query on the description column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDescription('fooValue');   // WHERE description = 'fooValue'
+     * $query->filterByDescription('%fooValue%'); // WHERE description LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $description The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildLanguageQuery The current query, for fluid interface
+     */
+    public function filterByDescription($description = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($description)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $description)) {
+                $description = str_replace('*', '%', $description);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(LanguageTableMap::COL_DESCRIPTION, $description, $comparison);
+    }
+
+    /**
+     * Filter the query on the active column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByActive(true); // WHERE active = true
+     * $query->filterByActive('yes'); // WHERE active = true
+     * </code>
+     *
+     * @param     boolean|string $active The value to use as filter.
      *              Non-boolean arguments are converted using the following rules:
      *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
      *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
      *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildUserGroupQuery The current query, for fluid interface
+     * @return $this|ChildLanguageQuery The current query, for fluid interface
      */
-    public function filterByVisible($visible = null, $comparison = null)
+    public function filterByActive($active = null, $comparison = null)
     {
-        if (is_string($visible)) {
-            $visible = in_array(strtolower($visible), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        if (is_string($active)) {
+            $active = in_array(strtolower($active), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
         }
 
-        return $this->addUsingAlias(UserGroupTableMap::COL_VISIBLE, $visible, $comparison);
-    }
-
-    /**
-     * Filter the query on the enabled column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByEnabled(true); // WHERE enabled = true
-     * $query->filterByEnabled('yes'); // WHERE enabled = true
-     * </code>
-     *
-     * @param     boolean|string $enabled The value to use as filter.
-     *              Non-boolean arguments are converted using the following rules:
-     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildUserGroupQuery The current query, for fluid interface
-     */
-    public function filterByEnabled($enabled = null, $comparison = null)
-    {
-        if (is_string($enabled)) {
-            $enabled = in_array(strtolower($enabled), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-        }
-
-        return $this->addUsingAlias(UserGroupTableMap::COL_ENABLED, $enabled, $comparison);
+        return $this->addUsingAlias(LanguageTableMap::COL_ACTIVE, $active, $comparison);
     }
 
     /**
@@ -400,18 +424,18 @@ abstract class UserGroupQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildUserGroupQuery The current query, for fluid interface
+     * @return $this|ChildLanguageQuery The current query, for fluid interface
      */
     public function filterByCreatedAt($createdAt = null, $comparison = null)
     {
         if (is_array($createdAt)) {
             $useMinMax = false;
             if (isset($createdAt['min'])) {
-                $this->addUsingAlias(UserGroupTableMap::COL_CREATED_AT, $createdAt['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(LanguageTableMap::COL_CREATED_AT, $createdAt['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($createdAt['max'])) {
-                $this->addUsingAlias(UserGroupTableMap::COL_CREATED_AT, $createdAt['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(LanguageTableMap::COL_CREATED_AT, $createdAt['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -422,7 +446,7 @@ abstract class UserGroupQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(UserGroupTableMap::COL_CREATED_AT, $createdAt, $comparison);
+        return $this->addUsingAlias(LanguageTableMap::COL_CREATED_AT, $createdAt, $comparison);
     }
 
     /**
@@ -443,18 +467,18 @@ abstract class UserGroupQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildUserGroupQuery The current query, for fluid interface
+     * @return $this|ChildLanguageQuery The current query, for fluid interface
      */
     public function filterByUpdatedAt($updatedAt = null, $comparison = null)
     {
         if (is_array($updatedAt)) {
             $useMinMax = false;
             if (isset($updatedAt['min'])) {
-                $this->addUsingAlias(UserGroupTableMap::COL_UPDATED_AT, $updatedAt['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(LanguageTableMap::COL_UPDATED_AT, $updatedAt['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($updatedAt['max'])) {
-                $this->addUsingAlias(UserGroupTableMap::COL_UPDATED_AT, $updatedAt['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(LanguageTableMap::COL_UPDATED_AT, $updatedAt['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -465,7 +489,7 @@ abstract class UserGroupQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(UserGroupTableMap::COL_UPDATED_AT, $updatedAt, $comparison);
+        return $this->addUsingAlias(LanguageTableMap::COL_UPDATED_AT, $updatedAt, $comparison);
     }
 
     /**
@@ -484,18 +508,18 @@ abstract class UserGroupQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildUserGroupQuery The current query, for fluid interface
+     * @return $this|ChildLanguageQuery The current query, for fluid interface
      */
     public function filterById($id = null, $comparison = null)
     {
         if (is_array($id)) {
             $useMinMax = false;
             if (isset($id['min'])) {
-                $this->addUsingAlias(UserGroupTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(LanguageTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($id['max'])) {
-                $this->addUsingAlias(UserGroupTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(LanguageTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -506,7 +530,7 @@ abstract class UserGroupQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(UserGroupTableMap::COL_ID, $id, $comparison);
+        return $this->addUsingAlias(LanguageTableMap::COL_ID, $id, $comparison);
     }
 
     /**
@@ -515,13 +539,13 @@ abstract class UserGroupQuery extends ModelCriteria
      * @param \App\Models\User|ObjectCollection $user the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildUserGroupQuery The current query, for fluid interface
+     * @return ChildLanguageQuery The current query, for fluid interface
      */
     public function filterByUser($user, $comparison = null)
     {
         if ($user instanceof \App\Models\User) {
             return $this
-                ->addUsingAlias(UserGroupTableMap::COL_ID, $user->getIdUserGroup(), $comparison);
+                ->addUsingAlias(LanguageTableMap::COL_ID, $user->getIdLanguage(), $comparison);
         } elseif ($user instanceof ObjectCollection) {
             return $this
                 ->useUserQuery()
@@ -538,9 +562,9 @@ abstract class UserGroupQuery extends ModelCriteria
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return $this|ChildUserGroupQuery The current query, for fluid interface
+     * @return $this|ChildLanguageQuery The current query, for fluid interface
      */
-    public function joinUser($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinUser($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('User');
@@ -575,7 +599,7 @@ abstract class UserGroupQuery extends ModelCriteria
      *
      * @return \App\Models\UserQuery A secondary query class using the current class as primary query
      */
-    public function useUserQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useUserQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
             ->joinUser($relationAlias, $joinType)
@@ -585,21 +609,21 @@ abstract class UserGroupQuery extends ModelCriteria
     /**
      * Exclude object from result
      *
-     * @param   ChildUserGroup $userGroup Object to remove from the list of results
+     * @param   ChildLanguage $language Object to remove from the list of results
      *
-     * @return $this|ChildUserGroupQuery The current query, for fluid interface
+     * @return $this|ChildLanguageQuery The current query, for fluid interface
      */
-    public function prune($userGroup = null)
+    public function prune($language = null)
     {
-        if ($userGroup) {
-            $this->addUsingAlias(UserGroupTableMap::COL_ID, $userGroup->getId(), Criteria::NOT_EQUAL);
+        if ($language) {
+            $this->addUsingAlias(LanguageTableMap::COL_ID, $language->getId(), Criteria::NOT_EQUAL);
         }
 
         return $this;
     }
 
     /**
-     * Deletes all rows from the user_group table.
+     * Deletes all rows from the language table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
@@ -607,7 +631,7 @@ abstract class UserGroupQuery extends ModelCriteria
     public function doDeleteAll(ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UserGroupTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(LanguageTableMap::DATABASE_NAME);
         }
 
         // use transaction because $criteria could contain info
@@ -618,8 +642,8 @@ abstract class UserGroupQuery extends ModelCriteria
             // Because this db requires some delete cascade/set null emulation, we have to
             // clear the cached instance *after* the emulation has happened (since
             // instances get re-added by the select statement contained therein).
-            UserGroupTableMap::clearInstancePool();
-            UserGroupTableMap::clearRelatedInstancePool();
+            LanguageTableMap::clearInstancePool();
+            LanguageTableMap::clearRelatedInstancePool();
 
             return $affectedRows;
         });
@@ -637,23 +661,23 @@ abstract class UserGroupQuery extends ModelCriteria
     public function delete(ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UserGroupTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(LanguageTableMap::DATABASE_NAME);
         }
 
         $criteria = $this;
 
         // Set the correct dbName
-        $criteria->setDbName(UserGroupTableMap::DATABASE_NAME);
+        $criteria->setDbName(LanguageTableMap::DATABASE_NAME);
 
         // use transaction because $criteria could contain info
         // for more than one table or we could emulating ON DELETE CASCADE, etc.
         return $con->transaction(function () use ($con, $criteria) {
             $affectedRows = 0; // initialize var to track total num of affected rows
 
-            UserGroupTableMap::removeInstanceFromPool($criteria);
+            LanguageTableMap::removeInstanceFromPool($criteria);
 
             $affectedRows += ModelCriteria::delete($con);
-            UserGroupTableMap::clearRelatedInstancePool();
+            LanguageTableMap::clearRelatedInstancePool();
 
             return $affectedRows;
         });
@@ -666,41 +690,41 @@ abstract class UserGroupQuery extends ModelCriteria
      *
      * @param      int $nbDays Maximum age of the latest update in days
      *
-     * @return     $this|ChildUserGroupQuery The current query, for fluid interface
+     * @return     $this|ChildLanguageQuery The current query, for fluid interface
      */
     public function recentlyUpdated($nbDays = 7)
     {
-        return $this->addUsingAlias(UserGroupTableMap::COL_UPDATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+        return $this->addUsingAlias(LanguageTableMap::COL_UPDATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
     }
 
     /**
      * Order by update date desc
      *
-     * @return     $this|ChildUserGroupQuery The current query, for fluid interface
+     * @return     $this|ChildLanguageQuery The current query, for fluid interface
      */
     public function lastUpdatedFirst()
     {
-        return $this->addDescendingOrderByColumn(UserGroupTableMap::COL_UPDATED_AT);
+        return $this->addDescendingOrderByColumn(LanguageTableMap::COL_UPDATED_AT);
     }
 
     /**
      * Order by update date asc
      *
-     * @return     $this|ChildUserGroupQuery The current query, for fluid interface
+     * @return     $this|ChildLanguageQuery The current query, for fluid interface
      */
     public function firstUpdatedFirst()
     {
-        return $this->addAscendingOrderByColumn(UserGroupTableMap::COL_UPDATED_AT);
+        return $this->addAscendingOrderByColumn(LanguageTableMap::COL_UPDATED_AT);
     }
 
     /**
      * Order by create date desc
      *
-     * @return     $this|ChildUserGroupQuery The current query, for fluid interface
+     * @return     $this|ChildLanguageQuery The current query, for fluid interface
      */
     public function lastCreatedFirst()
     {
-        return $this->addDescendingOrderByColumn(UserGroupTableMap::COL_CREATED_AT);
+        return $this->addDescendingOrderByColumn(LanguageTableMap::COL_CREATED_AT);
     }
 
     /**
@@ -708,21 +732,21 @@ abstract class UserGroupQuery extends ModelCriteria
      *
      * @param      int $nbDays Maximum age of in days
      *
-     * @return     $this|ChildUserGroupQuery The current query, for fluid interface
+     * @return     $this|ChildLanguageQuery The current query, for fluid interface
      */
     public function recentlyCreated($nbDays = 7)
     {
-        return $this->addUsingAlias(UserGroupTableMap::COL_CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+        return $this->addUsingAlias(LanguageTableMap::COL_CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
     }
 
     /**
      * Order by create date asc
      *
-     * @return     $this|ChildUserGroupQuery The current query, for fluid interface
+     * @return     $this|ChildLanguageQuery The current query, for fluid interface
      */
     public function firstCreatedFirst()
     {
-        return $this->addAscendingOrderByColumn(UserGroupTableMap::COL_CREATED_AT);
+        return $this->addAscendingOrderByColumn(LanguageTableMap::COL_CREATED_AT);
     }
 
-} // UserGroupQuery
+} // LanguageQuery

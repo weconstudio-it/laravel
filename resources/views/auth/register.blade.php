@@ -27,18 +27,17 @@
 									<?php echo U::T_("Form di registrazione"); ?>
                                 </h4>
 
-                                <form role="form" action="{{ url('/register') }}" method="post">
+                                <form id="registerForm" role="form" action="{{ url('/register') }}" method="post">
                                     {!! csrf_field() !!}
+                                    <input type="hidden" id="currency" name="currency" value="<?php echo old('currency'); ?>">
                                     <fieldset>
                                         <label class="block clearfix">
                                             <span class="block">
-                                                <select name="iso" class="form-control">
-                                                    <option value="">-- <?php echo U::T_("Seleziona la lingua"); ?> --</option>
-                                                    <option value="it_IT" <?php echo old('iso') == "it_IT" ? "selected" : ""; ?>><?php echo U::T_("Italiano"); ?></option>
-                                                    <option value="en_EN" <?php echo old('iso') == "en_EN" ? "selected" : ""; ?>><?php echo U::T_("Inglese"); ?></option>
-                                                    <option value="fr_FR" <?php echo old('iso') == "fr_FR" ? "selected" : ""; ?>><?php echo U::T_("Francese"); ?></option>
-                                                    <option value="es_ES" <?php echo old('iso') == "es_ES" ? "selected" : ""; ?>><?php echo U::T_("Spagnolo"); ?></option>
-                                                    <option value="de_DE" <?php echo old('iso') == "de_DE" ? "selected" : ""; ?>><?php echo U::T_("Tedesco"); ?></option>
+                                                <select name="id_language" class="form-control">
+                                                    <option value="">-- please select your language --</option>
+                                                    <?php foreach(\App\Models\LanguageQuery::create()->find() as $lang) : ?>
+                                                    <option value="<?php echo $lang->getId(); ?>" <?php echo old('id_language') == $lang->getId() ? "selected" : ""; ?>><?php echo $lang->getDescription(); ?></option>
+                                                    <?php endforeach; ?>
                                                 </select>
                                                 @if ($errors->has('iso'))
                                                     <span class="help-block">
@@ -162,35 +161,35 @@
                                         </label>
                                         <label class="block clearfix">
                                             <span class="block">
-                                                <select name="country" class="form-control">
-                                                    <option value="">-- <?php echo U::T_("Seleziona il paese"); ?> --</option>
-                                                    <option value="Austria" <?php echo old("country") == "Austria" ? "selected" : ""; ?>>Austria</option>
-                                                    <option value="Belgium" <?php echo old("country") == "Belgium" ? "selected" : ""; ?>>Belgium</option>
-                                                    <option value="Bulgaria" <?php echo old("country") == "Bulgaria" ? "selected" : ""; ?>>Bulgaria</option>
-                                                    <option value="Cyprus" <?php echo old("country") == "Cyprus" ? "selected" : ""; ?>>Cyprus</option>
-                                                    <option value="Czech Republic" <?php echo old("country") == "Czech Republic" ? "selected" : ""; ?>>Czech Republic</option>
-                                                    <option value="Denmark" <?php echo old("country") == "Denmark" ? "selected" : ""; ?>>Denmark</option>
-                                                    <option value="Estonia" <?php echo old("country") == "Estonia" ? "selected" : ""; ?>>Estonia</option>
-                                                    <option value="Finland" <?php echo old("country") == "Finland" ? "selected" : ""; ?>>Finland</option>
-                                                    <option value="France" <?php echo old("country") == "France" ? "selected" : ""; ?>>France</option>
-                                                    <option value="Germany" <?php echo old("country") == "Germany" ? "selected" : ""; ?>>Germany</option>
-                                                    <option value="Greece" <?php echo old("country") == "Greece" ? "selected" : ""; ?>>Greece</option>
-                                                    <option value="Hungary" <?php echo old("country") == "Hungary" ? "selected" : ""; ?>>Hungary</option>
-                                                    <option value="Ireland" <?php echo old("country") == "Ireland" ? "selected" : ""; ?>>Ireland</option>
-                                                    <option value="Italy" <?php echo old("country") == "Italy" ? "selected" : ""; ?>>Italy</option>
-                                                    <option value="Latvia" <?php echo old("country") == "Latvia" ? "selected" : ""; ?>>Latvia</option>
-                                                    <option value="Lithuania" <?php echo old("country") == "Lithuania" ? "selected" : ""; ?>>Lithuania</option>
-                                                    <option value="Luxembourg" <?php echo old("country") == "Luxembourg" ? "selected" : ""; ?>>Luxembourg</option>
-                                                    <option value="Malta" <?php echo old("country") == "Malta" ? "selected" : ""; ?>>Malta</option>
-                                                    <option value="Netherlands" <?php echo old("country") == "Netherlands" ? "selected" : ""; ?>>Netherlands</option>
-                                                    <option value="Poland" <?php echo old("country") == "Poland" ? "selected" : ""; ?>>Poland</option>
-                                                    <option value="Portugal" <?php echo old("country") == "Portugal" ? "selected" : ""; ?>>Portugal</option>
-                                                    <option value="Romania" <?php echo old("country") == "Romania" ? "selected" : ""; ?>>Romania</option>
-                                                    <option value="Slovakia" <?php echo old("country") == "Slovakia" ? "selected" : ""; ?>>Slovakia</option>
-                                                    <option value="Slovenia" <?php echo old("country") == "Slovenia" ? "selected" : ""; ?>>Slovenia</option>
-                                                    <option value="Spain" <?php echo old("country") == "Spain" ? "selected" : ""; ?>>Spain</option>
-                                                    <option value="Sweden" <?php echo old("country") == "Sweden" ? "selected" : ""; ?>>Sweden</option>
-                                                    <option value="United Kingdom" <?php echo old("country") == "United Kingdom" ? "selected" : ""; ?>>United Kingdom</option>
+                                                <select id="country" name="country" class="form-control">
+                                                    <option value="">- select your country -</option>
+                                                    <option data-currency="EUR" value="Austria" <?php echo old("country") == "Austria" ? "selected" : ""; ?>>Austria</option>
+                                                    <option data-currency="EUR" value="Belgium" <?php echo old("country") == "Belgium" ? "selected" : ""; ?>>Belgium</option>
+                                                    <option data-currency="EUR" value="Bulgaria" <?php echo old("country") == "Bulgaria" ? "selected" : ""; ?>>Bulgaria</option>
+                                                    <option data-currency="EUR" value="Cyprus" <?php echo old("country") == "Cyprus" ? "selected" : ""; ?>>Cyprus</option>
+                                                    <option data-currency="EUR" value="Czech Republic" <?php echo old("country") == "Czech Republic" ? "selected" : ""; ?>>Czech Republic</option>
+                                                    <option data-currency="EUR" value="Denmark" <?php echo old("country") == "Denmark" ? "selected" : ""; ?>>Denmark</option>
+                                                    <option data-currency="EUR" value="Estonia" <?php echo old("country") == "Estonia" ? "selected" : ""; ?>>Estonia</option>
+                                                    <option data-currency="EUR" value="Finland" <?php echo old("country") == "Finland" ? "selected" : ""; ?>>Finland</option>
+                                                    <option data-currency="EUR" value="France" <?php echo old("country") == "France" ? "selected" : ""; ?>>France</option>
+                                                    <option data-currency="EUR" value="Germany" <?php echo old("country") == "Germany" ? "selected" : ""; ?>>Germany</option>
+                                                    <option data-currency="EUR" value="Greece" <?php echo old("country") == "Greece" ? "selected" : ""; ?>>Greece</option>
+                                                    <option data-currency="EUR" value="Hungary" <?php echo old("country") == "Hungary" ? "selected" : ""; ?>>Hungary</option>
+                                                    <option data-currency="EUR" value="Ireland" <?php echo old("country") == "Ireland" ? "selected" : ""; ?>>Ireland</option>
+                                                    <option data-currency="EUR" value="Italy" <?php echo old("country") == "Italy" ? "selected" : ""; ?>>Italy</option>
+                                                    <option data-currency="EUR" value="Latvia" <?php echo old("country") == "Latvia" ? "selected" : ""; ?>>Latvia</option>
+                                                    <option data-currency="EUR" value="Lithuania" <?php echo old("country") == "Lithuania" ? "selected" : ""; ?>>Lithuania</option>
+                                                    <option data-currency="EUR" value="Luxembourg" <?php echo old("country") == "Luxembourg" ? "selected" : ""; ?>>Luxembourg</option>
+                                                    <option data-currency="EUR" value="Malta" <?php echo old("country") == "Malta" ? "selected" : ""; ?>>Malta</option>
+                                                    <option data-currency="EUR" value="Netherlands" <?php echo old("country") == "Netherlands" ? "selected" : ""; ?>>Netherlands</option>
+                                                    <option data-currency="EUR" value="Poland" <?php echo old("country") == "Poland" ? "selected" : ""; ?>>Poland</option>
+                                                    <option data-currency="EUR" value="Portugal" <?php echo old("country") == "Portugal" ? "selected" : ""; ?>>Portugal</option>
+                                                    <option data-currency="EUR" value="Romania" <?php echo old("country") == "Romania" ? "selected" : ""; ?>>Romania</option>
+                                                    <option data-currency="EUR" value="Slovakia" <?php echo old("country") == "Slovakia" ? "selected" : ""; ?>>Slovakia</option>
+                                                    <option data-currency="EUR" value="Slovenia" <?php echo old("country") == "Slovenia" ? "selected" : ""; ?>>Slovenia</option>
+                                                    <option data-currency="EUR" value="Spain" <?php echo old("country") == "Spain" ? "selected" : ""; ?>>Spain</option>
+                                                    <option data-currency="EUR" value="Sweden" <?php echo old("country") == "Sweden" ? "selected" : ""; ?>>Sweden</option>
+                                                    <option data-currency="EUR" value="United Kingdom" <?php echo old("country") == "United Kingdom" ? "selected" : ""; ?>>United Kingdom</option>
                                                 </select>
                                                 @if ($errors->has('country'))
                                                     <span class="help-block">
@@ -258,4 +257,12 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        $(function() {
+            new register();
+        });
+    </script>
 @endsection

@@ -8,9 +8,9 @@ var formatter = {
         var ret = "";
 
         if(cell_data) {
-            ret = '<button data-interaction="enable" data-disable="1" class="btn btn-xs btn-danger"><i class="fa fa-times"></i></button>'
+            ret = '<button data-interaction="enable" data-disable="1" class="btn btn-xs btn-success"><i class="fa fa-check"></i></button>'
         } else {
-            ret = '<button data-interaction="enable" class="btn btn-xs btn-success"><i class="fa fa-check"></i></button>'
+            ret = '<button data-interaction="enable" class="btn btn-xs btn-danger"><i class="fa fa-times"></i></button>'
         }
 
         return ret;

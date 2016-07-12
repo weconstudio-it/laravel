@@ -377,7 +377,7 @@ var app = {
 		//if (noBlockUI == 0)
 		//	app.blockUI(true);
 
-		url = url.replace("#", "");
+		if(url) url = url.replace("#", "");
 		if(url.indexOf(app.baseUrl) < 0) {
 			if(url[0] == "/") url = url.substring(1, url.length);
 			url = app.baseUrl + "/" + url;
@@ -914,11 +914,8 @@ var crud = function(options) {
 			app.formSubmit($("#" + options.form).attr("action"), $("#" + options.form), {}, function(data) {
 				if(data.response) {
 					app.success("", "Saved!");
-					setTimeout(function() {
-						if(reload) app.reload();
-						if(href) app.href(href);
-					}, 500);
-					app.href();
+					if(reload) app.reload();
+					if(href) app.href(href);
 				} else {
 					app.warning("", data.message);
 				}
@@ -1535,9 +1532,9 @@ var formatter = {
         var ret = "";
 
         if(cell_data) {
-            ret = '<button data-interaction="enable" data-disable="1" class="btn btn-xs btn-danger"><i class="fa fa-times"></i></button>'
+            ret = '<button data-interaction="enable" data-disable="1" class="btn btn-xs btn-success"><i class="fa fa-check"></i></button>'
         } else {
-            ret = '<button data-interaction="enable" class="btn btn-xs btn-success"><i class="fa fa-check"></i></button>'
+            ret = '<button data-interaction="enable" class="btn btn-xs btn-danger"><i class="fa fa-times"></i></button>'
         }
 
         return ret;
@@ -2056,6 +2053,20 @@ var weconsPopupper = {
     sourceUrl: "" // NB deve terminare con '/'
 };
 
+
+var register = function() {
+	
+	this.bindEvents = function() {
+		$('#country').unbind('change').bind('change', function() {
+			var currency = $(this).find('option:selected').attr('data-currency');
+			$('#currency').val(currency);
+		});
+
+		$('#country').trigger("change");
+	};
+	
+	this.bindEvents();
+};
 
 var user = function(ajaxUrl) {
 

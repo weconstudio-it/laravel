@@ -19,7 +19,6 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildJobsQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildJobsQuery orderByQueue($order = Criteria::ASC) Order by the queue column
  * @method     ChildJobsQuery orderByPayload($order = Criteria::ASC) Order by the payload column
  * @method     ChildJobsQuery orderByAttempts($order = Criteria::ASC) Order by the attempts column
@@ -28,8 +27,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildJobsQuery orderByAvailableAt($order = Criteria::ASC) Order by the available_at column
  * @method     ChildJobsQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildJobsQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
+ * @method     ChildJobsQuery orderById($order = Criteria::ASC) Order by the id column
  *
- * @method     ChildJobsQuery groupById() Group by the id column
  * @method     ChildJobsQuery groupByQueue() Group by the queue column
  * @method     ChildJobsQuery groupByPayload() Group by the payload column
  * @method     ChildJobsQuery groupByAttempts() Group by the attempts column
@@ -38,6 +37,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildJobsQuery groupByAvailableAt() Group by the available_at column
  * @method     ChildJobsQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildJobsQuery groupByUpdatedAt() Group by the updated_at column
+ * @method     ChildJobsQuery groupById() Group by the id column
  *
  * @method     ChildJobsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildJobsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -46,7 +46,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildJobs findOne(ConnectionInterface $con = null) Return the first ChildJobs matching the query
  * @method     ChildJobs findOneOrCreate(ConnectionInterface $con = null) Return the first ChildJobs matching the query, or a new ChildJobs object populated from the query conditions when no match is found
  *
- * @method     ChildJobs findOneById(int $id) Return the first ChildJobs filtered by the id column
  * @method     ChildJobs findOneByQueue(string $queue) Return the first ChildJobs filtered by the queue column
  * @method     ChildJobs findOneByPayload(string $payload) Return the first ChildJobs filtered by the payload column
  * @method     ChildJobs findOneByAttempts(int $attempts) Return the first ChildJobs filtered by the attempts column
@@ -54,12 +53,12 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildJobs findOneByReservedAt(int $reserved_at) Return the first ChildJobs filtered by the reserved_at column
  * @method     ChildJobs findOneByAvailableAt(int $available_at) Return the first ChildJobs filtered by the available_at column
  * @method     ChildJobs findOneByCreatedAt(string $created_at) Return the first ChildJobs filtered by the created_at column
- * @method     ChildJobs findOneByUpdatedAt(string $updated_at) Return the first ChildJobs filtered by the updated_at column *
+ * @method     ChildJobs findOneByUpdatedAt(string $updated_at) Return the first ChildJobs filtered by the updated_at column
+ * @method     ChildJobs findOneById(int $id) Return the first ChildJobs filtered by the id column *
 
  * @method     ChildJobs requirePk($key, ConnectionInterface $con = null) Return the ChildJobs by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildJobs requireOne(ConnectionInterface $con = null) Return the first ChildJobs matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildJobs requireOneById(int $id) Return the first ChildJobs filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildJobs requireOneByQueue(string $queue) Return the first ChildJobs filtered by the queue column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildJobs requireOneByPayload(string $payload) Return the first ChildJobs filtered by the payload column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildJobs requireOneByAttempts(int $attempts) Return the first ChildJobs filtered by the attempts column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -68,9 +67,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildJobs requireOneByAvailableAt(int $available_at) Return the first ChildJobs filtered by the available_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildJobs requireOneByCreatedAt(string $created_at) Return the first ChildJobs filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildJobs requireOneByUpdatedAt(string $updated_at) Return the first ChildJobs filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildJobs requireOneById(int $id) Return the first ChildJobs filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildJobs[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildJobs objects based on current ModelCriteria
- * @method     ChildJobs[]|ObjectCollection findById(int $id) Return ChildJobs objects filtered by the id column
  * @method     ChildJobs[]|ObjectCollection findByQueue(string $queue) Return ChildJobs objects filtered by the queue column
  * @method     ChildJobs[]|ObjectCollection findByPayload(string $payload) Return ChildJobs objects filtered by the payload column
  * @method     ChildJobs[]|ObjectCollection findByAttempts(int $attempts) Return ChildJobs objects filtered by the attempts column
@@ -79,6 +78,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildJobs[]|ObjectCollection findByAvailableAt(int $available_at) Return ChildJobs objects filtered by the available_at column
  * @method     ChildJobs[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildJobs objects filtered by the created_at column
  * @method     ChildJobs[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildJobs objects filtered by the updated_at column
+ * @method     ChildJobs[]|ObjectCollection findById(int $id) Return ChildJobs objects filtered by the id column
  * @method     ChildJobs[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -171,7 +171,7 @@ abstract class JobsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, queue, payload, attempts, reserved, reserved_at, available_at, created_at, updated_at FROM jobs WHERE id = :p0';
+        $sql = 'SELECT queue, payload, attempts, reserved, reserved_at, available_at, created_at, updated_at, id FROM jobs WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -259,47 +259,6 @@ abstract class JobsQuery extends ModelCriteria
     {
 
         return $this->addUsingAlias(JobsTableMap::COL_ID, $keys, Criteria::IN);
-    }
-
-    /**
-     * Filter the query on the id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterById(1234); // WHERE id = 1234
-     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
-     * $query->filterById(array('min' => 12)); // WHERE id > 12
-     * </code>
-     *
-     * @param     mixed $id The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildJobsQuery The current query, for fluid interface
-     */
-    public function filterById($id = null, $comparison = null)
-    {
-        if (is_array($id)) {
-            $useMinMax = false;
-            if (isset($id['min'])) {
-                $this->addUsingAlias(JobsTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($id['max'])) {
-                $this->addUsingAlias(JobsTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(JobsTableMap::COL_ID, $id, $comparison);
     }
 
     /**
@@ -608,6 +567,47 @@ abstract class JobsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(JobsTableMap::COL_UPDATED_AT, $updatedAt, $comparison);
+    }
+
+    /**
+     * Filter the query on the id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterById(1234); // WHERE id = 1234
+     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
+     * $query->filterById(array('min' => 12)); // WHERE id > 12
+     * </code>
+     *
+     * @param     mixed $id The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildJobsQuery The current query, for fluid interface
+     */
+    public function filterById($id = null, $comparison = null)
+    {
+        if (is_array($id)) {
+            $useMinMax = false;
+            if (isset($id['min'])) {
+                $this->addUsingAlias(JobsTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($id['max'])) {
+                $this->addUsingAlias(JobsTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(JobsTableMap::COL_ID, $id, $comparison);
     }
 
     /**

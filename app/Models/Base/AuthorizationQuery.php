@@ -19,7 +19,6 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildAuthorizationQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildAuthorizationQuery orderByUri($order = Criteria::ASC) Order by the uri column
  * @method     ChildAuthorizationQuery orderByMethod($order = Criteria::ASC) Order by the method column
  * @method     ChildAuthorizationQuery orderByIdUser($order = Criteria::ASC) Order by the id_user column
@@ -30,8 +29,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAuthorizationQuery orderByEnabled($order = Criteria::ASC) Order by the enabled column
  * @method     ChildAuthorizationQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildAuthorizationQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
+ * @method     ChildAuthorizationQuery orderById($order = Criteria::ASC) Order by the id column
  *
- * @method     ChildAuthorizationQuery groupById() Group by the id column
  * @method     ChildAuthorizationQuery groupByUri() Group by the uri column
  * @method     ChildAuthorizationQuery groupByMethod() Group by the method column
  * @method     ChildAuthorizationQuery groupByIdUser() Group by the id_user column
@@ -42,6 +41,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAuthorizationQuery groupByEnabled() Group by the enabled column
  * @method     ChildAuthorizationQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildAuthorizationQuery groupByUpdatedAt() Group by the updated_at column
+ * @method     ChildAuthorizationQuery groupById() Group by the id column
  *
  * @method     ChildAuthorizationQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildAuthorizationQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -50,7 +50,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAuthorization findOne(ConnectionInterface $con = null) Return the first ChildAuthorization matching the query
  * @method     ChildAuthorization findOneOrCreate(ConnectionInterface $con = null) Return the first ChildAuthorization matching the query, or a new ChildAuthorization object populated from the query conditions when no match is found
  *
- * @method     ChildAuthorization findOneById(int $id) Return the first ChildAuthorization filtered by the id column
  * @method     ChildAuthorization findOneByUri(string $uri) Return the first ChildAuthorization filtered by the uri column
  * @method     ChildAuthorization findOneByMethod(string $method) Return the first ChildAuthorization filtered by the method column
  * @method     ChildAuthorization findOneByIdUser(int $id_user) Return the first ChildAuthorization filtered by the id_user column
@@ -60,12 +59,12 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAuthorization findOneByLabel(string $label) Return the first ChildAuthorization filtered by the label column
  * @method     ChildAuthorization findOneByEnabled(boolean $enabled) Return the first ChildAuthorization filtered by the enabled column
  * @method     ChildAuthorization findOneByCreatedAt(string $created_at) Return the first ChildAuthorization filtered by the created_at column
- * @method     ChildAuthorization findOneByUpdatedAt(string $updated_at) Return the first ChildAuthorization filtered by the updated_at column *
+ * @method     ChildAuthorization findOneByUpdatedAt(string $updated_at) Return the first ChildAuthorization filtered by the updated_at column
+ * @method     ChildAuthorization findOneById(int $id) Return the first ChildAuthorization filtered by the id column *
 
  * @method     ChildAuthorization requirePk($key, ConnectionInterface $con = null) Return the ChildAuthorization by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAuthorization requireOne(ConnectionInterface $con = null) Return the first ChildAuthorization matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildAuthorization requireOneById(int $id) Return the first ChildAuthorization filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAuthorization requireOneByUri(string $uri) Return the first ChildAuthorization filtered by the uri column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAuthorization requireOneByMethod(string $method) Return the first ChildAuthorization filtered by the method column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAuthorization requireOneByIdUser(int $id_user) Return the first ChildAuthorization filtered by the id_user column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -76,9 +75,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAuthorization requireOneByEnabled(boolean $enabled) Return the first ChildAuthorization filtered by the enabled column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAuthorization requireOneByCreatedAt(string $created_at) Return the first ChildAuthorization filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAuthorization requireOneByUpdatedAt(string $updated_at) Return the first ChildAuthorization filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAuthorization requireOneById(int $id) Return the first ChildAuthorization filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildAuthorization[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildAuthorization objects based on current ModelCriteria
- * @method     ChildAuthorization[]|ObjectCollection findById(int $id) Return ChildAuthorization objects filtered by the id column
  * @method     ChildAuthorization[]|ObjectCollection findByUri(string $uri) Return ChildAuthorization objects filtered by the uri column
  * @method     ChildAuthorization[]|ObjectCollection findByMethod(string $method) Return ChildAuthorization objects filtered by the method column
  * @method     ChildAuthorization[]|ObjectCollection findByIdUser(int $id_user) Return ChildAuthorization objects filtered by the id_user column
@@ -89,6 +88,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAuthorization[]|ObjectCollection findByEnabled(boolean $enabled) Return ChildAuthorization objects filtered by the enabled column
  * @method     ChildAuthorization[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildAuthorization objects filtered by the created_at column
  * @method     ChildAuthorization[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildAuthorization objects filtered by the updated_at column
+ * @method     ChildAuthorization[]|ObjectCollection findById(int $id) Return ChildAuthorization objects filtered by the id column
  * @method     ChildAuthorization[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -181,7 +181,7 @@ abstract class AuthorizationQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, uri, method, id_user, id_user_group, order, policy, label, enabled, created_at, updated_at FROM authorization WHERE id = :p0';
+        $sql = 'SELECT uri, method, id_user, id_user_group, order, policy, label, enabled, created_at, updated_at, id FROM authorization WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -269,47 +269,6 @@ abstract class AuthorizationQuery extends ModelCriteria
     {
 
         return $this->addUsingAlias(AuthorizationTableMap::COL_ID, $keys, Criteria::IN);
-    }
-
-    /**
-     * Filter the query on the id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterById(1234); // WHERE id = 1234
-     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
-     * $query->filterById(array('min' => 12)); // WHERE id > 12
-     * </code>
-     *
-     * @param     mixed $id The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildAuthorizationQuery The current query, for fluid interface
-     */
-    public function filterById($id = null, $comparison = null)
-    {
-        if (is_array($id)) {
-            $useMinMax = false;
-            if (isset($id['min'])) {
-                $this->addUsingAlias(AuthorizationTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($id['max'])) {
-                $this->addUsingAlias(AuthorizationTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(AuthorizationTableMap::COL_ID, $id, $comparison);
     }
 
     /**
@@ -660,6 +619,47 @@ abstract class AuthorizationQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(AuthorizationTableMap::COL_UPDATED_AT, $updatedAt, $comparison);
+    }
+
+    /**
+     * Filter the query on the id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterById(1234); // WHERE id = 1234
+     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
+     * $query->filterById(array('min' => 12)); // WHERE id > 12
+     * </code>
+     *
+     * @param     mixed $id The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildAuthorizationQuery The current query, for fluid interface
+     */
+    public function filterById($id = null, $comparison = null)
+    {
+        if (is_array($id)) {
+            $useMinMax = false;
+            if (isset($id['min'])) {
+                $this->addUsingAlias(AuthorizationTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($id['max'])) {
+                $this->addUsingAlias(AuthorizationTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(AuthorizationTableMap::COL_ID, $id, $comparison);
     }
 
     /**

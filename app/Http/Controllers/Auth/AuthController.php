@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\Currency;
+use App\Models\CurrencyQuery;
 use App\Models\Subject;
 use App\Models\User;
 use App\Models\UserGroup;
@@ -58,7 +60,8 @@ class AuthController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-			'iso' => 'required',
+			'id_language' => 'required|exists:language,id',
+			'currency' => 'required',
 			'first_name' => 'required|max:255',
 			'last_name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:user',
@@ -122,13 +125,17 @@ class AuthController extends Controller
 			$data = $request->all();
 			$data['id_subject'] = $subject->getId();
 			$data['name'] = $request->input('first_name', '') . " " . $request->input('last_name', '');
+			// currency
+			$currency = CurrencyQuery::create()->findOneByShortName($request->input('currency', 'EUR'));
+			if(!$currency instanceof Currency) throw new \Exception('Currency ' . $request->input('currency', 'EUR') . ' not found!');
+			$data['id_currency'] = $currency->getId();
 			$user = $this->create($data);
 			$con->commit();
 		} catch(\Exception $e) {
 			Log::e("\n$e");
 			$con->rollBack();
 			return redirect('/register/error')->withInput([
-				'message' => 'Failed create account. Retry later!'
+				'message' => U::T_("Creazione account fallita. Riprova più tardi!")
 			]);
 		}
 		

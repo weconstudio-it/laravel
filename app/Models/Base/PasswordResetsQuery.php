@@ -19,17 +19,17 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildPasswordResetsQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildPasswordResetsQuery orderByEmail($order = Criteria::ASC) Order by the email column
  * @method     ChildPasswordResetsQuery orderByToken($order = Criteria::ASC) Order by the token column
  * @method     ChildPasswordResetsQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildPasswordResetsQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
+ * @method     ChildPasswordResetsQuery orderById($order = Criteria::ASC) Order by the id column
  *
- * @method     ChildPasswordResetsQuery groupById() Group by the id column
  * @method     ChildPasswordResetsQuery groupByEmail() Group by the email column
  * @method     ChildPasswordResetsQuery groupByToken() Group by the token column
  * @method     ChildPasswordResetsQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildPasswordResetsQuery groupByUpdatedAt() Group by the updated_at column
+ * @method     ChildPasswordResetsQuery groupById() Group by the id column
  *
  * @method     ChildPasswordResetsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildPasswordResetsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -38,27 +38,27 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPasswordResets findOne(ConnectionInterface $con = null) Return the first ChildPasswordResets matching the query
  * @method     ChildPasswordResets findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPasswordResets matching the query, or a new ChildPasswordResets object populated from the query conditions when no match is found
  *
- * @method     ChildPasswordResets findOneById(int $id) Return the first ChildPasswordResets filtered by the id column
  * @method     ChildPasswordResets findOneByEmail(string $email) Return the first ChildPasswordResets filtered by the email column
  * @method     ChildPasswordResets findOneByToken(string $token) Return the first ChildPasswordResets filtered by the token column
  * @method     ChildPasswordResets findOneByCreatedAt(string $created_at) Return the first ChildPasswordResets filtered by the created_at column
- * @method     ChildPasswordResets findOneByUpdatedAt(string $updated_at) Return the first ChildPasswordResets filtered by the updated_at column *
+ * @method     ChildPasswordResets findOneByUpdatedAt(string $updated_at) Return the first ChildPasswordResets filtered by the updated_at column
+ * @method     ChildPasswordResets findOneById(int $id) Return the first ChildPasswordResets filtered by the id column *
 
  * @method     ChildPasswordResets requirePk($key, ConnectionInterface $con = null) Return the ChildPasswordResets by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPasswordResets requireOne(ConnectionInterface $con = null) Return the first ChildPasswordResets matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildPasswordResets requireOneById(int $id) Return the first ChildPasswordResets filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPasswordResets requireOneByEmail(string $email) Return the first ChildPasswordResets filtered by the email column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPasswordResets requireOneByToken(string $token) Return the first ChildPasswordResets filtered by the token column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPasswordResets requireOneByCreatedAt(string $created_at) Return the first ChildPasswordResets filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPasswordResets requireOneByUpdatedAt(string $updated_at) Return the first ChildPasswordResets filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPasswordResets requireOneById(int $id) Return the first ChildPasswordResets filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildPasswordResets[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildPasswordResets objects based on current ModelCriteria
- * @method     ChildPasswordResets[]|ObjectCollection findById(int $id) Return ChildPasswordResets objects filtered by the id column
  * @method     ChildPasswordResets[]|ObjectCollection findByEmail(string $email) Return ChildPasswordResets objects filtered by the email column
  * @method     ChildPasswordResets[]|ObjectCollection findByToken(string $token) Return ChildPasswordResets objects filtered by the token column
  * @method     ChildPasswordResets[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildPasswordResets objects filtered by the created_at column
  * @method     ChildPasswordResets[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildPasswordResets objects filtered by the updated_at column
+ * @method     ChildPasswordResets[]|ObjectCollection findById(int $id) Return ChildPasswordResets objects filtered by the id column
  * @method     ChildPasswordResets[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -151,7 +151,7 @@ abstract class PasswordResetsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, email, token, created_at, updated_at FROM password_resets WHERE id = :p0';
+        $sql = 'SELECT email, token, created_at, updated_at, id FROM password_resets WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -239,47 +239,6 @@ abstract class PasswordResetsQuery extends ModelCriteria
     {
 
         return $this->addUsingAlias(PasswordResetsTableMap::COL_ID, $keys, Criteria::IN);
-    }
-
-    /**
-     * Filter the query on the id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterById(1234); // WHERE id = 1234
-     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
-     * $query->filterById(array('min' => 12)); // WHERE id > 12
-     * </code>
-     *
-     * @param     mixed $id The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildPasswordResetsQuery The current query, for fluid interface
-     */
-    public function filterById($id = null, $comparison = null)
-    {
-        if (is_array($id)) {
-            $useMinMax = false;
-            if (isset($id['min'])) {
-                $this->addUsingAlias(PasswordResetsTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($id['max'])) {
-                $this->addUsingAlias(PasswordResetsTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(PasswordResetsTableMap::COL_ID, $id, $comparison);
     }
 
     /**
@@ -424,6 +383,47 @@ abstract class PasswordResetsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PasswordResetsTableMap::COL_UPDATED_AT, $updatedAt, $comparison);
+    }
+
+    /**
+     * Filter the query on the id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterById(1234); // WHERE id = 1234
+     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
+     * $query->filterById(array('min' => 12)); // WHERE id > 12
+     * </code>
+     *
+     * @param     mixed $id The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildPasswordResetsQuery The current query, for fluid interface
+     */
+    public function filterById($id = null, $comparison = null)
+    {
+        if (is_array($id)) {
+            $useMinMax = false;
+            if (isset($id['min'])) {
+                $this->addUsingAlias(PasswordResetsTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($id['max'])) {
+                $this->addUsingAlias(PasswordResetsTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(PasswordResetsTableMap::COL_ID, $id, $comparison);
     }
 
     /**

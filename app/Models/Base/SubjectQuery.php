@@ -20,9 +20,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildSubjectQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildSubjectQuery orderByActive($order = Criteria::ASC) Order by the active column
- * @method     ChildSubjectQuery orderByIso($order = Criteria::ASC) Order by the iso column
  * @method     ChildSubjectQuery orderByFirstName($order = Criteria::ASC) Order by the first_name column
  * @method     ChildSubjectQuery orderByLastName($order = Criteria::ASC) Order by the last_name column
  * @method     ChildSubjectQuery orderByAddress($order = Criteria::ASC) Order by the address column
@@ -35,10 +33,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSubjectQuery orderByNotes($order = Criteria::ASC) Order by the notes column
  * @method     ChildSubjectQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildSubjectQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
+ * @method     ChildSubjectQuery orderById($order = Criteria::ASC) Order by the id column
  *
- * @method     ChildSubjectQuery groupById() Group by the id column
  * @method     ChildSubjectQuery groupByActive() Group by the active column
- * @method     ChildSubjectQuery groupByIso() Group by the iso column
  * @method     ChildSubjectQuery groupByFirstName() Group by the first_name column
  * @method     ChildSubjectQuery groupByLastName() Group by the last_name column
  * @method     ChildSubjectQuery groupByAddress() Group by the address column
@@ -51,6 +48,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSubjectQuery groupByNotes() Group by the notes column
  * @method     ChildSubjectQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildSubjectQuery groupByUpdatedAt() Group by the updated_at column
+ * @method     ChildSubjectQuery groupById() Group by the id column
  *
  * @method     ChildSubjectQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildSubjectQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -65,9 +63,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSubject findOne(ConnectionInterface $con = null) Return the first ChildSubject matching the query
  * @method     ChildSubject findOneOrCreate(ConnectionInterface $con = null) Return the first ChildSubject matching the query, or a new ChildSubject object populated from the query conditions when no match is found
  *
- * @method     ChildSubject findOneById(int $id) Return the first ChildSubject filtered by the id column
  * @method     ChildSubject findOneByActive(boolean $active) Return the first ChildSubject filtered by the active column
- * @method     ChildSubject findOneByIso(string $iso) Return the first ChildSubject filtered by the iso column
  * @method     ChildSubject findOneByFirstName(string $first_name) Return the first ChildSubject filtered by the first_name column
  * @method     ChildSubject findOneByLastName(string $last_name) Return the first ChildSubject filtered by the last_name column
  * @method     ChildSubject findOneByAddress(string $address) Return the first ChildSubject filtered by the address column
@@ -79,14 +75,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSubject findOneByFax(string $fax) Return the first ChildSubject filtered by the fax column
  * @method     ChildSubject findOneByNotes(string $notes) Return the first ChildSubject filtered by the notes column
  * @method     ChildSubject findOneByCreatedAt(string $created_at) Return the first ChildSubject filtered by the created_at column
- * @method     ChildSubject findOneByUpdatedAt(string $updated_at) Return the first ChildSubject filtered by the updated_at column *
+ * @method     ChildSubject findOneByUpdatedAt(string $updated_at) Return the first ChildSubject filtered by the updated_at column
+ * @method     ChildSubject findOneById(int $id) Return the first ChildSubject filtered by the id column *
 
  * @method     ChildSubject requirePk($key, ConnectionInterface $con = null) Return the ChildSubject by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSubject requireOne(ConnectionInterface $con = null) Return the first ChildSubject matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildSubject requireOneById(int $id) Return the first ChildSubject filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSubject requireOneByActive(boolean $active) Return the first ChildSubject filtered by the active column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildSubject requireOneByIso(string $iso) Return the first ChildSubject filtered by the iso column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSubject requireOneByFirstName(string $first_name) Return the first ChildSubject filtered by the first_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSubject requireOneByLastName(string $last_name) Return the first ChildSubject filtered by the last_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSubject requireOneByAddress(string $address) Return the first ChildSubject filtered by the address column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -99,11 +94,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSubject requireOneByNotes(string $notes) Return the first ChildSubject filtered by the notes column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSubject requireOneByCreatedAt(string $created_at) Return the first ChildSubject filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSubject requireOneByUpdatedAt(string $updated_at) Return the first ChildSubject filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSubject requireOneById(int $id) Return the first ChildSubject filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildSubject[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildSubject objects based on current ModelCriteria
- * @method     ChildSubject[]|ObjectCollection findById(int $id) Return ChildSubject objects filtered by the id column
  * @method     ChildSubject[]|ObjectCollection findByActive(boolean $active) Return ChildSubject objects filtered by the active column
- * @method     ChildSubject[]|ObjectCollection findByIso(string $iso) Return ChildSubject objects filtered by the iso column
  * @method     ChildSubject[]|ObjectCollection findByFirstName(string $first_name) Return ChildSubject objects filtered by the first_name column
  * @method     ChildSubject[]|ObjectCollection findByLastName(string $last_name) Return ChildSubject objects filtered by the last_name column
  * @method     ChildSubject[]|ObjectCollection findByAddress(string $address) Return ChildSubject objects filtered by the address column
@@ -116,6 +110,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSubject[]|ObjectCollection findByNotes(string $notes) Return ChildSubject objects filtered by the notes column
  * @method     ChildSubject[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildSubject objects filtered by the created_at column
  * @method     ChildSubject[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildSubject objects filtered by the updated_at column
+ * @method     ChildSubject[]|ObjectCollection findById(int $id) Return ChildSubject objects filtered by the id column
  * @method     ChildSubject[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -208,7 +203,7 @@ abstract class SubjectQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, active, iso, first_name, last_name, address, zip, city, province, country, phone, fax, notes, created_at, updated_at FROM subject WHERE id = :p0';
+        $sql = 'SELECT active, first_name, last_name, address, zip, city, province, country, phone, fax, notes, created_at, updated_at, id FROM subject WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -299,47 +294,6 @@ abstract class SubjectQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterById(1234); // WHERE id = 1234
-     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
-     * $query->filterById(array('min' => 12)); // WHERE id > 12
-     * </code>
-     *
-     * @param     mixed $id The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildSubjectQuery The current query, for fluid interface
-     */
-    public function filterById($id = null, $comparison = null)
-    {
-        if (is_array($id)) {
-            $useMinMax = false;
-            if (isset($id['min'])) {
-                $this->addUsingAlias(SubjectTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($id['max'])) {
-                $this->addUsingAlias(SubjectTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(SubjectTableMap::COL_ID, $id, $comparison);
-    }
-
-    /**
      * Filter the query on the active column
      *
      * Example usage:
@@ -364,35 +318,6 @@ abstract class SubjectQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(SubjectTableMap::COL_ACTIVE, $active, $comparison);
-    }
-
-    /**
-     * Filter the query on the iso column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByIso('fooValue');   // WHERE iso = 'fooValue'
-     * $query->filterByIso('%fooValue%'); // WHERE iso LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $iso The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildSubjectQuery The current query, for fluid interface
-     */
-    public function filterByIso($iso = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($iso)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $iso)) {
-                $iso = str_replace('*', '%', $iso);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(SubjectTableMap::COL_ISO, $iso, $comparison);
     }
 
     /**
@@ -769,6 +694,47 @@ abstract class SubjectQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(SubjectTableMap::COL_UPDATED_AT, $updatedAt, $comparison);
+    }
+
+    /**
+     * Filter the query on the id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterById(1234); // WHERE id = 1234
+     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
+     * $query->filterById(array('min' => 12)); // WHERE id > 12
+     * </code>
+     *
+     * @param     mixed $id The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildSubjectQuery The current query, for fluid interface
+     */
+    public function filterById($id = null, $comparison = null)
+    {
+        if (is_array($id)) {
+            $useMinMax = false;
+            if (isset($id['min'])) {
+                $this->addUsingAlias(SubjectTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($id['max'])) {
+                $this->addUsingAlias(SubjectTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(SubjectTableMap::COL_ID, $id, $comparison);
     }
 
     /**

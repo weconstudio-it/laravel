@@ -2,8 +2,8 @@
 
 namespace App\Models\Map;
 
-use App\Models\Authorization;
-use App\Models\AuthorizationQuery;
+use App\Models\Currency;
+use App\Models\CurrencyQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'authorization' table.
+ * This class defines the structure of the 'currency' table.
  *
  *
  *
@@ -26,7 +26,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * (i.e. if it's a text column type).
  *
  */
-class AuthorizationTableMap extends TableMap
+class CurrencyTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -34,7 +34,7 @@ class AuthorizationTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.AuthorizationTableMap';
+    const CLASS_NAME = '.Map.CurrencyTableMap';
 
     /**
      * The default database name for this class
@@ -44,22 +44,22 @@ class AuthorizationTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'authorization';
+    const TABLE_NAME = 'currency';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\App\\Models\\Authorization';
+    const OM_CLASS = '\\App\\Models\\Currency';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'Authorization';
+    const CLASS_DEFAULT = 'Currency';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 11;
+    const NUM_COLUMNS = 4;
 
     /**
      * The number of lazy-loaded columns
@@ -69,62 +69,27 @@ class AuthorizationTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 11;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /**
-     * the column name for the uri field
+     * the column name for the symbol field
      */
-    const COL_URI = 'authorization.uri';
+    const COL_SYMBOL = 'currency.symbol';
 
     /**
-     * the column name for the method field
+     * the column name for the name field
      */
-    const COL_METHOD = 'authorization.method';
+    const COL_NAME = 'currency.name';
 
     /**
-     * the column name for the id_user field
+     * the column name for the short_name field
      */
-    const COL_ID_USER = 'authorization.id_user';
-
-    /**
-     * the column name for the id_user_group field
-     */
-    const COL_ID_USER_GROUP = 'authorization.id_user_group';
-
-    /**
-     * the column name for the order field
-     */
-    const COL_ORDER = 'authorization.order';
-
-    /**
-     * the column name for the policy field
-     */
-    const COL_POLICY = 'authorization.policy';
-
-    /**
-     * the column name for the label field
-     */
-    const COL_LABEL = 'authorization.label';
-
-    /**
-     * the column name for the enabled field
-     */
-    const COL_ENABLED = 'authorization.enabled';
-
-    /**
-     * the column name for the created_at field
-     */
-    const COL_CREATED_AT = 'authorization.created_at';
-
-    /**
-     * the column name for the updated_at field
-     */
-    const COL_UPDATED_AT = 'authorization.updated_at';
+    const COL_SHORT_NAME = 'currency.short_name';
 
     /**
      * the column name for the id field
      */
-    const COL_ID = 'authorization.id';
+    const COL_ID = 'currency.id';
 
     /**
      * The default string format for model objects of the related table
@@ -138,11 +103,11 @@ class AuthorizationTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Uri', 'Method', 'IdUser', 'IdUserGroup', 'Order', 'Policy', 'Label', 'Enabled', 'CreatedAt', 'UpdatedAt', 'Id', ),
-        self::TYPE_CAMELNAME     => array('uri', 'method', 'idUser', 'idUserGroup', 'order', 'policy', 'label', 'enabled', 'createdAt', 'updatedAt', 'id', ),
-        self::TYPE_COLNAME       => array(AuthorizationTableMap::COL_URI, AuthorizationTableMap::COL_METHOD, AuthorizationTableMap::COL_ID_USER, AuthorizationTableMap::COL_ID_USER_GROUP, AuthorizationTableMap::COL_ORDER, AuthorizationTableMap::COL_POLICY, AuthorizationTableMap::COL_LABEL, AuthorizationTableMap::COL_ENABLED, AuthorizationTableMap::COL_CREATED_AT, AuthorizationTableMap::COL_UPDATED_AT, AuthorizationTableMap::COL_ID, ),
-        self::TYPE_FIELDNAME     => array('uri', 'method', 'id_user', 'id_user_group', 'order', 'policy', 'label', 'enabled', 'created_at', 'updated_at', 'id', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+        self::TYPE_PHPNAME       => array('Symbol', 'Name', 'ShortName', 'Id', ),
+        self::TYPE_CAMELNAME     => array('symbol', 'name', 'shortName', 'id', ),
+        self::TYPE_COLNAME       => array(CurrencyTableMap::COL_SYMBOL, CurrencyTableMap::COL_NAME, CurrencyTableMap::COL_SHORT_NAME, CurrencyTableMap::COL_ID, ),
+        self::TYPE_FIELDNAME     => array('symbol', 'name', 'short_name', 'id', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -152,11 +117,11 @@ class AuthorizationTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Uri' => 0, 'Method' => 1, 'IdUser' => 2, 'IdUserGroup' => 3, 'Order' => 4, 'Policy' => 5, 'Label' => 6, 'Enabled' => 7, 'CreatedAt' => 8, 'UpdatedAt' => 9, 'Id' => 10, ),
-        self::TYPE_CAMELNAME     => array('uri' => 0, 'method' => 1, 'idUser' => 2, 'idUserGroup' => 3, 'order' => 4, 'policy' => 5, 'label' => 6, 'enabled' => 7, 'createdAt' => 8, 'updatedAt' => 9, 'id' => 10, ),
-        self::TYPE_COLNAME       => array(AuthorizationTableMap::COL_URI => 0, AuthorizationTableMap::COL_METHOD => 1, AuthorizationTableMap::COL_ID_USER => 2, AuthorizationTableMap::COL_ID_USER_GROUP => 3, AuthorizationTableMap::COL_ORDER => 4, AuthorizationTableMap::COL_POLICY => 5, AuthorizationTableMap::COL_LABEL => 6, AuthorizationTableMap::COL_ENABLED => 7, AuthorizationTableMap::COL_CREATED_AT => 8, AuthorizationTableMap::COL_UPDATED_AT => 9, AuthorizationTableMap::COL_ID => 10, ),
-        self::TYPE_FIELDNAME     => array('uri' => 0, 'method' => 1, 'id_user' => 2, 'id_user_group' => 3, 'order' => 4, 'policy' => 5, 'label' => 6, 'enabled' => 7, 'created_at' => 8, 'updated_at' => 9, 'id' => 10, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+        self::TYPE_PHPNAME       => array('Symbol' => 0, 'Name' => 1, 'ShortName' => 2, 'Id' => 3, ),
+        self::TYPE_CAMELNAME     => array('symbol' => 0, 'name' => 1, 'shortName' => 2, 'id' => 3, ),
+        self::TYPE_COLNAME       => array(CurrencyTableMap::COL_SYMBOL => 0, CurrencyTableMap::COL_NAME => 1, CurrencyTableMap::COL_SHORT_NAME => 2, CurrencyTableMap::COL_ID => 3, ),
+        self::TYPE_FIELDNAME     => array('symbol' => 0, 'name' => 1, 'short_name' => 2, 'id' => 3, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -169,23 +134,16 @@ class AuthorizationTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('authorization');
-        $this->setPhpName('Authorization');
+        $this->setName('currency');
+        $this->setPhpName('Currency');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\App\\Models\\Authorization');
+        $this->setClassName('\\App\\Models\\Currency');
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addColumn('uri', 'Uri', 'VARCHAR', true, 255, null);
-        $this->addColumn('method', 'Method', 'VARCHAR', false, 255, null);
-        $this->addColumn('id_user', 'IdUser', 'INTEGER', false, null, null);
-        $this->addColumn('id_user_group', 'IdUserGroup', 'INTEGER', false, null, null);
-        $this->addColumn('order', 'Order', 'INTEGER', false, null, null);
-        $this->addColumn('policy', 'Policy', 'BOOLEAN', true, 1, true);
-        $this->addColumn('label', 'Label', 'VARCHAR', false, 255, null);
-        $this->addColumn('enabled', 'Enabled', 'BOOLEAN', true, 1, true);
-        $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('symbol', 'Symbol', 'VARCHAR', true, 3, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', true, 100, null);
+        $this->addColumn('short_name', 'ShortName', 'VARCHAR', true, 20, null);
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
     } // initialize()
 
@@ -194,6 +152,20 @@ class AuthorizationTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('User', '\\App\\Models\\User', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id_currency',
+    1 => ':id',
+  ),
+), null, null, 'Users', false);
+        $this->addRelation('CurrenciesRateValidity', '\\App\\Models\\CurrenciesRateValidity', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id_currency',
+    1 => ':id',
+  ),
+), 'CASCADE', 'CASCADE', 'CurrenciesRateValidities', false);
     } // buildRelations()
 
     /**
@@ -205,10 +177,18 @@ class AuthorizationTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
             'auto_add_pk' => array('name' => 'id', 'autoIncrement' => 'true', 'type' => 'INTEGER', ),
         );
     } // getBehaviors()
+    /**
+     * Method to invalidate the instance pool of all tables related to currency     * by a foreign key with ON DELETE CASCADE
+     */
+    public static function clearRelatedInstancePool()
+    {
+        // Invalidate objects in related instance pools,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        CurrenciesRateValidityTableMap::clearInstancePool();
+    }
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
@@ -226,11 +206,11 @@ class AuthorizationTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 10 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 3 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 10 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 3 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -249,7 +229,7 @@ class AuthorizationTableMap extends TableMap
     {
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 10 + $offset
+                ? 3 + $offset
                 : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
@@ -267,7 +247,7 @@ class AuthorizationTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? AuthorizationTableMap::CLASS_DEFAULT : AuthorizationTableMap::OM_CLASS;
+        return $withPrefix ? CurrencyTableMap::CLASS_DEFAULT : CurrencyTableMap::OM_CLASS;
     }
 
     /**
@@ -281,22 +261,22 @@ class AuthorizationTableMap extends TableMap
      *
      * @throws PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (Authorization object, last column rank)
+     * @return array           (Currency object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = AuthorizationTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = AuthorizationTableMap::getInstanceFromPool($key))) {
+        $key = CurrencyTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = CurrencyTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + AuthorizationTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + CurrencyTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = AuthorizationTableMap::OM_CLASS;
-            /** @var Authorization $obj */
+            $cls = CurrencyTableMap::OM_CLASS;
+            /** @var Currency $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            AuthorizationTableMap::addInstanceToPool($obj, $key);
+            CurrencyTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -319,18 +299,18 @@ class AuthorizationTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = AuthorizationTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = AuthorizationTableMap::getInstanceFromPool($key))) {
+            $key = CurrencyTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = CurrencyTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Authorization $obj */
+                /** @var Currency $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                AuthorizationTableMap::addInstanceToPool($obj, $key);
+                CurrencyTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -351,28 +331,14 @@ class AuthorizationTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(AuthorizationTableMap::COL_URI);
-            $criteria->addSelectColumn(AuthorizationTableMap::COL_METHOD);
-            $criteria->addSelectColumn(AuthorizationTableMap::COL_ID_USER);
-            $criteria->addSelectColumn(AuthorizationTableMap::COL_ID_USER_GROUP);
-            $criteria->addSelectColumn(AuthorizationTableMap::COL_ORDER);
-            $criteria->addSelectColumn(AuthorizationTableMap::COL_POLICY);
-            $criteria->addSelectColumn(AuthorizationTableMap::COL_LABEL);
-            $criteria->addSelectColumn(AuthorizationTableMap::COL_ENABLED);
-            $criteria->addSelectColumn(AuthorizationTableMap::COL_CREATED_AT);
-            $criteria->addSelectColumn(AuthorizationTableMap::COL_UPDATED_AT);
-            $criteria->addSelectColumn(AuthorizationTableMap::COL_ID);
+            $criteria->addSelectColumn(CurrencyTableMap::COL_SYMBOL);
+            $criteria->addSelectColumn(CurrencyTableMap::COL_NAME);
+            $criteria->addSelectColumn(CurrencyTableMap::COL_SHORT_NAME);
+            $criteria->addSelectColumn(CurrencyTableMap::COL_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.uri');
-            $criteria->addSelectColumn($alias . '.method');
-            $criteria->addSelectColumn($alias . '.id_user');
-            $criteria->addSelectColumn($alias . '.id_user_group');
-            $criteria->addSelectColumn($alias . '.order');
-            $criteria->addSelectColumn($alias . '.policy');
-            $criteria->addSelectColumn($alias . '.label');
-            $criteria->addSelectColumn($alias . '.enabled');
-            $criteria->addSelectColumn($alias . '.created_at');
-            $criteria->addSelectColumn($alias . '.updated_at');
+            $criteria->addSelectColumn($alias . '.symbol');
+            $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.short_name');
             $criteria->addSelectColumn($alias . '.id');
         }
     }
@@ -386,7 +352,7 @@ class AuthorizationTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(AuthorizationTableMap::DATABASE_NAME)->getTable(AuthorizationTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(CurrencyTableMap::DATABASE_NAME)->getTable(CurrencyTableMap::TABLE_NAME);
     }
 
     /**
@@ -394,16 +360,16 @@ class AuthorizationTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(AuthorizationTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(AuthorizationTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new AuthorizationTableMap());
+        $dbMap = Propel::getServiceContainer()->getDatabaseMap(CurrencyTableMap::DATABASE_NAME);
+        if (!$dbMap->hasTable(CurrencyTableMap::TABLE_NAME)) {
+            $dbMap->addTableObject(new CurrencyTableMap());
         }
     }
 
     /**
-     * Performs a DELETE on the database, given a Authorization or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Currency or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or Authorization object or primary key or array of primary keys
+     * @param mixed               $values Criteria or Currency object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param  ConnectionInterface $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -414,27 +380,27 @@ class AuthorizationTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(AuthorizationTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(CurrencyTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \App\Models\Authorization) { // it's a model object
+        } elseif ($values instanceof \App\Models\Currency) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(AuthorizationTableMap::DATABASE_NAME);
-            $criteria->add(AuthorizationTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(CurrencyTableMap::DATABASE_NAME);
+            $criteria->add(CurrencyTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = AuthorizationQuery::create()->mergeWith($criteria);
+        $query = CurrencyQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            AuthorizationTableMap::clearInstancePool();
+            CurrencyTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                AuthorizationTableMap::removeInstanceFromPool($singleval);
+                CurrencyTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -442,20 +408,20 @@ class AuthorizationTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the authorization table.
+     * Deletes all rows from the currency table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return AuthorizationQuery::create()->doDeleteAll($con);
+        return CurrencyQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Authorization or Criteria object.
+     * Performs an INSERT on the database, given a Currency or Criteria object.
      *
-     * @param mixed               $criteria Criteria or Authorization object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or Currency object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -464,22 +430,22 @@ class AuthorizationTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(AuthorizationTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(CurrencyTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Authorization object
+            $criteria = $criteria->buildCriteria(); // build Criteria from Currency object
         }
 
-        if ($criteria->containsKey(AuthorizationTableMap::COL_ID) && $criteria->keyContainsValue(AuthorizationTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.AuthorizationTableMap::COL_ID.')');
+        if ($criteria->containsKey(CurrencyTableMap::COL_ID) && $criteria->keyContainsValue(CurrencyTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.CurrencyTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = AuthorizationQuery::create()->mergeWith($criteria);
+        $query = CurrencyQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)
@@ -488,7 +454,7 @@ class AuthorizationTableMap extends TableMap
         });
     }
 
-} // AuthorizationTableMap
+} // CurrencyTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-AuthorizationTableMap::buildTableMap();
+CurrencyTableMap::buildTableMap();

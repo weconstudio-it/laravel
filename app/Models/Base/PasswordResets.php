@@ -63,12 +63,6 @@ abstract class PasswordResets implements ActiveRecordInterface
     protected $virtualColumns = array();
 
     /**
-     * The value for the id field.
-     * @var        int
-     */
-    protected $id;
-
-    /**
      * The value for the email field.
      * @var        string
      */
@@ -91,6 +85,12 @@ abstract class PasswordResets implements ActiveRecordInterface
      * @var        \DateTime
      */
     protected $updated_at;
+
+    /**
+     * The value for the id field.
+     * @var        int
+     */
+    protected $id;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -318,16 +318,6 @@ abstract class PasswordResets implements ActiveRecordInterface
     }
 
     /**
-     * Get the [id] column value.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * Get the [email] column value.
      *
      * @return string
@@ -388,24 +378,14 @@ abstract class PasswordResets implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [id] column.
+     * Get the [id] column value.
      *
-     * @param int $v new value
-     * @return $this|\App\Models\PasswordResets The current object (for fluent API support)
+     * @return int
      */
-    public function setId($v)
+    public function getId()
     {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->id !== $v) {
-            $this->id = $v;
-            $this->modifiedColumns[PasswordResetsTableMap::COL_ID] = true;
-        }
-
-        return $this;
-    } // setId()
+        return $this->id;
+    }
 
     /**
      * Set the value of [email] column.
@@ -488,6 +468,26 @@ abstract class PasswordResets implements ActiveRecordInterface
     } // setUpdatedAt()
 
     /**
+     * Set the value of [id] column.
+     *
+     * @param int $v new value
+     * @return $this|\App\Models\PasswordResets The current object (for fluent API support)
+     */
+    public function setId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->id !== $v) {
+            $this->id = $v;
+            $this->modifiedColumns[PasswordResetsTableMap::COL_ID] = true;
+        }
+
+        return $this;
+    } // setId()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -523,26 +523,26 @@ abstract class PasswordResets implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : PasswordResetsTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : PasswordResetsTableMap::translateFieldName('Email', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : PasswordResetsTableMap::translateFieldName('Email', TableMap::TYPE_PHPNAME, $indexType)];
             $this->email = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : PasswordResetsTableMap::translateFieldName('Token', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : PasswordResetsTableMap::translateFieldName('Token', TableMap::TYPE_PHPNAME, $indexType)];
             $this->token = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : PasswordResetsTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : PasswordResetsTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : PasswordResetsTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : PasswordResetsTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : PasswordResetsTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -760,9 +760,6 @@ abstract class PasswordResets implements ActiveRecordInterface
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(PasswordResetsTableMap::COL_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'id';
-        }
         if ($this->isColumnModified(PasswordResetsTableMap::COL_EMAIL)) {
             $modifiedColumns[':p' . $index++]  = 'email';
         }
@@ -775,6 +772,9 @@ abstract class PasswordResets implements ActiveRecordInterface
         if ($this->isColumnModified(PasswordResetsTableMap::COL_UPDATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'updated_at';
         }
+        if ($this->isColumnModified(PasswordResetsTableMap::COL_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'id';
+        }
 
         $sql = sprintf(
             'INSERT INTO password_resets (%s) VALUES (%s)',
@@ -786,9 +786,6 @@ abstract class PasswordResets implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'id':
-                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
-                        break;
                     case 'email':
                         $stmt->bindValue($identifier, $this->email, PDO::PARAM_STR);
                         break;
@@ -800,6 +797,9 @@ abstract class PasswordResets implements ActiveRecordInterface
                         break;
                     case 'updated_at':
                         $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                        break;
+                    case 'id':
+                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -864,19 +864,19 @@ abstract class PasswordResets implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getId();
-                break;
-            case 1:
                 return $this->getEmail();
                 break;
-            case 2:
+            case 1:
                 return $this->getToken();
                 break;
-            case 3:
+            case 2:
                 return $this->getCreatedAt();
                 break;
-            case 4:
+            case 3:
                 return $this->getUpdatedAt();
+                break;
+            case 4:
+                return $this->getId();
                 break;
             default:
                 return null;
@@ -907,24 +907,24 @@ abstract class PasswordResets implements ActiveRecordInterface
         $alreadyDumpedObjects['PasswordResets'][$this->hashCode()] = true;
         $keys = PasswordResetsTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getId(),
-            $keys[1] => $this->getEmail(),
-            $keys[2] => $this->getToken(),
-            $keys[3] => $this->getCreatedAt(),
-            $keys[4] => $this->getUpdatedAt(),
+            $keys[0] => $this->getEmail(),
+            $keys[1] => $this->getToken(),
+            $keys[2] => $this->getCreatedAt(),
+            $keys[3] => $this->getUpdatedAt(),
+            $keys[4] => $this->getId(),
         );
 
         $utc = new \DateTimeZone('utc');
+        if ($result[$keys[2]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[2]];
+            $result[$keys[2]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+
         if ($result[$keys[3]] instanceof \DateTime) {
             // When changing timezone we don't want to change existing instances
             $dateTime = clone $result[$keys[3]];
             $result[$keys[3]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
-        }
-
-        if ($result[$keys[4]] instanceof \DateTime) {
-            // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[4]];
-            $result[$keys[4]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -966,19 +966,19 @@ abstract class PasswordResets implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setId($value);
-                break;
-            case 1:
                 $this->setEmail($value);
                 break;
-            case 2:
+            case 1:
                 $this->setToken($value);
                 break;
-            case 3:
+            case 2:
                 $this->setCreatedAt($value);
                 break;
-            case 4:
+            case 3:
                 $this->setUpdatedAt($value);
+                break;
+            case 4:
+                $this->setId($value);
                 break;
         } // switch()
 
@@ -1007,19 +1007,19 @@ abstract class PasswordResets implements ActiveRecordInterface
         $keys = PasswordResetsTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setId($arr[$keys[0]]);
+            $this->setEmail($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setEmail($arr[$keys[1]]);
+            $this->setToken($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setToken($arr[$keys[2]]);
+            $this->setCreatedAt($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setCreatedAt($arr[$keys[3]]);
+            $this->setUpdatedAt($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setUpdatedAt($arr[$keys[4]]);
+            $this->setId($arr[$keys[4]]);
         }
     }
 
@@ -1062,9 +1062,6 @@ abstract class PasswordResets implements ActiveRecordInterface
     {
         $criteria = new Criteria(PasswordResetsTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(PasswordResetsTableMap::COL_ID)) {
-            $criteria->add(PasswordResetsTableMap::COL_ID, $this->id);
-        }
         if ($this->isColumnModified(PasswordResetsTableMap::COL_EMAIL)) {
             $criteria->add(PasswordResetsTableMap::COL_EMAIL, $this->email);
         }
@@ -1076,6 +1073,9 @@ abstract class PasswordResets implements ActiveRecordInterface
         }
         if ($this->isColumnModified(PasswordResetsTableMap::COL_UPDATED_AT)) {
             $criteria->add(PasswordResetsTableMap::COL_UPDATED_AT, $this->updated_at);
+        }
+        if ($this->isColumnModified(PasswordResetsTableMap::COL_ID)) {
+            $criteria->add(PasswordResetsTableMap::COL_ID, $this->id);
         }
 
         return $criteria;
@@ -1202,11 +1202,11 @@ abstract class PasswordResets implements ActiveRecordInterface
      */
     public function clear()
     {
-        $this->id = null;
         $this->email = null;
         $this->token = null;
         $this->created_at = null;
         $this->updated_at = null;
+        $this->id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

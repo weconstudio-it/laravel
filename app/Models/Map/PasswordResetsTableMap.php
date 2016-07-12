@@ -72,11 +72,6 @@ class PasswordResetsTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 5;
 
     /**
-     * the column name for the id field
-     */
-    const COL_ID = 'password_resets.id';
-
-    /**
      * the column name for the email field
      */
     const COL_EMAIL = 'password_resets.email';
@@ -97,6 +92,11 @@ class PasswordResetsTableMap extends TableMap
     const COL_UPDATED_AT = 'password_resets.updated_at';
 
     /**
+     * the column name for the id field
+     */
+    const COL_ID = 'password_resets.id';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -108,10 +108,10 @@ class PasswordResetsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Email', 'Token', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('id', 'email', 'token', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(PasswordResetsTableMap::COL_ID, PasswordResetsTableMap::COL_EMAIL, PasswordResetsTableMap::COL_TOKEN, PasswordResetsTableMap::COL_CREATED_AT, PasswordResetsTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('id', 'email', 'token', 'created_at', 'updated_at', ),
+        self::TYPE_PHPNAME       => array('Email', 'Token', 'CreatedAt', 'UpdatedAt', 'Id', ),
+        self::TYPE_CAMELNAME     => array('email', 'token', 'createdAt', 'updatedAt', 'id', ),
+        self::TYPE_COLNAME       => array(PasswordResetsTableMap::COL_EMAIL, PasswordResetsTableMap::COL_TOKEN, PasswordResetsTableMap::COL_CREATED_AT, PasswordResetsTableMap::COL_UPDATED_AT, PasswordResetsTableMap::COL_ID, ),
+        self::TYPE_FIELDNAME     => array('email', 'token', 'created_at', 'updated_at', 'id', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
@@ -122,10 +122,10 @@ class PasswordResetsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Email' => 1, 'Token' => 2, 'CreatedAt' => 3, 'UpdatedAt' => 4, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'email' => 1, 'token' => 2, 'createdAt' => 3, 'updatedAt' => 4, ),
-        self::TYPE_COLNAME       => array(PasswordResetsTableMap::COL_ID => 0, PasswordResetsTableMap::COL_EMAIL => 1, PasswordResetsTableMap::COL_TOKEN => 2, PasswordResetsTableMap::COL_CREATED_AT => 3, PasswordResetsTableMap::COL_UPDATED_AT => 4, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'email' => 1, 'token' => 2, 'created_at' => 3, 'updated_at' => 4, ),
+        self::TYPE_PHPNAME       => array('Email' => 0, 'Token' => 1, 'CreatedAt' => 2, 'UpdatedAt' => 3, 'Id' => 4, ),
+        self::TYPE_CAMELNAME     => array('email' => 0, 'token' => 1, 'createdAt' => 2, 'updatedAt' => 3, 'id' => 4, ),
+        self::TYPE_COLNAME       => array(PasswordResetsTableMap::COL_EMAIL => 0, PasswordResetsTableMap::COL_TOKEN => 1, PasswordResetsTableMap::COL_CREATED_AT => 2, PasswordResetsTableMap::COL_UPDATED_AT => 3, PasswordResetsTableMap::COL_ID => 4, ),
+        self::TYPE_FIELDNAME     => array('email' => 0, 'token' => 1, 'created_at' => 2, 'updated_at' => 3, 'id' => 4, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
@@ -146,11 +146,11 @@ class PasswordResetsTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('email', 'Email', 'VARCHAR', true, 255, null);
         $this->addColumn('token', 'Token', 'VARCHAR', true, 255, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
     } // initialize()
 
     /**
@@ -170,6 +170,7 @@ class PasswordResetsTableMap extends TableMap
     {
         return array(
             'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
+            'auto_add_pk' => array('name' => 'id', 'autoIncrement' => 'true', 'type' => 'INTEGER', ),
         );
     } // getBehaviors()
 
@@ -189,11 +190,11 @@ class PasswordResetsTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -212,7 +213,7 @@ class PasswordResetsTableMap extends TableMap
     {
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 0 + $offset
+                ? 4 + $offset
                 : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
@@ -314,17 +315,17 @@ class PasswordResetsTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(PasswordResetsTableMap::COL_ID);
             $criteria->addSelectColumn(PasswordResetsTableMap::COL_EMAIL);
             $criteria->addSelectColumn(PasswordResetsTableMap::COL_TOKEN);
             $criteria->addSelectColumn(PasswordResetsTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(PasswordResetsTableMap::COL_UPDATED_AT);
+            $criteria->addSelectColumn(PasswordResetsTableMap::COL_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.email');
             $criteria->addSelectColumn($alias . '.token');
             $criteria->addSelectColumn($alias . '.created_at');
             $criteria->addSelectColumn($alias . '.updated_at');
+            $criteria->addSelectColumn($alias . '.id');
         }
     }
 

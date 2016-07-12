@@ -59,7 +59,7 @@ class SubjectTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 15;
+    const NUM_COLUMNS = 14;
 
     /**
      * The number of lazy-loaded columns
@@ -69,22 +69,12 @@ class SubjectTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 15;
-
-    /**
-     * the column name for the id field
-     */
-    const COL_ID = 'subject.id';
+    const NUM_HYDRATE_COLUMNS = 14;
 
     /**
      * the column name for the active field
      */
     const COL_ACTIVE = 'subject.active';
-
-    /**
-     * the column name for the iso field
-     */
-    const COL_ISO = 'subject.iso';
 
     /**
      * the column name for the first_name field
@@ -147,6 +137,11 @@ class SubjectTableMap extends TableMap
     const COL_UPDATED_AT = 'subject.updated_at';
 
     /**
+     * the column name for the id field
+     */
+    const COL_ID = 'subject.id';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -158,11 +153,11 @@ class SubjectTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Active', 'Iso', 'FirstName', 'LastName', 'Address', 'Zip', 'City', 'Province', 'Country', 'Phone', 'Fax', 'Notes', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('id', 'active', 'iso', 'firstName', 'lastName', 'address', 'zip', 'city', 'province', 'country', 'phone', 'fax', 'notes', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(SubjectTableMap::COL_ID, SubjectTableMap::COL_ACTIVE, SubjectTableMap::COL_ISO, SubjectTableMap::COL_FIRST_NAME, SubjectTableMap::COL_LAST_NAME, SubjectTableMap::COL_ADDRESS, SubjectTableMap::COL_ZIP, SubjectTableMap::COL_CITY, SubjectTableMap::COL_PROVINCE, SubjectTableMap::COL_COUNTRY, SubjectTableMap::COL_PHONE, SubjectTableMap::COL_FAX, SubjectTableMap::COL_NOTES, SubjectTableMap::COL_CREATED_AT, SubjectTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('id', 'active', 'iso', 'first_name', 'last_name', 'address', 'zip', 'city', 'province', 'country', 'phone', 'fax', 'notes', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
+        self::TYPE_PHPNAME       => array('Active', 'FirstName', 'LastName', 'Address', 'Zip', 'City', 'Province', 'Country', 'Phone', 'Fax', 'Notes', 'CreatedAt', 'UpdatedAt', 'Id', ),
+        self::TYPE_CAMELNAME     => array('active', 'firstName', 'lastName', 'address', 'zip', 'city', 'province', 'country', 'phone', 'fax', 'notes', 'createdAt', 'updatedAt', 'id', ),
+        self::TYPE_COLNAME       => array(SubjectTableMap::COL_ACTIVE, SubjectTableMap::COL_FIRST_NAME, SubjectTableMap::COL_LAST_NAME, SubjectTableMap::COL_ADDRESS, SubjectTableMap::COL_ZIP, SubjectTableMap::COL_CITY, SubjectTableMap::COL_PROVINCE, SubjectTableMap::COL_COUNTRY, SubjectTableMap::COL_PHONE, SubjectTableMap::COL_FAX, SubjectTableMap::COL_NOTES, SubjectTableMap::COL_CREATED_AT, SubjectTableMap::COL_UPDATED_AT, SubjectTableMap::COL_ID, ),
+        self::TYPE_FIELDNAME     => array('active', 'first_name', 'last_name', 'address', 'zip', 'city', 'province', 'country', 'phone', 'fax', 'notes', 'created_at', 'updated_at', 'id', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
     );
 
     /**
@@ -172,11 +167,11 @@ class SubjectTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Active' => 1, 'Iso' => 2, 'FirstName' => 3, 'LastName' => 4, 'Address' => 5, 'Zip' => 6, 'City' => 7, 'Province' => 8, 'Country' => 9, 'Phone' => 10, 'Fax' => 11, 'Notes' => 12, 'CreatedAt' => 13, 'UpdatedAt' => 14, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'active' => 1, 'iso' => 2, 'firstName' => 3, 'lastName' => 4, 'address' => 5, 'zip' => 6, 'city' => 7, 'province' => 8, 'country' => 9, 'phone' => 10, 'fax' => 11, 'notes' => 12, 'createdAt' => 13, 'updatedAt' => 14, ),
-        self::TYPE_COLNAME       => array(SubjectTableMap::COL_ID => 0, SubjectTableMap::COL_ACTIVE => 1, SubjectTableMap::COL_ISO => 2, SubjectTableMap::COL_FIRST_NAME => 3, SubjectTableMap::COL_LAST_NAME => 4, SubjectTableMap::COL_ADDRESS => 5, SubjectTableMap::COL_ZIP => 6, SubjectTableMap::COL_CITY => 7, SubjectTableMap::COL_PROVINCE => 8, SubjectTableMap::COL_COUNTRY => 9, SubjectTableMap::COL_PHONE => 10, SubjectTableMap::COL_FAX => 11, SubjectTableMap::COL_NOTES => 12, SubjectTableMap::COL_CREATED_AT => 13, SubjectTableMap::COL_UPDATED_AT => 14, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'active' => 1, 'iso' => 2, 'first_name' => 3, 'last_name' => 4, 'address' => 5, 'zip' => 6, 'city' => 7, 'province' => 8, 'country' => 9, 'phone' => 10, 'fax' => 11, 'notes' => 12, 'created_at' => 13, 'updated_at' => 14, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
+        self::TYPE_PHPNAME       => array('Active' => 0, 'FirstName' => 1, 'LastName' => 2, 'Address' => 3, 'Zip' => 4, 'City' => 5, 'Province' => 6, 'Country' => 7, 'Phone' => 8, 'Fax' => 9, 'Notes' => 10, 'CreatedAt' => 11, 'UpdatedAt' => 12, 'Id' => 13, ),
+        self::TYPE_CAMELNAME     => array('active' => 0, 'firstName' => 1, 'lastName' => 2, 'address' => 3, 'zip' => 4, 'city' => 5, 'province' => 6, 'country' => 7, 'phone' => 8, 'fax' => 9, 'notes' => 10, 'createdAt' => 11, 'updatedAt' => 12, 'id' => 13, ),
+        self::TYPE_COLNAME       => array(SubjectTableMap::COL_ACTIVE => 0, SubjectTableMap::COL_FIRST_NAME => 1, SubjectTableMap::COL_LAST_NAME => 2, SubjectTableMap::COL_ADDRESS => 3, SubjectTableMap::COL_ZIP => 4, SubjectTableMap::COL_CITY => 5, SubjectTableMap::COL_PROVINCE => 6, SubjectTableMap::COL_COUNTRY => 7, SubjectTableMap::COL_PHONE => 8, SubjectTableMap::COL_FAX => 9, SubjectTableMap::COL_NOTES => 10, SubjectTableMap::COL_CREATED_AT => 11, SubjectTableMap::COL_UPDATED_AT => 12, SubjectTableMap::COL_ID => 13, ),
+        self::TYPE_FIELDNAME     => array('active' => 0, 'first_name' => 1, 'last_name' => 2, 'address' => 3, 'zip' => 4, 'city' => 5, 'province' => 6, 'country' => 7, 'phone' => 8, 'fax' => 9, 'notes' => 10, 'created_at' => 11, 'updated_at' => 12, 'id' => 13, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
     );
 
     /**
@@ -196,9 +191,7 @@ class SubjectTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('active', 'Active', 'BOOLEAN', true, 1, true);
-        $this->addColumn('iso', 'Iso', 'VARCHAR', true, 50, null);
         $this->addColumn('first_name', 'FirstName', 'VARCHAR', true, 255, null);
         $this->addColumn('last_name', 'LastName', 'VARCHAR', true, 255, null);
         $this->addColumn('address', 'Address', 'VARCHAR', false, 255, null);
@@ -211,6 +204,7 @@ class SubjectTableMap extends TableMap
         $this->addColumn('notes', 'Notes', 'LONGVARCHAR', false, null, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
     } // initialize()
 
     /**
@@ -237,6 +231,7 @@ class SubjectTableMap extends TableMap
     {
         return array(
             'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
+            'auto_add_pk' => array('name' => 'id', 'autoIncrement' => 'true', 'type' => 'INTEGER', ),
         );
     } // getBehaviors()
     /**
@@ -265,11 +260,11 @@ class SubjectTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 13 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 13 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -288,7 +283,7 @@ class SubjectTableMap extends TableMap
     {
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 0 + $offset
+                ? 13 + $offset
                 : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
@@ -390,9 +385,7 @@ class SubjectTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(SubjectTableMap::COL_ID);
             $criteria->addSelectColumn(SubjectTableMap::COL_ACTIVE);
-            $criteria->addSelectColumn(SubjectTableMap::COL_ISO);
             $criteria->addSelectColumn(SubjectTableMap::COL_FIRST_NAME);
             $criteria->addSelectColumn(SubjectTableMap::COL_LAST_NAME);
             $criteria->addSelectColumn(SubjectTableMap::COL_ADDRESS);
@@ -405,10 +398,9 @@ class SubjectTableMap extends TableMap
             $criteria->addSelectColumn(SubjectTableMap::COL_NOTES);
             $criteria->addSelectColumn(SubjectTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(SubjectTableMap::COL_UPDATED_AT);
+            $criteria->addSelectColumn(SubjectTableMap::COL_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.active');
-            $criteria->addSelectColumn($alias . '.iso');
             $criteria->addSelectColumn($alias . '.first_name');
             $criteria->addSelectColumn($alias . '.last_name');
             $criteria->addSelectColumn($alias . '.address');
@@ -421,6 +413,7 @@ class SubjectTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.notes');
             $criteria->addSelectColumn($alias . '.created_at');
             $criteria->addSelectColumn($alias . '.updated_at');
+            $criteria->addSelectColumn($alias . '.id');
         }
     }
 

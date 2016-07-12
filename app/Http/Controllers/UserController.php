@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Currency;
+use App\Models\CurrencyQuery;
 use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -137,7 +139,9 @@ class UserController extends Controller
     {
 		$this->validate($request, [
 			'email' => 'required|email|max:255',
-			'iso' => 'required',
+			'password' => 'min:6|confirmed',
+			'id_language' => 'required|exists:language,id',
+			'id_currency' => 'required|exists:currency,id',
 			'first_name' => 'required|max:255',
 			'last_name' => 'required|max:255',
 		]);
@@ -158,6 +162,7 @@ class UserController extends Controller
 			unset($data['password']);
 			unset($data['enabled']);
 			unset($data['email_confirmed']);
+			if($request->has('password')) $data['password'] = bcrypt($request->input('password'));
 			$user->fromArray($data);
 			$user->save();
 			$con->commit();

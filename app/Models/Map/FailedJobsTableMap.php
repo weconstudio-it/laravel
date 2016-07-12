@@ -72,11 +72,6 @@ class FailedJobsTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 5;
 
     /**
-     * the column name for the id field
-     */
-    const COL_ID = 'failed_jobs.id';
-
-    /**
      * the column name for the connection field
      */
     const COL_CONNECTION = 'failed_jobs.connection';
@@ -97,6 +92,11 @@ class FailedJobsTableMap extends TableMap
     const COL_FAILED_AT = 'failed_jobs.failed_at';
 
     /**
+     * the column name for the id field
+     */
+    const COL_ID = 'failed_jobs.id';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -108,10 +108,10 @@ class FailedJobsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Connection', 'Queue', 'Payload', 'FailedAt', ),
-        self::TYPE_CAMELNAME     => array('id', 'connection', 'queue', 'payload', 'failedAt', ),
-        self::TYPE_COLNAME       => array(FailedJobsTableMap::COL_ID, FailedJobsTableMap::COL_CONNECTION, FailedJobsTableMap::COL_QUEUE, FailedJobsTableMap::COL_PAYLOAD, FailedJobsTableMap::COL_FAILED_AT, ),
-        self::TYPE_FIELDNAME     => array('id', 'connection', 'queue', 'payload', 'failed_at', ),
+        self::TYPE_PHPNAME       => array('Connection', 'Queue', 'Payload', 'FailedAt', 'Id', ),
+        self::TYPE_CAMELNAME     => array('connection', 'queue', 'payload', 'failedAt', 'id', ),
+        self::TYPE_COLNAME       => array(FailedJobsTableMap::COL_CONNECTION, FailedJobsTableMap::COL_QUEUE, FailedJobsTableMap::COL_PAYLOAD, FailedJobsTableMap::COL_FAILED_AT, FailedJobsTableMap::COL_ID, ),
+        self::TYPE_FIELDNAME     => array('connection', 'queue', 'payload', 'failed_at', 'id', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
@@ -122,10 +122,10 @@ class FailedJobsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Connection' => 1, 'Queue' => 2, 'Payload' => 3, 'FailedAt' => 4, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'connection' => 1, 'queue' => 2, 'payload' => 3, 'failedAt' => 4, ),
-        self::TYPE_COLNAME       => array(FailedJobsTableMap::COL_ID => 0, FailedJobsTableMap::COL_CONNECTION => 1, FailedJobsTableMap::COL_QUEUE => 2, FailedJobsTableMap::COL_PAYLOAD => 3, FailedJobsTableMap::COL_FAILED_AT => 4, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'connection' => 1, 'queue' => 2, 'payload' => 3, 'failed_at' => 4, ),
+        self::TYPE_PHPNAME       => array('Connection' => 0, 'Queue' => 1, 'Payload' => 2, 'FailedAt' => 3, 'Id' => 4, ),
+        self::TYPE_CAMELNAME     => array('connection' => 0, 'queue' => 1, 'payload' => 2, 'failedAt' => 3, 'id' => 4, ),
+        self::TYPE_COLNAME       => array(FailedJobsTableMap::COL_CONNECTION => 0, FailedJobsTableMap::COL_QUEUE => 1, FailedJobsTableMap::COL_PAYLOAD => 2, FailedJobsTableMap::COL_FAILED_AT => 3, FailedJobsTableMap::COL_ID => 4, ),
+        self::TYPE_FIELDNAME     => array('connection' => 0, 'queue' => 1, 'payload' => 2, 'failed_at' => 3, 'id' => 4, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
@@ -146,11 +146,11 @@ class FailedJobsTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('connection', 'Connection', 'LONGVARCHAR', true, null, null);
         $this->addColumn('queue', 'Queue', 'LONGVARCHAR', true, null, null);
         $this->addColumn('payload', 'Payload', 'CLOB', true, null, null);
         $this->addColumn('failed_at', 'FailedAt', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
     } // initialize()
 
     /**
@@ -159,6 +159,19 @@ class FailedJobsTableMap extends TableMap
     public function buildRelations()
     {
     } // buildRelations()
+
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'auto_add_pk' => array('name' => 'id', 'autoIncrement' => 'true', 'type' => 'INTEGER', ),
+        );
+    } // getBehaviors()
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
@@ -176,11 +189,11 @@ class FailedJobsTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -199,7 +212,7 @@ class FailedJobsTableMap extends TableMap
     {
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 0 + $offset
+                ? 4 + $offset
                 : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
@@ -301,17 +314,17 @@ class FailedJobsTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(FailedJobsTableMap::COL_ID);
             $criteria->addSelectColumn(FailedJobsTableMap::COL_CONNECTION);
             $criteria->addSelectColumn(FailedJobsTableMap::COL_QUEUE);
             $criteria->addSelectColumn(FailedJobsTableMap::COL_PAYLOAD);
             $criteria->addSelectColumn(FailedJobsTableMap::COL_FAILED_AT);
+            $criteria->addSelectColumn(FailedJobsTableMap::COL_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.connection');
             $criteria->addSelectColumn($alias . '.queue');
             $criteria->addSelectColumn($alias . '.payload');
             $criteria->addSelectColumn($alias . '.failed_at');
+            $criteria->addSelectColumn($alias . '.id');
         }
     }
 

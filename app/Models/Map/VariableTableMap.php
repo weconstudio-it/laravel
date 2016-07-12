@@ -72,11 +72,6 @@ class VariableTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 10;
 
     /**
-     * the column name for the id field
-     */
-    const COL_ID = 'variable.id';
-
-    /**
      * the column name for the group field
      */
     const COL_GROUP = 'variable.group';
@@ -122,6 +117,11 @@ class VariableTableMap extends TableMap
     const COL_UPDATED_AT = 'variable.updated_at';
 
     /**
+     * the column name for the id field
+     */
+    const COL_ID = 'variable.id';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -133,10 +133,10 @@ class VariableTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Group', 'Name', 'Value', 'Validfrom', 'Validto', 'Description', 'Enabled', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('id', 'group', 'name', 'value', 'validfrom', 'validto', 'description', 'enabled', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(VariableTableMap::COL_ID, VariableTableMap::COL_GROUP, VariableTableMap::COL_NAME, VariableTableMap::COL_VALUE, VariableTableMap::COL_VALIDFROM, VariableTableMap::COL_VALIDTO, VariableTableMap::COL_DESCRIPTION, VariableTableMap::COL_ENABLED, VariableTableMap::COL_CREATED_AT, VariableTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('id', 'group', 'name', 'value', 'validFrom', 'validTo', 'description', 'enabled', 'created_at', 'updated_at', ),
+        self::TYPE_PHPNAME       => array('Group', 'Name', 'Value', 'Validfrom', 'Validto', 'Description', 'Enabled', 'CreatedAt', 'UpdatedAt', 'Id', ),
+        self::TYPE_CAMELNAME     => array('group', 'name', 'value', 'validfrom', 'validto', 'description', 'enabled', 'createdAt', 'updatedAt', 'id', ),
+        self::TYPE_COLNAME       => array(VariableTableMap::COL_GROUP, VariableTableMap::COL_NAME, VariableTableMap::COL_VALUE, VariableTableMap::COL_VALIDFROM, VariableTableMap::COL_VALIDTO, VariableTableMap::COL_DESCRIPTION, VariableTableMap::COL_ENABLED, VariableTableMap::COL_CREATED_AT, VariableTableMap::COL_UPDATED_AT, VariableTableMap::COL_ID, ),
+        self::TYPE_FIELDNAME     => array('group', 'name', 'value', 'validFrom', 'validTo', 'description', 'enabled', 'created_at', 'updated_at', 'id', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
@@ -147,10 +147,10 @@ class VariableTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Group' => 1, 'Name' => 2, 'Value' => 3, 'Validfrom' => 4, 'Validto' => 5, 'Description' => 6, 'Enabled' => 7, 'CreatedAt' => 8, 'UpdatedAt' => 9, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'group' => 1, 'name' => 2, 'value' => 3, 'validfrom' => 4, 'validto' => 5, 'description' => 6, 'enabled' => 7, 'createdAt' => 8, 'updatedAt' => 9, ),
-        self::TYPE_COLNAME       => array(VariableTableMap::COL_ID => 0, VariableTableMap::COL_GROUP => 1, VariableTableMap::COL_NAME => 2, VariableTableMap::COL_VALUE => 3, VariableTableMap::COL_VALIDFROM => 4, VariableTableMap::COL_VALIDTO => 5, VariableTableMap::COL_DESCRIPTION => 6, VariableTableMap::COL_ENABLED => 7, VariableTableMap::COL_CREATED_AT => 8, VariableTableMap::COL_UPDATED_AT => 9, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'group' => 1, 'name' => 2, 'value' => 3, 'validFrom' => 4, 'validTo' => 5, 'description' => 6, 'enabled' => 7, 'created_at' => 8, 'updated_at' => 9, ),
+        self::TYPE_PHPNAME       => array('Group' => 0, 'Name' => 1, 'Value' => 2, 'Validfrom' => 3, 'Validto' => 4, 'Description' => 5, 'Enabled' => 6, 'CreatedAt' => 7, 'UpdatedAt' => 8, 'Id' => 9, ),
+        self::TYPE_CAMELNAME     => array('group' => 0, 'name' => 1, 'value' => 2, 'validfrom' => 3, 'validto' => 4, 'description' => 5, 'enabled' => 6, 'createdAt' => 7, 'updatedAt' => 8, 'id' => 9, ),
+        self::TYPE_COLNAME       => array(VariableTableMap::COL_GROUP => 0, VariableTableMap::COL_NAME => 1, VariableTableMap::COL_VALUE => 2, VariableTableMap::COL_VALIDFROM => 3, VariableTableMap::COL_VALIDTO => 4, VariableTableMap::COL_DESCRIPTION => 5, VariableTableMap::COL_ENABLED => 6, VariableTableMap::COL_CREATED_AT => 7, VariableTableMap::COL_UPDATED_AT => 8, VariableTableMap::COL_ID => 9, ),
+        self::TYPE_FIELDNAME     => array('group' => 0, 'name' => 1, 'value' => 2, 'validFrom' => 3, 'validTo' => 4, 'description' => 5, 'enabled' => 6, 'created_at' => 7, 'updated_at' => 8, 'id' => 9, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
@@ -171,7 +171,6 @@ class VariableTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('group', 'Group', 'VARCHAR', false, 255, 'generic');
         $this->addColumn('name', 'Name', 'VARCHAR', false, 255, null);
         $this->addColumn('value', 'Value', 'VARCHAR', false, 255, null);
@@ -181,6 +180,7 @@ class VariableTableMap extends TableMap
         $this->addColumn('enabled', 'Enabled', 'BOOLEAN', true, 1, true);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
     } // initialize()
 
     /**
@@ -200,6 +200,7 @@ class VariableTableMap extends TableMap
     {
         return array(
             'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
+            'auto_add_pk' => array('name' => 'id', 'autoIncrement' => 'true', 'type' => 'INTEGER', ),
         );
     } // getBehaviors()
 
@@ -219,11 +220,11 @@ class VariableTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 9 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 9 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -242,7 +243,7 @@ class VariableTableMap extends TableMap
     {
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 0 + $offset
+                ? 9 + $offset
                 : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
@@ -344,7 +345,6 @@ class VariableTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(VariableTableMap::COL_ID);
             $criteria->addSelectColumn(VariableTableMap::COL_GROUP);
             $criteria->addSelectColumn(VariableTableMap::COL_NAME);
             $criteria->addSelectColumn(VariableTableMap::COL_VALUE);
@@ -354,8 +354,8 @@ class VariableTableMap extends TableMap
             $criteria->addSelectColumn(VariableTableMap::COL_ENABLED);
             $criteria->addSelectColumn(VariableTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(VariableTableMap::COL_UPDATED_AT);
+            $criteria->addSelectColumn(VariableTableMap::COL_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.group');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.value');
@@ -365,6 +365,7 @@ class VariableTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.enabled');
             $criteria->addSelectColumn($alias . '.created_at');
             $criteria->addSelectColumn($alias . '.updated_at');
+            $criteria->addSelectColumn($alias . '.id');
         }
     }
 

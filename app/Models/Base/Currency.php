@@ -2,14 +2,15 @@
 
 namespace App\Models\Base;
 
-use \DateTime;
 use \Exception;
 use \PDO;
+use App\Models\CurrenciesRateValidity as ChildCurrenciesRateValidity;
+use App\Models\CurrenciesRateValidityQuery as ChildCurrenciesRateValidityQuery;
+use App\Models\Currency as ChildCurrency;
+use App\Models\CurrencyQuery as ChildCurrencyQuery;
 use App\Models\User as ChildUser;
-use App\Models\UserGroup as ChildUserGroup;
-use App\Models\UserGroupQuery as ChildUserGroupQuery;
 use App\Models\UserQuery as ChildUserQuery;
-use App\Models\Map\UserGroupTableMap;
+use App\Models\Map\CurrencyTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -22,21 +23,20 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
-use Propel\Runtime\Util\PropelDateTime;
 
 /**
- * Base class that represents a row from the 'user_group' table.
+ * Base class that represents a row from the 'currency' table.
  *
  *
  *
 * @package    propel.generator..Base
 */
-abstract class UserGroup implements ActiveRecordInterface
+abstract class Currency implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\App\\Models\\Map\\UserGroupTableMap';
+    const TABLE_MAP = '\\App\\Models\\Map\\CurrencyTableMap';
 
 
     /**
@@ -66,42 +66,22 @@ abstract class UserGroup implements ActiveRecordInterface
     protected $virtualColumns = array();
 
     /**
-     * The value for the label field.
+     * The value for the symbol field.
      * @var        string
      */
-    protected $label;
+    protected $symbol;
 
     /**
-     * The value for the level field.
-     * @var        int
+     * The value for the name field.
+     * @var        string
      */
-    protected $level;
+    protected $name;
 
     /**
-     * The value for the visible field.
-     * Note: this column has a database default value of: true
-     * @var        boolean
+     * The value for the short_name field.
+     * @var        string
      */
-    protected $visible;
-
-    /**
-     * The value for the enabled field.
-     * Note: this column has a database default value of: true
-     * @var        boolean
-     */
-    protected $enabled;
-
-    /**
-     * The value for the created_at field.
-     * @var        \DateTime
-     */
-    protected $created_at;
-
-    /**
-     * The value for the updated_at field.
-     * @var        \DateTime
-     */
-    protected $updated_at;
+    protected $short_name;
 
     /**
      * The value for the id field.
@@ -114,6 +94,12 @@ abstract class UserGroup implements ActiveRecordInterface
      */
     protected $collUsers;
     protected $collUsersPartial;
+
+    /**
+     * @var        ObjectCollection|ChildCurrenciesRateValidity[] Collection to store aggregation of ChildCurrenciesRateValidity objects.
+     */
+    protected $collCurrenciesRateValidities;
+    protected $collCurrenciesRateValiditiesPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -130,24 +116,16 @@ abstract class UserGroup implements ActiveRecordInterface
     protected $usersScheduledForDeletion = null;
 
     /**
-     * Applies default values to this object.
-     * This method should be called from the object's constructor (or
-     * equivalent initialization method).
-     * @see __construct()
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildCurrenciesRateValidity[]
      */
-    public function applyDefaultValues()
-    {
-        $this->visible = true;
-        $this->enabled = true;
-    }
+    protected $currenciesRateValiditiesScheduledForDeletion = null;
 
     /**
-     * Initializes internal state of App\Models\Base\UserGroup object.
-     * @see applyDefaults()
+     * Initializes internal state of App\Models\Base\Currency object.
      */
     public function __construct()
     {
-        $this->applyDefaultValues();
     }
 
     /**
@@ -239,9 +217,9 @@ abstract class UserGroup implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>UserGroup</code> instance.  If
-     * <code>obj</code> is an instance of <code>UserGroup</code>, delegates to
-     * <code>equals(UserGroup)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>Currency</code> instance.  If
+     * <code>obj</code> is an instance of <code>Currency</code>, delegates to
+     * <code>equals(Currency)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param  mixed   $obj The object to compare to.
      * @return boolean Whether equal to the object specified.
@@ -307,7 +285,7 @@ abstract class UserGroup implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|UserGroup The current object, for fluid interface
+     * @return $this|Currency The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -361,103 +339,33 @@ abstract class UserGroup implements ActiveRecordInterface
     }
 
     /**
-     * Get the [label] column value.
+     * Get the [symbol] column value.
      *
      * @return string
      */
-    public function getLabel()
+    public function getSymbol()
     {
-        return $this->label;
+        return $this->symbol;
     }
 
     /**
-     * Get the [level] column value.
+     * Get the [name] column value.
      *
-     * @return int
+     * @return string
      */
-    public function getLevel()
+    public function getName()
     {
-        return $this->level;
+        return $this->name;
     }
 
     /**
-     * Get the [visible] column value.
+     * Get the [short_name] column value.
      *
-     * @return boolean
+     * @return string
      */
-    public function getVisible()
+    public function getShortName()
     {
-        return $this->visible;
-    }
-
-    /**
-     * Get the [visible] column value.
-     *
-     * @return boolean
-     */
-    public function isVisible()
-    {
-        return $this->getVisible();
-    }
-
-    /**
-     * Get the [enabled] column value.
-     *
-     * @return boolean
-     */
-    public function getEnabled()
-    {
-        return $this->enabled;
-    }
-
-    /**
-     * Get the [enabled] column value.
-     *
-     * @return boolean
-     */
-    public function isEnabled()
-    {
-        return $this->getEnabled();
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [created_at] column value.
-     *
-     *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
-     *
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getCreatedAt($format = 'Y-m-d H:i:s')
-    {
-        if ($format === null) {
-            return $this->created_at;
-        } else {
-            return $this->created_at instanceof \DateTime ? $this->created_at->format($format) : null;
-        }
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [updated_at] column value.
-     *
-     *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
-     *
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getUpdatedAt($format = 'Y-m-d H:i:s')
-    {
-        if ($format === null) {
-            return $this->updated_at;
-        } else {
-            return $this->updated_at instanceof \DateTime ? $this->updated_at->format($format) : null;
-        }
+        return $this->short_name;
     }
 
     /**
@@ -471,146 +379,70 @@ abstract class UserGroup implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [label] column.
+     * Set the value of [symbol] column.
      *
      * @param string $v new value
-     * @return $this|\App\Models\UserGroup The current object (for fluent API support)
+     * @return $this|\App\Models\Currency The current object (for fluent API support)
      */
-    public function setLabel($v)
+    public function setSymbol($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->label !== $v) {
-            $this->label = $v;
-            $this->modifiedColumns[UserGroupTableMap::COL_LABEL] = true;
+        if ($this->symbol !== $v) {
+            $this->symbol = $v;
+            $this->modifiedColumns[CurrencyTableMap::COL_SYMBOL] = true;
         }
 
         return $this;
-    } // setLabel()
+    } // setSymbol()
 
     /**
-     * Set the value of [level] column.
+     * Set the value of [name] column.
      *
-     * @param int $v new value
-     * @return $this|\App\Models\UserGroup The current object (for fluent API support)
+     * @param string $v new value
+     * @return $this|\App\Models\Currency The current object (for fluent API support)
      */
-    public function setLevel($v)
+    public function setName($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            $v = (string) $v;
         }
 
-        if ($this->level !== $v) {
-            $this->level = $v;
-            $this->modifiedColumns[UserGroupTableMap::COL_LEVEL] = true;
+        if ($this->name !== $v) {
+            $this->name = $v;
+            $this->modifiedColumns[CurrencyTableMap::COL_NAME] = true;
         }
 
         return $this;
-    } // setLevel()
+    } // setName()
 
     /**
-     * Sets the value of the [visible] column.
-     * Non-boolean arguments are converted using the following rules:
-     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * Set the value of [short_name] column.
      *
-     * @param  boolean|integer|string $v The new value
-     * @return $this|\App\Models\UserGroup The current object (for fluent API support)
+     * @param string $v new value
+     * @return $this|\App\Models\Currency The current object (for fluent API support)
      */
-    public function setVisible($v)
+    public function setShortName($v)
     {
         if ($v !== null) {
-            if (is_string($v)) {
-                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-            } else {
-                $v = (boolean) $v;
-            }
+            $v = (string) $v;
         }
 
-        if ($this->visible !== $v) {
-            $this->visible = $v;
-            $this->modifiedColumns[UserGroupTableMap::COL_VISIBLE] = true;
+        if ($this->short_name !== $v) {
+            $this->short_name = $v;
+            $this->modifiedColumns[CurrencyTableMap::COL_SHORT_NAME] = true;
         }
 
         return $this;
-    } // setVisible()
-
-    /**
-     * Sets the value of the [enabled] column.
-     * Non-boolean arguments are converted using the following rules:
-     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     *
-     * @param  boolean|integer|string $v The new value
-     * @return $this|\App\Models\UserGroup The current object (for fluent API support)
-     */
-    public function setEnabled($v)
-    {
-        if ($v !== null) {
-            if (is_string($v)) {
-                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-            } else {
-                $v = (boolean) $v;
-            }
-        }
-
-        if ($this->enabled !== $v) {
-            $this->enabled = $v;
-            $this->modifiedColumns[UserGroupTableMap::COL_ENABLED] = true;
-        }
-
-        return $this;
-    } // setEnabled()
-
-    /**
-     * Sets the value of [created_at] column to a normalized version of the date/time value specified.
-     *
-     * @param  mixed $v string, integer (timestamp), or \DateTime value.
-     *               Empty strings are treated as NULL.
-     * @return $this|\App\Models\UserGroup The current object (for fluent API support)
-     */
-    public function setCreatedAt($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->created_at !== null || $dt !== null) {
-            if ($this->created_at === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->created_at->format("Y-m-d H:i:s")) {
-                $this->created_at = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[UserGroupTableMap::COL_CREATED_AT] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    } // setCreatedAt()
-
-    /**
-     * Sets the value of [updated_at] column to a normalized version of the date/time value specified.
-     *
-     * @param  mixed $v string, integer (timestamp), or \DateTime value.
-     *               Empty strings are treated as NULL.
-     * @return $this|\App\Models\UserGroup The current object (for fluent API support)
-     */
-    public function setUpdatedAt($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->updated_at !== null || $dt !== null) {
-            if ($this->updated_at === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->updated_at->format("Y-m-d H:i:s")) {
-                $this->updated_at = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[UserGroupTableMap::COL_UPDATED_AT] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    } // setUpdatedAt()
+    } // setShortName()
 
     /**
      * Set the value of [id] column.
      *
      * @param int $v new value
-     * @return $this|\App\Models\UserGroup The current object (for fluent API support)
+     * @return $this|\App\Models\Currency The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -620,7 +452,7 @@ abstract class UserGroup implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[UserGroupTableMap::COL_ID] = true;
+            $this->modifiedColumns[CurrencyTableMap::COL_ID] = true;
         }
 
         return $this;
@@ -636,14 +468,6 @@ abstract class UserGroup implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues()
     {
-            if ($this->visible !== true) {
-                return false;
-            }
-
-            if ($this->enabled !== true) {
-                return false;
-            }
-
         // otherwise, everything was equal, so return TRUE
         return true;
     } // hasOnlyDefaultValues()
@@ -670,31 +494,16 @@ abstract class UserGroup implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : UserGroupTableMap::translateFieldName('Label', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->label = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : CurrencyTableMap::translateFieldName('Symbol', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->symbol = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : UserGroupTableMap::translateFieldName('Level', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->level = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : CurrencyTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : UserGroupTableMap::translateFieldName('Visible', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->visible = (null !== $col) ? (boolean) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : CurrencyTableMap::translateFieldName('ShortName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->short_name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : UserGroupTableMap::translateFieldName('Enabled', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->enabled = (null !== $col) ? (boolean) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : UserGroupTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : UserGroupTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : UserGroupTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : CurrencyTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
@@ -704,10 +513,10 @@ abstract class UserGroup implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 7; // 7 = UserGroupTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = CurrencyTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\App\\Models\\UserGroup'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\App\\Models\\Currency'), 0, $e);
         }
     }
 
@@ -749,13 +558,13 @@ abstract class UserGroup implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(UserGroupTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(CurrencyTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildUserGroupQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildCurrencyQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -767,6 +576,8 @@ abstract class UserGroup implements ActiveRecordInterface
 
             $this->collUsers = null;
 
+            $this->collCurrenciesRateValidities = null;
+
         } // if (deep)
     }
 
@@ -776,8 +587,8 @@ abstract class UserGroup implements ActiveRecordInterface
      * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
-     * @see UserGroup::setDeleted()
-     * @see UserGroup::isDeleted()
+     * @see Currency::setDeleted()
+     * @see Currency::isDeleted()
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -786,11 +597,11 @@ abstract class UserGroup implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UserGroupTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(CurrencyTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildUserGroupQuery::create()
+            $deleteQuery = ChildCurrencyQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -821,7 +632,7 @@ abstract class UserGroup implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UserGroupTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(CurrencyTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -829,20 +640,8 @@ abstract class UserGroup implements ActiveRecordInterface
             $ret = $this->preSave($con);
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
-                // timestampable behavior
-
-                if (!$this->isColumnModified(UserGroupTableMap::COL_CREATED_AT)) {
-                    $this->setCreatedAt(time());
-                }
-                if (!$this->isColumnModified(UserGroupTableMap::COL_UPDATED_AT)) {
-                    $this->setUpdatedAt(time());
-                }
             } else {
                 $ret = $ret && $this->preUpdate($con);
-                // timestampable behavior
-                if ($this->isModified() && !$this->isColumnModified(UserGroupTableMap::COL_UPDATED_AT)) {
-                    $this->setUpdatedAt(time());
-                }
             }
             if ($ret) {
                 $affectedRows = $this->doSave($con);
@@ -852,7 +651,7 @@ abstract class UserGroup implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                UserGroupTableMap::addInstanceToPool($this);
+                CurrencyTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -891,15 +690,33 @@ abstract class UserGroup implements ActiveRecordInterface
 
             if ($this->usersScheduledForDeletion !== null) {
                 if (!$this->usersScheduledForDeletion->isEmpty()) {
-                    \App\Models\UserQuery::create()
-                        ->filterByPrimaryKeys($this->usersScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
+                    foreach ($this->usersScheduledForDeletion as $user) {
+                        // need to save related object because we set the relation to null
+                        $user->save($con);
+                    }
                     $this->usersScheduledForDeletion = null;
                 }
             }
 
             if ($this->collUsers !== null) {
                 foreach ($this->collUsers as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->currenciesRateValiditiesScheduledForDeletion !== null) {
+                if (!$this->currenciesRateValiditiesScheduledForDeletion->isEmpty()) {
+                    \App\Models\CurrenciesRateValidityQuery::create()
+                        ->filterByPrimaryKeys($this->currenciesRateValiditiesScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->currenciesRateValiditiesScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collCurrenciesRateValidities !== null) {
+                foreach ($this->collCurrenciesRateValidities as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -926,36 +743,27 @@ abstract class UserGroup implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[UserGroupTableMap::COL_ID] = true;
+        $this->modifiedColumns[CurrencyTableMap::COL_ID] = true;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . UserGroupTableMap::COL_ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . CurrencyTableMap::COL_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(UserGroupTableMap::COL_LABEL)) {
-            $modifiedColumns[':p' . $index++]  = 'label';
+        if ($this->isColumnModified(CurrencyTableMap::COL_SYMBOL)) {
+            $modifiedColumns[':p' . $index++]  = 'symbol';
         }
-        if ($this->isColumnModified(UserGroupTableMap::COL_LEVEL)) {
-            $modifiedColumns[':p' . $index++]  = 'level';
+        if ($this->isColumnModified(CurrencyTableMap::COL_NAME)) {
+            $modifiedColumns[':p' . $index++]  = 'name';
         }
-        if ($this->isColumnModified(UserGroupTableMap::COL_VISIBLE)) {
-            $modifiedColumns[':p' . $index++]  = 'visible';
+        if ($this->isColumnModified(CurrencyTableMap::COL_SHORT_NAME)) {
+            $modifiedColumns[':p' . $index++]  = 'short_name';
         }
-        if ($this->isColumnModified(UserGroupTableMap::COL_ENABLED)) {
-            $modifiedColumns[':p' . $index++]  = 'enabled';
-        }
-        if ($this->isColumnModified(UserGroupTableMap::COL_CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'created_at';
-        }
-        if ($this->isColumnModified(UserGroupTableMap::COL_UPDATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'updated_at';
-        }
-        if ($this->isColumnModified(UserGroupTableMap::COL_ID)) {
+        if ($this->isColumnModified(CurrencyTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
 
         $sql = sprintf(
-            'INSERT INTO user_group (%s) VALUES (%s)',
+            'INSERT INTO currency (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -964,23 +772,14 @@ abstract class UserGroup implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'label':
-                        $stmt->bindValue($identifier, $this->label, PDO::PARAM_STR);
+                    case 'symbol':
+                        $stmt->bindValue($identifier, $this->symbol, PDO::PARAM_STR);
                         break;
-                    case 'level':
-                        $stmt->bindValue($identifier, $this->level, PDO::PARAM_INT);
+                    case 'name':
+                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
-                    case 'visible':
-                        $stmt->bindValue($identifier, (int) $this->visible, PDO::PARAM_INT);
-                        break;
-                    case 'enabled':
-                        $stmt->bindValue($identifier, (int) $this->enabled, PDO::PARAM_INT);
-                        break;
-                    case 'created_at':
-                        $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
-                        break;
-                    case 'updated_at':
-                        $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                    case 'short_name':
+                        $stmt->bindValue($identifier, $this->short_name, PDO::PARAM_STR);
                         break;
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
@@ -1031,7 +830,7 @@ abstract class UserGroup implements ActiveRecordInterface
      */
     public function getByName($name, $type = TableMap::TYPE_FIELDNAME)
     {
-        $pos = UserGroupTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = CurrencyTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -1048,24 +847,15 @@ abstract class UserGroup implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getLabel();
+                return $this->getSymbol();
                 break;
             case 1:
-                return $this->getLevel();
+                return $this->getName();
                 break;
             case 2:
-                return $this->getVisible();
+                return $this->getShortName();
                 break;
             case 3:
-                return $this->getEnabled();
-                break;
-            case 4:
-                return $this->getCreatedAt();
-                break;
-            case 5:
-                return $this->getUpdatedAt();
-                break;
-            case 6:
                 return $this->getId();
                 break;
             default:
@@ -1092,34 +882,17 @@ abstract class UserGroup implements ActiveRecordInterface
     public function toArray($keyType = TableMap::TYPE_FIELDNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
-        if (isset($alreadyDumpedObjects['UserGroup'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['Currency'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['UserGroup'][$this->hashCode()] = true;
-        $keys = UserGroupTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['Currency'][$this->hashCode()] = true;
+        $keys = CurrencyTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getLabel(),
-            $keys[1] => $this->getLevel(),
-            $keys[2] => $this->getVisible(),
-            $keys[3] => $this->getEnabled(),
-            $keys[4] => $this->getCreatedAt(),
-            $keys[5] => $this->getUpdatedAt(),
-            $keys[6] => $this->getId(),
+            $keys[0] => $this->getSymbol(),
+            $keys[1] => $this->getName(),
+            $keys[2] => $this->getShortName(),
+            $keys[3] => $this->getId(),
         );
-
-        $utc = new \DateTimeZone('utc');
-        if ($result[$keys[4]] instanceof \DateTime) {
-            // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[4]];
-            $result[$keys[4]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
-        }
-
-        if ($result[$keys[5]] instanceof \DateTime) {
-            // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[5]];
-            $result[$keys[5]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
-        }
-
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
@@ -1141,6 +914,21 @@ abstract class UserGroup implements ActiveRecordInterface
 
                 $result[$key] = $this->collUsers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
+            if (null !== $this->collCurrenciesRateValidities) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'currenciesRateValidities';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'currencies_rate_validities';
+                        break;
+                    default:
+                        $key = 'CurrenciesRateValidities';
+                }
+
+                $result[$key] = $this->collCurrenciesRateValidities->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
         }
 
         return $result;
@@ -1155,11 +943,11 @@ abstract class UserGroup implements ActiveRecordInterface
      *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_FIELDNAME.
-     * @return $this|\App\Models\UserGroup
+     * @return $this|\App\Models\Currency
      */
     public function setByName($name, $value, $type = TableMap::TYPE_FIELDNAME)
     {
-        $pos = UserGroupTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = CurrencyTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         return $this->setByPosition($pos, $value);
     }
@@ -1170,30 +958,21 @@ abstract class UserGroup implements ActiveRecordInterface
      *
      * @param  int $pos position in xml schema
      * @param  mixed $value field value
-     * @return $this|\App\Models\UserGroup
+     * @return $this|\App\Models\Currency
      */
     public function setByPosition($pos, $value)
     {
         switch ($pos) {
             case 0:
-                $this->setLabel($value);
+                $this->setSymbol($value);
                 break;
             case 1:
-                $this->setLevel($value);
+                $this->setName($value);
                 break;
             case 2:
-                $this->setVisible($value);
+                $this->setShortName($value);
                 break;
             case 3:
-                $this->setEnabled($value);
-                break;
-            case 4:
-                $this->setCreatedAt($value);
-                break;
-            case 5:
-                $this->setUpdatedAt($value);
-                break;
-            case 6:
                 $this->setId($value);
                 break;
         } // switch()
@@ -1220,28 +999,19 @@ abstract class UserGroup implements ActiveRecordInterface
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_FIELDNAME)
     {
-        $keys = UserGroupTableMap::getFieldNames($keyType);
+        $keys = CurrencyTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setLabel($arr[$keys[0]]);
+            $this->setSymbol($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setLevel($arr[$keys[1]]);
+            $this->setName($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setVisible($arr[$keys[2]]);
+            $this->setShortName($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setEnabled($arr[$keys[3]]);
-        }
-        if (array_key_exists($keys[4], $arr)) {
-            $this->setCreatedAt($arr[$keys[4]]);
-        }
-        if (array_key_exists($keys[5], $arr)) {
-            $this->setUpdatedAt($arr[$keys[5]]);
-        }
-        if (array_key_exists($keys[6], $arr)) {
-            $this->setId($arr[$keys[6]]);
+            $this->setId($arr[$keys[3]]);
         }
     }
 
@@ -1262,7 +1032,7 @@ abstract class UserGroup implements ActiveRecordInterface
      * @param string $data The source data to import from
      * @param string $keyType The type of keys the array uses.
      *
-     * @return $this|\App\Models\UserGroup The current object, for fluid interface
+     * @return $this|\App\Models\Currency The current object, for fluid interface
      */
     public function importFrom($parser, $data, $keyType = TableMap::TYPE_FIELDNAME)
     {
@@ -1282,28 +1052,19 @@ abstract class UserGroup implements ActiveRecordInterface
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(UserGroupTableMap::DATABASE_NAME);
+        $criteria = new Criteria(CurrencyTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(UserGroupTableMap::COL_LABEL)) {
-            $criteria->add(UserGroupTableMap::COL_LABEL, $this->label);
+        if ($this->isColumnModified(CurrencyTableMap::COL_SYMBOL)) {
+            $criteria->add(CurrencyTableMap::COL_SYMBOL, $this->symbol);
         }
-        if ($this->isColumnModified(UserGroupTableMap::COL_LEVEL)) {
-            $criteria->add(UserGroupTableMap::COL_LEVEL, $this->level);
+        if ($this->isColumnModified(CurrencyTableMap::COL_NAME)) {
+            $criteria->add(CurrencyTableMap::COL_NAME, $this->name);
         }
-        if ($this->isColumnModified(UserGroupTableMap::COL_VISIBLE)) {
-            $criteria->add(UserGroupTableMap::COL_VISIBLE, $this->visible);
+        if ($this->isColumnModified(CurrencyTableMap::COL_SHORT_NAME)) {
+            $criteria->add(CurrencyTableMap::COL_SHORT_NAME, $this->short_name);
         }
-        if ($this->isColumnModified(UserGroupTableMap::COL_ENABLED)) {
-            $criteria->add(UserGroupTableMap::COL_ENABLED, $this->enabled);
-        }
-        if ($this->isColumnModified(UserGroupTableMap::COL_CREATED_AT)) {
-            $criteria->add(UserGroupTableMap::COL_CREATED_AT, $this->created_at);
-        }
-        if ($this->isColumnModified(UserGroupTableMap::COL_UPDATED_AT)) {
-            $criteria->add(UserGroupTableMap::COL_UPDATED_AT, $this->updated_at);
-        }
-        if ($this->isColumnModified(UserGroupTableMap::COL_ID)) {
-            $criteria->add(UserGroupTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(CurrencyTableMap::COL_ID)) {
+            $criteria->add(CurrencyTableMap::COL_ID, $this->id);
         }
 
         return $criteria;
@@ -1321,8 +1082,8 @@ abstract class UserGroup implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = ChildUserGroupQuery::create();
-        $criteria->add(UserGroupTableMap::COL_ID, $this->id);
+        $criteria = ChildCurrencyQuery::create();
+        $criteria->add(CurrencyTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1384,19 +1145,16 @@ abstract class UserGroup implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \App\Models\UserGroup (or compatible) type.
+     * @param      object $copyObj An object of \App\Models\Currency (or compatible) type.
      * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setLabel($this->getLabel());
-        $copyObj->setLevel($this->getLevel());
-        $copyObj->setVisible($this->getVisible());
-        $copyObj->setEnabled($this->getEnabled());
-        $copyObj->setCreatedAt($this->getCreatedAt());
-        $copyObj->setUpdatedAt($this->getUpdatedAt());
+        $copyObj->setSymbol($this->getSymbol());
+        $copyObj->setName($this->getName());
+        $copyObj->setShortName($this->getShortName());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1406,6 +1164,12 @@ abstract class UserGroup implements ActiveRecordInterface
             foreach ($this->getUsers() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addUser($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getCurrenciesRateValidities() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addCurrenciesRateValidity($relObj->copy($deepCopy));
                 }
             }
 
@@ -1426,7 +1190,7 @@ abstract class UserGroup implements ActiveRecordInterface
      * objects.
      *
      * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \App\Models\UserGroup Clone of current object.
+     * @return \App\Models\Currency Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1452,6 +1216,9 @@ abstract class UserGroup implements ActiveRecordInterface
     {
         if ('User' == $relationName) {
             return $this->initUsers();
+        }
+        if ('CurrenciesRateValidity' == $relationName) {
+            return $this->initCurrenciesRateValidities();
         }
     }
 
@@ -1504,7 +1271,7 @@ abstract class UserGroup implements ActiveRecordInterface
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
      * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildUserGroup is new, it will return
+     * If this ChildCurrency is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
@@ -1521,7 +1288,7 @@ abstract class UserGroup implements ActiveRecordInterface
                 $this->initUsers();
             } else {
                 $collUsers = ChildUserQuery::create(null, $criteria)
-                    ->filterByUserGroup($this)
+                    ->filterByCurrency($this)
                     ->find($con);
 
                 if (null !== $criteria) {
@@ -1564,7 +1331,7 @@ abstract class UserGroup implements ActiveRecordInterface
      *
      * @param      Collection $users A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildUserGroup The current object (for fluent API support)
+     * @return $this|ChildCurrency The current object (for fluent API support)
      */
     public function setUsers(Collection $users, ConnectionInterface $con = null)
     {
@@ -1575,7 +1342,7 @@ abstract class UserGroup implements ActiveRecordInterface
         $this->usersScheduledForDeletion = $usersToDelete;
 
         foreach ($usersToDelete as $userRemoved) {
-            $userRemoved->setUserGroup(null);
+            $userRemoved->setCurrency(null);
         }
 
         $this->collUsers = null;
@@ -1616,7 +1383,7 @@ abstract class UserGroup implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByUserGroup($this)
+                ->filterByCurrency($this)
                 ->count($con);
         }
 
@@ -1628,7 +1395,7 @@ abstract class UserGroup implements ActiveRecordInterface
      * through the ChildUser foreign key attribute.
      *
      * @param  ChildUser $l ChildUser
-     * @return $this|\App\Models\UserGroup The current object (for fluent API support)
+     * @return $this|\App\Models\Currency The current object (for fluent API support)
      */
     public function addUser(ChildUser $l)
     {
@@ -1650,12 +1417,12 @@ abstract class UserGroup implements ActiveRecordInterface
     protected function doAddUser(ChildUser $user)
     {
         $this->collUsers[]= $user;
-        $user->setUserGroup($this);
+        $user->setCurrency($this);
     }
 
     /**
      * @param  ChildUser $user The ChildUser object to remove.
-     * @return $this|ChildUserGroup The current object (for fluent API support)
+     * @return $this|ChildCurrency The current object (for fluent API support)
      */
     public function removeUser(ChildUser $user)
     {
@@ -1666,8 +1433,8 @@ abstract class UserGroup implements ActiveRecordInterface
                 $this->usersScheduledForDeletion = clone $this->collUsers;
                 $this->usersScheduledForDeletion->clear();
             }
-            $this->usersScheduledForDeletion[]= clone $user;
-            $user->setUserGroup(null);
+            $this->usersScheduledForDeletion[]= $user;
+            $user->setCurrency(null);
         }
 
         return $this;
@@ -1677,13 +1444,38 @@ abstract class UserGroup implements ActiveRecordInterface
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this UserGroup is new, it will return
-     * an empty collection; or if this UserGroup has previously
+     * Otherwise if this Currency is new, it will return
+     * an empty collection; or if this Currency has previously
      * been saved, it will retrieve related Users from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in UserGroup.
+     * actually need in Currency.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildUser[] List of ChildUser objects
+     */
+    public function getUsersJoinUserGroup(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildUserQuery::create(null, $criteria);
+        $query->joinWith('UserGroup', $joinBehavior);
+
+        return $this->getUsers($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Currency is new, it will return
+     * an empty collection; or if this Currency has previously
+     * been saved, it will retrieve related Users from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Currency.
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
@@ -1702,13 +1494,13 @@ abstract class UserGroup implements ActiveRecordInterface
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this UserGroup is new, it will return
-     * an empty collection; or if this UserGroup has previously
+     * Otherwise if this Currency is new, it will return
+     * an empty collection; or if this Currency has previously
      * been saved, it will retrieve related Users from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in UserGroup.
+     * actually need in Currency.
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
@@ -1723,29 +1515,222 @@ abstract class UserGroup implements ActiveRecordInterface
         return $this->getUsers($query, $con);
     }
 
+    /**
+     * Clears out the collCurrenciesRateValidities collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addCurrenciesRateValidities()
+     */
+    public function clearCurrenciesRateValidities()
+    {
+        $this->collCurrenciesRateValidities = null; // important to set this to NULL since that means it is uninitialized
+    }
 
     /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this UserGroup is new, it will return
-     * an empty collection; or if this UserGroup has previously
-     * been saved, it will retrieve related Users from storage.
+     * Reset is the collCurrenciesRateValidities collection loaded partially.
+     */
+    public function resetPartialCurrenciesRateValidities($v = true)
+    {
+        $this->collCurrenciesRateValiditiesPartial = $v;
+    }
+
+    /**
+     * Initializes the collCurrenciesRateValidities collection.
      *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in UserGroup.
+     * By default this just sets the collCurrenciesRateValidities collection to an empty array (like clearcollCurrenciesRateValidities());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initCurrenciesRateValidities($overrideExisting = true)
+    {
+        if (null !== $this->collCurrenciesRateValidities && !$overrideExisting) {
+            return;
+        }
+        $this->collCurrenciesRateValidities = new ObjectCollection();
+        $this->collCurrenciesRateValidities->setModel('\App\Models\CurrenciesRateValidity');
+    }
+
+    /**
+     * Gets an array of ChildCurrenciesRateValidity objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildCurrency is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildUser[] List of ChildUser objects
+     * @return ObjectCollection|ChildCurrenciesRateValidity[] List of ChildCurrenciesRateValidity objects
+     * @throws PropelException
      */
-    public function getUsersJoinCurrency(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getCurrenciesRateValidities(Criteria $criteria = null, ConnectionInterface $con = null)
     {
-        $query = ChildUserQuery::create(null, $criteria);
-        $query->joinWith('Currency', $joinBehavior);
+        $partial = $this->collCurrenciesRateValiditiesPartial && !$this->isNew();
+        if (null === $this->collCurrenciesRateValidities || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collCurrenciesRateValidities) {
+                // return empty collection
+                $this->initCurrenciesRateValidities();
+            } else {
+                $collCurrenciesRateValidities = ChildCurrenciesRateValidityQuery::create(null, $criteria)
+                    ->filterByCurrency($this)
+                    ->find($con);
 
-        return $this->getUsers($query, $con);
+                if (null !== $criteria) {
+                    if (false !== $this->collCurrenciesRateValiditiesPartial && count($collCurrenciesRateValidities)) {
+                        $this->initCurrenciesRateValidities(false);
+
+                        foreach ($collCurrenciesRateValidities as $obj) {
+                            if (false == $this->collCurrenciesRateValidities->contains($obj)) {
+                                $this->collCurrenciesRateValidities->append($obj);
+                            }
+                        }
+
+                        $this->collCurrenciesRateValiditiesPartial = true;
+                    }
+
+                    return $collCurrenciesRateValidities;
+                }
+
+                if ($partial && $this->collCurrenciesRateValidities) {
+                    foreach ($this->collCurrenciesRateValidities as $obj) {
+                        if ($obj->isNew()) {
+                            $collCurrenciesRateValidities[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collCurrenciesRateValidities = $collCurrenciesRateValidities;
+                $this->collCurrenciesRateValiditiesPartial = false;
+            }
+        }
+
+        return $this->collCurrenciesRateValidities;
+    }
+
+    /**
+     * Sets a collection of ChildCurrenciesRateValidity objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $currenciesRateValidities A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildCurrency The current object (for fluent API support)
+     */
+    public function setCurrenciesRateValidities(Collection $currenciesRateValidities, ConnectionInterface $con = null)
+    {
+        /** @var ChildCurrenciesRateValidity[] $currenciesRateValiditiesToDelete */
+        $currenciesRateValiditiesToDelete = $this->getCurrenciesRateValidities(new Criteria(), $con)->diff($currenciesRateValidities);
+
+
+        $this->currenciesRateValiditiesScheduledForDeletion = $currenciesRateValiditiesToDelete;
+
+        foreach ($currenciesRateValiditiesToDelete as $currenciesRateValidityRemoved) {
+            $currenciesRateValidityRemoved->setCurrency(null);
+        }
+
+        $this->collCurrenciesRateValidities = null;
+        foreach ($currenciesRateValidities as $currenciesRateValidity) {
+            $this->addCurrenciesRateValidity($currenciesRateValidity);
+        }
+
+        $this->collCurrenciesRateValidities = $currenciesRateValidities;
+        $this->collCurrenciesRateValiditiesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related CurrenciesRateValidity objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related CurrenciesRateValidity objects.
+     * @throws PropelException
+     */
+    public function countCurrenciesRateValidities(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collCurrenciesRateValiditiesPartial && !$this->isNew();
+        if (null === $this->collCurrenciesRateValidities || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCurrenciesRateValidities) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getCurrenciesRateValidities());
+            }
+
+            $query = ChildCurrenciesRateValidityQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByCurrency($this)
+                ->count($con);
+        }
+
+        return count($this->collCurrenciesRateValidities);
+    }
+
+    /**
+     * Method called to associate a ChildCurrenciesRateValidity object to this object
+     * through the ChildCurrenciesRateValidity foreign key attribute.
+     *
+     * @param  ChildCurrenciesRateValidity $l ChildCurrenciesRateValidity
+     * @return $this|\App\Models\Currency The current object (for fluent API support)
+     */
+    public function addCurrenciesRateValidity(ChildCurrenciesRateValidity $l)
+    {
+        if ($this->collCurrenciesRateValidities === null) {
+            $this->initCurrenciesRateValidities();
+            $this->collCurrenciesRateValiditiesPartial = true;
+        }
+
+        if (!$this->collCurrenciesRateValidities->contains($l)) {
+            $this->doAddCurrenciesRateValidity($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildCurrenciesRateValidity $currenciesRateValidity The ChildCurrenciesRateValidity object to add.
+     */
+    protected function doAddCurrenciesRateValidity(ChildCurrenciesRateValidity $currenciesRateValidity)
+    {
+        $this->collCurrenciesRateValidities[]= $currenciesRateValidity;
+        $currenciesRateValidity->setCurrency($this);
+    }
+
+    /**
+     * @param  ChildCurrenciesRateValidity $currenciesRateValidity The ChildCurrenciesRateValidity object to remove.
+     * @return $this|ChildCurrency The current object (for fluent API support)
+     */
+    public function removeCurrenciesRateValidity(ChildCurrenciesRateValidity $currenciesRateValidity)
+    {
+        if ($this->getCurrenciesRateValidities()->contains($currenciesRateValidity)) {
+            $pos = $this->collCurrenciesRateValidities->search($currenciesRateValidity);
+            $this->collCurrenciesRateValidities->remove($pos);
+            if (null === $this->currenciesRateValiditiesScheduledForDeletion) {
+                $this->currenciesRateValiditiesScheduledForDeletion = clone $this->collCurrenciesRateValidities;
+                $this->currenciesRateValiditiesScheduledForDeletion->clear();
+            }
+            $this->currenciesRateValiditiesScheduledForDeletion[]= clone $currenciesRateValidity;
+            $currenciesRateValidity->setCurrency(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -1755,16 +1740,12 @@ abstract class UserGroup implements ActiveRecordInterface
      */
     public function clear()
     {
-        $this->label = null;
-        $this->level = null;
-        $this->visible = null;
-        $this->enabled = null;
-        $this->created_at = null;
-        $this->updated_at = null;
+        $this->symbol = null;
+        $this->name = null;
+        $this->short_name = null;
         $this->id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
-        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
@@ -1786,9 +1767,15 @@ abstract class UserGroup implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collCurrenciesRateValidities) {
+                foreach ($this->collCurrenciesRateValidities as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
         $this->collUsers = null;
+        $this->collCurrenciesRateValidities = null;
     }
 
     /**
@@ -1798,21 +1785,7 @@ abstract class UserGroup implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(UserGroupTableMap::DEFAULT_STRING_FORMAT);
-    }
-
-    // timestampable behavior
-
-    /**
-     * Mark the current object so that the update date doesn't get updated during next save
-     *
-     * @return     $this|ChildUserGroup The current object (for fluent API support)
-     */
-    public function keepUpdateDateUnchanged()
-    {
-        $this->modifiedColumns[UserGroupTableMap::COL_UPDATED_AT] = true;
-
-        return $this;
+        return (string) $this->exportTo(CurrencyTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

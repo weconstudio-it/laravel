@@ -62,12 +62,6 @@ abstract class FailedJobs implements ActiveRecordInterface
     protected $virtualColumns = array();
 
     /**
-     * The value for the id field.
-     * @var        int
-     */
-    protected $id;
-
-    /**
      * The value for the connection field.
      * @var        string
      */
@@ -91,6 +85,12 @@ abstract class FailedJobs implements ActiveRecordInterface
      * @var        \DateTime
      */
     protected $failed_at;
+
+    /**
+     * The value for the id field.
+     * @var        int
+     */
+    protected $id;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -330,16 +330,6 @@ abstract class FailedJobs implements ActiveRecordInterface
     }
 
     /**
-     * Get the [id] column value.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * Get the [connection] column value.
      *
      * @return string
@@ -390,24 +380,14 @@ abstract class FailedJobs implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [id] column.
+     * Get the [id] column value.
      *
-     * @param int $v new value
-     * @return $this|\App\Models\FailedJobs The current object (for fluent API support)
+     * @return int
      */
-    public function setId($v)
+    public function getId()
     {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->id !== $v) {
-            $this->id = $v;
-            $this->modifiedColumns[FailedJobsTableMap::COL_ID] = true;
-        }
-
-        return $this;
-    } // setId()
+        return $this->id;
+    }
 
     /**
      * Set the value of [connection] column.
@@ -490,6 +470,26 @@ abstract class FailedJobs implements ActiveRecordInterface
     } // setFailedAt()
 
     /**
+     * Set the value of [id] column.
+     *
+     * @param int $v new value
+     * @return $this|\App\Models\FailedJobs The current object (for fluent API support)
+     */
+    public function setId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->id !== $v) {
+            $this->id = $v;
+            $this->modifiedColumns[FailedJobsTableMap::COL_ID] = true;
+        }
+
+        return $this;
+    } // setId()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -525,23 +525,23 @@ abstract class FailedJobs implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : FailedJobsTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : FailedJobsTableMap::translateFieldName('Connection', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : FailedJobsTableMap::translateFieldName('Connection', TableMap::TYPE_PHPNAME, $indexType)];
             $this->connection = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : FailedJobsTableMap::translateFieldName('Queue', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : FailedJobsTableMap::translateFieldName('Queue', TableMap::TYPE_PHPNAME, $indexType)];
             $this->queue = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : FailedJobsTableMap::translateFieldName('Payload', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : FailedJobsTableMap::translateFieldName('Payload', TableMap::TYPE_PHPNAME, $indexType)];
             $this->payload = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : FailedJobsTableMap::translateFieldName('FailedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : FailedJobsTableMap::translateFieldName('FailedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->failed_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : FailedJobsTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -747,9 +747,6 @@ abstract class FailedJobs implements ActiveRecordInterface
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(FailedJobsTableMap::COL_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'id';
-        }
         if ($this->isColumnModified(FailedJobsTableMap::COL_CONNECTION)) {
             $modifiedColumns[':p' . $index++]  = 'connection';
         }
@@ -762,6 +759,9 @@ abstract class FailedJobs implements ActiveRecordInterface
         if ($this->isColumnModified(FailedJobsTableMap::COL_FAILED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'failed_at';
         }
+        if ($this->isColumnModified(FailedJobsTableMap::COL_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'id';
+        }
 
         $sql = sprintf(
             'INSERT INTO failed_jobs (%s) VALUES (%s)',
@@ -773,9 +773,6 @@ abstract class FailedJobs implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'id':
-                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
-                        break;
                     case 'connection':
                         $stmt->bindValue($identifier, $this->connection, PDO::PARAM_STR);
                         break;
@@ -787,6 +784,9 @@ abstract class FailedJobs implements ActiveRecordInterface
                         break;
                     case 'failed_at':
                         $stmt->bindValue($identifier, $this->failed_at ? $this->failed_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                        break;
+                    case 'id':
+                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -851,19 +851,19 @@ abstract class FailedJobs implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getId();
-                break;
-            case 1:
                 return $this->getConnection();
                 break;
-            case 2:
+            case 1:
                 return $this->getQueue();
                 break;
-            case 3:
+            case 2:
                 return $this->getPayload();
                 break;
-            case 4:
+            case 3:
                 return $this->getFailedAt();
+                break;
+            case 4:
+                return $this->getId();
                 break;
             default:
                 return null;
@@ -894,18 +894,18 @@ abstract class FailedJobs implements ActiveRecordInterface
         $alreadyDumpedObjects['FailedJobs'][$this->hashCode()] = true;
         $keys = FailedJobsTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getId(),
-            $keys[1] => $this->getConnection(),
-            $keys[2] => $this->getQueue(),
-            $keys[3] => $this->getPayload(),
-            $keys[4] => $this->getFailedAt(),
+            $keys[0] => $this->getConnection(),
+            $keys[1] => $this->getQueue(),
+            $keys[2] => $this->getPayload(),
+            $keys[3] => $this->getFailedAt(),
+            $keys[4] => $this->getId(),
         );
 
         $utc = new \DateTimeZone('utc');
-        if ($result[$keys[4]] instanceof \DateTime) {
+        if ($result[$keys[3]] instanceof \DateTime) {
             // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[4]];
-            $result[$keys[4]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+            $dateTime = clone $result[$keys[3]];
+            $result[$keys[3]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -947,19 +947,19 @@ abstract class FailedJobs implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setId($value);
-                break;
-            case 1:
                 $this->setConnection($value);
                 break;
-            case 2:
+            case 1:
                 $this->setQueue($value);
                 break;
-            case 3:
+            case 2:
                 $this->setPayload($value);
                 break;
-            case 4:
+            case 3:
                 $this->setFailedAt($value);
+                break;
+            case 4:
+                $this->setId($value);
                 break;
         } // switch()
 
@@ -988,19 +988,19 @@ abstract class FailedJobs implements ActiveRecordInterface
         $keys = FailedJobsTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setId($arr[$keys[0]]);
+            $this->setConnection($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setConnection($arr[$keys[1]]);
+            $this->setQueue($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setQueue($arr[$keys[2]]);
+            $this->setPayload($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setPayload($arr[$keys[3]]);
+            $this->setFailedAt($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setFailedAt($arr[$keys[4]]);
+            $this->setId($arr[$keys[4]]);
         }
     }
 
@@ -1043,9 +1043,6 @@ abstract class FailedJobs implements ActiveRecordInterface
     {
         $criteria = new Criteria(FailedJobsTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(FailedJobsTableMap::COL_ID)) {
-            $criteria->add(FailedJobsTableMap::COL_ID, $this->id);
-        }
         if ($this->isColumnModified(FailedJobsTableMap::COL_CONNECTION)) {
             $criteria->add(FailedJobsTableMap::COL_CONNECTION, $this->connection);
         }
@@ -1057,6 +1054,9 @@ abstract class FailedJobs implements ActiveRecordInterface
         }
         if ($this->isColumnModified(FailedJobsTableMap::COL_FAILED_AT)) {
             $criteria->add(FailedJobsTableMap::COL_FAILED_AT, $this->failed_at);
+        }
+        if ($this->isColumnModified(FailedJobsTableMap::COL_ID)) {
+            $criteria->add(FailedJobsTableMap::COL_ID, $this->id);
         }
 
         return $criteria;
@@ -1183,11 +1183,11 @@ abstract class FailedJobs implements ActiveRecordInterface
      */
     public function clear()
     {
-        $this->id = null;
         $this->connection = null;
         $this->queue = null;
         $this->payload = null;
         $this->failed_at = null;
+        $this->id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();

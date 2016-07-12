@@ -5,9 +5,11 @@ namespace App\Models\Base;
 use \DateTime;
 use \Exception;
 use \PDO;
-use App\Models\Authorization as ChildAuthorization;
-use App\Models\AuthorizationQuery as ChildAuthorizationQuery;
-use App\Models\Map\AuthorizationTableMap;
+use App\Models\CurrenciesRateValidity as ChildCurrenciesRateValidity;
+use App\Models\CurrenciesRateValidityQuery as ChildCurrenciesRateValidityQuery;
+use App\Models\Currency as ChildCurrency;
+use App\Models\CurrencyQuery as ChildCurrencyQuery;
+use App\Models\Map\CurrenciesRateValidityTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -22,18 +24,18 @@ use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
 
 /**
- * Base class that represents a row from the 'authorization' table.
+ * Base class that represents a row from the 'currencies_rate_validity' table.
  *
  *
  *
 * @package    propel.generator..Base
 */
-abstract class Authorization implements ActiveRecordInterface
+abstract class CurrenciesRateValidity implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\App\\Models\\Map\\AuthorizationTableMap';
+    const TABLE_MAP = '\\App\\Models\\Map\\CurrenciesRateValidityTableMap';
 
 
     /**
@@ -63,54 +65,34 @@ abstract class Authorization implements ActiveRecordInterface
     protected $virtualColumns = array();
 
     /**
-     * The value for the uri field.
+     * The value for the id_currency field.
+     * @var        int
+     */
+    protected $id_currency;
+
+    /**
+     * The value for the start field.
+     * @var        \DateTime
+     */
+    protected $start;
+
+    /**
+     * The value for the end field.
+     * @var        \DateTime
+     */
+    protected $end;
+
+    /**
+     * The value for the value field.
      * @var        string
      */
-    protected $uri;
+    protected $value;
 
     /**
-     * The value for the method field.
-     * @var        string
-     */
-    protected $method;
-
-    /**
-     * The value for the id_user field.
-     * @var        int
-     */
-    protected $id_user;
-
-    /**
-     * The value for the id_user_group field.
-     * @var        int
-     */
-    protected $id_user_group;
-
-    /**
-     * The value for the order field.
-     * @var        int
-     */
-    protected $order;
-
-    /**
-     * The value for the policy field.
-     * Note: this column has a database default value of: true
+     * The value for the active field.
      * @var        boolean
      */
-    protected $policy;
-
-    /**
-     * The value for the label field.
-     * @var        string
-     */
-    protected $label;
-
-    /**
-     * The value for the enabled field.
-     * Note: this column has a database default value of: true
-     * @var        boolean
-     */
-    protected $enabled;
+    protected $active;
 
     /**
      * The value for the created_at field.
@@ -131,6 +113,11 @@ abstract class Authorization implements ActiveRecordInterface
     protected $id;
 
     /**
+     * @var        ChildCurrency
+     */
+    protected $aCurrency;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
@@ -139,24 +126,10 @@ abstract class Authorization implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * Applies default values to this object.
-     * This method should be called from the object's constructor (or
-     * equivalent initialization method).
-     * @see __construct()
-     */
-    public function applyDefaultValues()
-    {
-        $this->policy = true;
-        $this->enabled = true;
-    }
-
-    /**
-     * Initializes internal state of App\Models\Base\Authorization object.
-     * @see applyDefaults()
+     * Initializes internal state of App\Models\Base\CurrenciesRateValidity object.
      */
     public function __construct()
     {
-        $this->applyDefaultValues();
     }
 
     /**
@@ -248,9 +221,9 @@ abstract class Authorization implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>Authorization</code> instance.  If
-     * <code>obj</code> is an instance of <code>Authorization</code>, delegates to
-     * <code>equals(Authorization)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>CurrenciesRateValidity</code> instance.  If
+     * <code>obj</code> is an instance of <code>CurrenciesRateValidity</code>, delegates to
+     * <code>equals(CurrenciesRateValidity)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param  mixed   $obj The object to compare to.
      * @return boolean Whether equal to the object specified.
@@ -316,7 +289,7 @@ abstract class Authorization implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|Authorization The current object, for fluid interface
+     * @return $this|CurrenciesRateValidity The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -370,103 +343,83 @@ abstract class Authorization implements ActiveRecordInterface
     }
 
     /**
-     * Get the [uri] column value.
-     *
-     * @return string
-     */
-    public function getUri()
-    {
-        return $this->uri;
-    }
-
-    /**
-     * Get the [method] column value.
-     *
-     * @return string
-     */
-    public function getMethod()
-    {
-        return $this->method;
-    }
-
-    /**
-     * Get the [id_user] column value.
+     * Get the [id_currency] column value.
      *
      * @return int
      */
-    public function getIdUser()
+    public function getIdCurrency()
     {
-        return $this->id_user;
+        return $this->id_currency;
     }
 
     /**
-     * Get the [id_user_group] column value.
+     * Get the [optionally formatted] temporal [start] column value.
      *
-     * @return int
-     */
-    public function getIdUserGroup()
-    {
-        return $this->id_user_group;
-    }
-
-    /**
-     * Get the [order] column value.
      *
-     * @return int
-     */
-    public function getOrder()
-    {
-        return $this->order;
-    }
-
-    /**
-     * Get the [policy] column value.
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return boolean
-     */
-    public function getPolicy()
-    {
-        return $this->policy;
-    }
-
-    /**
-     * Get the [policy] column value.
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00
      *
-     * @return boolean
+     * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function isPolicy()
+    public function getStart($format = 'Y-m-d')
     {
-        return $this->getPolicy();
+        if ($format === null) {
+            return $this->start;
+        } else {
+            return $this->start instanceof \DateTime ? $this->start->format($format) : null;
+        }
     }
 
     /**
-     * Get the [label] column value.
+     * Get the [optionally formatted] temporal [end] column value.
+     *
+     *
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getEnd($format = 'Y-m-d')
+    {
+        if ($format === null) {
+            return $this->end;
+        } else {
+            return $this->end instanceof \DateTime ? $this->end->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [value] column value.
      *
      * @return string
      */
-    public function getLabel()
+    public function getValue()
     {
-        return $this->label;
+        return $this->value;
     }
 
     /**
-     * Get the [enabled] column value.
+     * Get the [active] column value.
      *
      * @return boolean
      */
-    public function getEnabled()
+    public function getActive()
     {
-        return $this->enabled;
+        return $this->active;
     }
 
     /**
-     * Get the [enabled] column value.
+     * Get the [active] column value.
      *
      * @return boolean
      */
-    public function isEnabled()
+    public function isActive()
     {
-        return $this->getEnabled();
+        return $this->getActive();
     }
 
     /**
@@ -520,116 +473,100 @@ abstract class Authorization implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [uri] column.
+     * Set the value of [id_currency] column.
+     *
+     * @param int $v new value
+     * @return $this|\App\Models\CurrenciesRateValidity The current object (for fluent API support)
+     */
+    public function setIdCurrency($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->id_currency !== $v) {
+            $this->id_currency = $v;
+            $this->modifiedColumns[CurrenciesRateValidityTableMap::COL_ID_CURRENCY] = true;
+        }
+
+        if ($this->aCurrency !== null && $this->aCurrency->getId() !== $v) {
+            $this->aCurrency = null;
+        }
+
+        return $this;
+    } // setIdCurrency()
+
+    /**
+     * Sets the value of [start] column to a normalized version of the date/time value specified.
+     *
+     * @param  mixed $v string, integer (timestamp), or \DateTime value.
+     *               Empty strings are treated as NULL.
+     * @return $this|\App\Models\CurrenciesRateValidity The current object (for fluent API support)
+     */
+    public function setStart($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->start !== null || $dt !== null) {
+            if ($this->start === null || $dt === null || $dt->format("Y-m-d") !== $this->start->format("Y-m-d")) {
+                $this->start = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[CurrenciesRateValidityTableMap::COL_START] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    } // setStart()
+
+    /**
+     * Sets the value of [end] column to a normalized version of the date/time value specified.
+     *
+     * @param  mixed $v string, integer (timestamp), or \DateTime value.
+     *               Empty strings are treated as NULL.
+     * @return $this|\App\Models\CurrenciesRateValidity The current object (for fluent API support)
+     */
+    public function setEnd($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->end !== null || $dt !== null) {
+            if ($this->end === null || $dt === null || $dt->format("Y-m-d") !== $this->end->format("Y-m-d")) {
+                $this->end = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[CurrenciesRateValidityTableMap::COL_END] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    } // setEnd()
+
+    /**
+     * Set the value of [value] column.
      *
      * @param string $v new value
-     * @return $this|\App\Models\Authorization The current object (for fluent API support)
+     * @return $this|\App\Models\CurrenciesRateValidity The current object (for fluent API support)
      */
-    public function setUri($v)
+    public function setValue($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->uri !== $v) {
-            $this->uri = $v;
-            $this->modifiedColumns[AuthorizationTableMap::COL_URI] = true;
+        if ($this->value !== $v) {
+            $this->value = $v;
+            $this->modifiedColumns[CurrenciesRateValidityTableMap::COL_VALUE] = true;
         }
 
         return $this;
-    } // setUri()
+    } // setValue()
 
     /**
-     * Set the value of [method] column.
-     *
-     * @param string $v new value
-     * @return $this|\App\Models\Authorization The current object (for fluent API support)
-     */
-    public function setMethod($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->method !== $v) {
-            $this->method = $v;
-            $this->modifiedColumns[AuthorizationTableMap::COL_METHOD] = true;
-        }
-
-        return $this;
-    } // setMethod()
-
-    /**
-     * Set the value of [id_user] column.
-     *
-     * @param int $v new value
-     * @return $this|\App\Models\Authorization The current object (for fluent API support)
-     */
-    public function setIdUser($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->id_user !== $v) {
-            $this->id_user = $v;
-            $this->modifiedColumns[AuthorizationTableMap::COL_ID_USER] = true;
-        }
-
-        return $this;
-    } // setIdUser()
-
-    /**
-     * Set the value of [id_user_group] column.
-     *
-     * @param int $v new value
-     * @return $this|\App\Models\Authorization The current object (for fluent API support)
-     */
-    public function setIdUserGroup($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->id_user_group !== $v) {
-            $this->id_user_group = $v;
-            $this->modifiedColumns[AuthorizationTableMap::COL_ID_USER_GROUP] = true;
-        }
-
-        return $this;
-    } // setIdUserGroup()
-
-    /**
-     * Set the value of [order] column.
-     *
-     * @param int $v new value
-     * @return $this|\App\Models\Authorization The current object (for fluent API support)
-     */
-    public function setOrder($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->order !== $v) {
-            $this->order = $v;
-            $this->modifiedColumns[AuthorizationTableMap::COL_ORDER] = true;
-        }
-
-        return $this;
-    } // setOrder()
-
-    /**
-     * Sets the value of the [policy] column.
+     * Sets the value of the [active] column.
      * Non-boolean arguments are converted using the following rules:
      *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
      *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
      * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      *
      * @param  boolean|integer|string $v The new value
-     * @return $this|\App\Models\Authorization The current object (for fluent API support)
+     * @return $this|\App\Models\CurrenciesRateValidity The current object (for fluent API support)
      */
-    public function setPolicy($v)
+    public function setActive($v)
     {
         if ($v !== null) {
             if (is_string($v)) {
@@ -639,68 +576,20 @@ abstract class Authorization implements ActiveRecordInterface
             }
         }
 
-        if ($this->policy !== $v) {
-            $this->policy = $v;
-            $this->modifiedColumns[AuthorizationTableMap::COL_POLICY] = true;
+        if ($this->active !== $v) {
+            $this->active = $v;
+            $this->modifiedColumns[CurrenciesRateValidityTableMap::COL_ACTIVE] = true;
         }
 
         return $this;
-    } // setPolicy()
-
-    /**
-     * Set the value of [label] column.
-     *
-     * @param string $v new value
-     * @return $this|\App\Models\Authorization The current object (for fluent API support)
-     */
-    public function setLabel($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->label !== $v) {
-            $this->label = $v;
-            $this->modifiedColumns[AuthorizationTableMap::COL_LABEL] = true;
-        }
-
-        return $this;
-    } // setLabel()
-
-    /**
-     * Sets the value of the [enabled] column.
-     * Non-boolean arguments are converted using the following rules:
-     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     *
-     * @param  boolean|integer|string $v The new value
-     * @return $this|\App\Models\Authorization The current object (for fluent API support)
-     */
-    public function setEnabled($v)
-    {
-        if ($v !== null) {
-            if (is_string($v)) {
-                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-            } else {
-                $v = (boolean) $v;
-            }
-        }
-
-        if ($this->enabled !== $v) {
-            $this->enabled = $v;
-            $this->modifiedColumns[AuthorizationTableMap::COL_ENABLED] = true;
-        }
-
-        return $this;
-    } // setEnabled()
+    } // setActive()
 
     /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
      *               Empty strings are treated as NULL.
-     * @return $this|\App\Models\Authorization The current object (for fluent API support)
+     * @return $this|\App\Models\CurrenciesRateValidity The current object (for fluent API support)
      */
     public function setCreatedAt($v)
     {
@@ -708,7 +597,7 @@ abstract class Authorization implements ActiveRecordInterface
         if ($this->created_at !== null || $dt !== null) {
             if ($this->created_at === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->created_at->format("Y-m-d H:i:s")) {
                 $this->created_at = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[AuthorizationTableMap::COL_CREATED_AT] = true;
+                $this->modifiedColumns[CurrenciesRateValidityTableMap::COL_CREATED_AT] = true;
             }
         } // if either are not null
 
@@ -720,7 +609,7 @@ abstract class Authorization implements ActiveRecordInterface
      *
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
      *               Empty strings are treated as NULL.
-     * @return $this|\App\Models\Authorization The current object (for fluent API support)
+     * @return $this|\App\Models\CurrenciesRateValidity The current object (for fluent API support)
      */
     public function setUpdatedAt($v)
     {
@@ -728,7 +617,7 @@ abstract class Authorization implements ActiveRecordInterface
         if ($this->updated_at !== null || $dt !== null) {
             if ($this->updated_at === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->updated_at->format("Y-m-d H:i:s")) {
                 $this->updated_at = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[AuthorizationTableMap::COL_UPDATED_AT] = true;
+                $this->modifiedColumns[CurrenciesRateValidityTableMap::COL_UPDATED_AT] = true;
             }
         } // if either are not null
 
@@ -739,7 +628,7 @@ abstract class Authorization implements ActiveRecordInterface
      * Set the value of [id] column.
      *
      * @param int $v new value
-     * @return $this|\App\Models\Authorization The current object (for fluent API support)
+     * @return $this|\App\Models\CurrenciesRateValidity The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -749,7 +638,7 @@ abstract class Authorization implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[AuthorizationTableMap::COL_ID] = true;
+            $this->modifiedColumns[CurrenciesRateValidityTableMap::COL_ID] = true;
         }
 
         return $this;
@@ -765,14 +654,6 @@ abstract class Authorization implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues()
     {
-            if ($this->policy !== true) {
-                return false;
-            }
-
-            if ($this->enabled !== true) {
-                return false;
-            }
-
         // otherwise, everything was equal, so return TRUE
         return true;
     } // hasOnlyDefaultValues()
@@ -799,43 +680,40 @@ abstract class Authorization implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : AuthorizationTableMap::translateFieldName('Uri', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->uri = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : CurrenciesRateValidityTableMap::translateFieldName('IdCurrency', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id_currency = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : AuthorizationTableMap::translateFieldName('Method', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->method = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : CurrenciesRateValidityTableMap::translateFieldName('Start', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00') {
+                $col = null;
+            }
+            $this->start = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : AuthorizationTableMap::translateFieldName('IdUser', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id_user = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : CurrenciesRateValidityTableMap::translateFieldName('End', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00') {
+                $col = null;
+            }
+            $this->end = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : AuthorizationTableMap::translateFieldName('IdUserGroup', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id_user_group = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : CurrenciesRateValidityTableMap::translateFieldName('Value', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->value = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : AuthorizationTableMap::translateFieldName('Order', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->order = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : CurrenciesRateValidityTableMap::translateFieldName('Active', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->active = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : AuthorizationTableMap::translateFieldName('Policy', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->policy = (null !== $col) ? (boolean) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : AuthorizationTableMap::translateFieldName('Label', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->label = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : AuthorizationTableMap::translateFieldName('Enabled', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->enabled = (null !== $col) ? (boolean) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : AuthorizationTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : CurrenciesRateValidityTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : AuthorizationTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : CurrenciesRateValidityTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : AuthorizationTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : CurrenciesRateValidityTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
@@ -845,10 +723,10 @@ abstract class Authorization implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 11; // 11 = AuthorizationTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = CurrenciesRateValidityTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\App\\Models\\Authorization'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\App\\Models\\CurrenciesRateValidity'), 0, $e);
         }
     }
 
@@ -867,6 +745,9 @@ abstract class Authorization implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aCurrency !== null && $this->id_currency !== $this->aCurrency->getId()) {
+            $this->aCurrency = null;
+        }
     } // ensureConsistency
 
     /**
@@ -890,13 +771,13 @@ abstract class Authorization implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(AuthorizationTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(CurrenciesRateValidityTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildAuthorizationQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildCurrenciesRateValidityQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -906,6 +787,7 @@ abstract class Authorization implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aCurrency = null;
         } // if (deep)
     }
 
@@ -915,8 +797,8 @@ abstract class Authorization implements ActiveRecordInterface
      * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
-     * @see Authorization::setDeleted()
-     * @see Authorization::isDeleted()
+     * @see CurrenciesRateValidity::setDeleted()
+     * @see CurrenciesRateValidity::isDeleted()
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -925,11 +807,11 @@ abstract class Authorization implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(AuthorizationTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(CurrenciesRateValidityTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildAuthorizationQuery::create()
+            $deleteQuery = ChildCurrenciesRateValidityQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -960,7 +842,7 @@ abstract class Authorization implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(AuthorizationTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(CurrenciesRateValidityTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -970,16 +852,16 @@ abstract class Authorization implements ActiveRecordInterface
                 $ret = $ret && $this->preInsert($con);
                 // timestampable behavior
 
-                if (!$this->isColumnModified(AuthorizationTableMap::COL_CREATED_AT)) {
+                if (!$this->isColumnModified(CurrenciesRateValidityTableMap::COL_CREATED_AT)) {
                     $this->setCreatedAt(time());
                 }
-                if (!$this->isColumnModified(AuthorizationTableMap::COL_UPDATED_AT)) {
+                if (!$this->isColumnModified(CurrenciesRateValidityTableMap::COL_UPDATED_AT)) {
                     $this->setUpdatedAt(time());
                 }
             } else {
                 $ret = $ret && $this->preUpdate($con);
                 // timestampable behavior
-                if ($this->isModified() && !$this->isColumnModified(AuthorizationTableMap::COL_UPDATED_AT)) {
+                if ($this->isModified() && !$this->isColumnModified(CurrenciesRateValidityTableMap::COL_UPDATED_AT)) {
                     $this->setUpdatedAt(time());
                 }
             }
@@ -991,7 +873,7 @@ abstract class Authorization implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                AuthorizationTableMap::addInstanceToPool($this);
+                CurrenciesRateValidityTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -1016,6 +898,18 @@ abstract class Authorization implements ActiveRecordInterface
         $affectedRows = 0; // initialize var to track total num of affected rows
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
+
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aCurrency !== null) {
+                if ($this->aCurrency->isModified() || $this->aCurrency->isNew()) {
+                    $affectedRows += $this->aCurrency->save($con);
+                }
+                $this->setCurrency($this->aCurrency);
+            }
 
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
@@ -1048,48 +942,39 @@ abstract class Authorization implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[AuthorizationTableMap::COL_ID] = true;
+        $this->modifiedColumns[CurrenciesRateValidityTableMap::COL_ID] = true;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . AuthorizationTableMap::COL_ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . CurrenciesRateValidityTableMap::COL_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(AuthorizationTableMap::COL_URI)) {
-            $modifiedColumns[':p' . $index++]  = 'uri';
+        if ($this->isColumnModified(CurrenciesRateValidityTableMap::COL_ID_CURRENCY)) {
+            $modifiedColumns[':p' . $index++]  = 'id_currency';
         }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_METHOD)) {
-            $modifiedColumns[':p' . $index++]  = 'method';
+        if ($this->isColumnModified(CurrenciesRateValidityTableMap::COL_START)) {
+            $modifiedColumns[':p' . $index++]  = 'start';
         }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_ID_USER)) {
-            $modifiedColumns[':p' . $index++]  = 'id_user';
+        if ($this->isColumnModified(CurrenciesRateValidityTableMap::COL_END)) {
+            $modifiedColumns[':p' . $index++]  = 'end';
         }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_ID_USER_GROUP)) {
-            $modifiedColumns[':p' . $index++]  = 'id_user_group';
+        if ($this->isColumnModified(CurrenciesRateValidityTableMap::COL_VALUE)) {
+            $modifiedColumns[':p' . $index++]  = 'value';
         }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_ORDER)) {
-            $modifiedColumns[':p' . $index++]  = 'order';
+        if ($this->isColumnModified(CurrenciesRateValidityTableMap::COL_ACTIVE)) {
+            $modifiedColumns[':p' . $index++]  = 'active';
         }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_POLICY)) {
-            $modifiedColumns[':p' . $index++]  = 'policy';
-        }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_LABEL)) {
-            $modifiedColumns[':p' . $index++]  = 'label';
-        }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_ENABLED)) {
-            $modifiedColumns[':p' . $index++]  = 'enabled';
-        }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_CREATED_AT)) {
+        if ($this->isColumnModified(CurrenciesRateValidityTableMap::COL_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'created_at';
         }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_UPDATED_AT)) {
+        if ($this->isColumnModified(CurrenciesRateValidityTableMap::COL_UPDATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'updated_at';
         }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_ID)) {
+        if ($this->isColumnModified(CurrenciesRateValidityTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
 
         $sql = sprintf(
-            'INSERT INTO authorization (%s) VALUES (%s)',
+            'INSERT INTO currencies_rate_validity (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1098,29 +983,20 @@ abstract class Authorization implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'uri':
-                        $stmt->bindValue($identifier, $this->uri, PDO::PARAM_STR);
+                    case 'id_currency':
+                        $stmt->bindValue($identifier, $this->id_currency, PDO::PARAM_INT);
                         break;
-                    case 'method':
-                        $stmt->bindValue($identifier, $this->method, PDO::PARAM_STR);
+                    case 'start':
+                        $stmt->bindValue($identifier, $this->start ? $this->start->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'id_user':
-                        $stmt->bindValue($identifier, $this->id_user, PDO::PARAM_INT);
+                    case 'end':
+                        $stmt->bindValue($identifier, $this->end ? $this->end->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'id_user_group':
-                        $stmt->bindValue($identifier, $this->id_user_group, PDO::PARAM_INT);
+                    case 'value':
+                        $stmt->bindValue($identifier, $this->value, PDO::PARAM_STR);
                         break;
-                    case 'order':
-                        $stmt->bindValue($identifier, $this->order, PDO::PARAM_INT);
-                        break;
-                    case 'policy':
-                        $stmt->bindValue($identifier, (int) $this->policy, PDO::PARAM_INT);
-                        break;
-                    case 'label':
-                        $stmt->bindValue($identifier, $this->label, PDO::PARAM_STR);
-                        break;
-                    case 'enabled':
-                        $stmt->bindValue($identifier, (int) $this->enabled, PDO::PARAM_INT);
+                    case 'active':
+                        $stmt->bindValue($identifier, (int) $this->active, PDO::PARAM_INT);
                         break;
                     case 'created_at':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
@@ -1177,7 +1053,7 @@ abstract class Authorization implements ActiveRecordInterface
      */
     public function getByName($name, $type = TableMap::TYPE_FIELDNAME)
     {
-        $pos = AuthorizationTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = CurrenciesRateValidityTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -1194,36 +1070,27 @@ abstract class Authorization implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getUri();
+                return $this->getIdCurrency();
                 break;
             case 1:
-                return $this->getMethod();
+                return $this->getStart();
                 break;
             case 2:
-                return $this->getIdUser();
+                return $this->getEnd();
                 break;
             case 3:
-                return $this->getIdUserGroup();
+                return $this->getValue();
                 break;
             case 4:
-                return $this->getOrder();
+                return $this->getActive();
                 break;
             case 5:
-                return $this->getPolicy();
-                break;
-            case 6:
-                return $this->getLabel();
-                break;
-            case 7:
-                return $this->getEnabled();
-                break;
-            case 8:
                 return $this->getCreatedAt();
                 break;
-            case 9:
+            case 6:
                 return $this->getUpdatedAt();
                 break;
-            case 10:
+            case 7:
                 return $this->getId();
                 break;
             default:
@@ -1243,42 +1110,52 @@ abstract class Authorization implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_FIELDNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_FIELDNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_FIELDNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
-        if (isset($alreadyDumpedObjects['Authorization'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['CurrenciesRateValidity'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Authorization'][$this->hashCode()] = true;
-        $keys = AuthorizationTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['CurrenciesRateValidity'][$this->hashCode()] = true;
+        $keys = CurrenciesRateValidityTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getUri(),
-            $keys[1] => $this->getMethod(),
-            $keys[2] => $this->getIdUser(),
-            $keys[3] => $this->getIdUserGroup(),
-            $keys[4] => $this->getOrder(),
-            $keys[5] => $this->getPolicy(),
-            $keys[6] => $this->getLabel(),
-            $keys[7] => $this->getEnabled(),
-            $keys[8] => $this->getCreatedAt(),
-            $keys[9] => $this->getUpdatedAt(),
-            $keys[10] => $this->getId(),
+            $keys[0] => $this->getIdCurrency(),
+            $keys[1] => $this->getStart(),
+            $keys[2] => $this->getEnd(),
+            $keys[3] => $this->getValue(),
+            $keys[4] => $this->getActive(),
+            $keys[5] => $this->getCreatedAt(),
+            $keys[6] => $this->getUpdatedAt(),
+            $keys[7] => $this->getId(),
         );
 
         $utc = new \DateTimeZone('utc');
-        if ($result[$keys[8]] instanceof \DateTime) {
+        if ($result[$keys[1]] instanceof \DateTime) {
             // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[8]];
-            $result[$keys[8]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+            $dateTime = clone $result[$keys[1]];
+            $result[$keys[1]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
 
-        if ($result[$keys[9]] instanceof \DateTime) {
+        if ($result[$keys[2]] instanceof \DateTime) {
             // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[9]];
-            $result[$keys[9]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+            $dateTime = clone $result[$keys[2]];
+            $result[$keys[2]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+
+        if ($result[$keys[5]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[5]];
+            $result[$keys[5]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+
+        if ($result[$keys[6]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[6]];
+            $result[$keys[6]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1286,6 +1163,23 @@ abstract class Authorization implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->aCurrency) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'currency';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'currency';
+                        break;
+                    default:
+                        $key = 'Currency';
+                }
+
+                $result[$key] = $this->aCurrency->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+        }
 
         return $result;
     }
@@ -1299,11 +1193,11 @@ abstract class Authorization implements ActiveRecordInterface
      *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_FIELDNAME.
-     * @return $this|\App\Models\Authorization
+     * @return $this|\App\Models\CurrenciesRateValidity
      */
     public function setByName($name, $value, $type = TableMap::TYPE_FIELDNAME)
     {
-        $pos = AuthorizationTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = CurrenciesRateValidityTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         return $this->setByPosition($pos, $value);
     }
@@ -1314,42 +1208,33 @@ abstract class Authorization implements ActiveRecordInterface
      *
      * @param  int $pos position in xml schema
      * @param  mixed $value field value
-     * @return $this|\App\Models\Authorization
+     * @return $this|\App\Models\CurrenciesRateValidity
      */
     public function setByPosition($pos, $value)
     {
         switch ($pos) {
             case 0:
-                $this->setUri($value);
+                $this->setIdCurrency($value);
                 break;
             case 1:
-                $this->setMethod($value);
+                $this->setStart($value);
                 break;
             case 2:
-                $this->setIdUser($value);
+                $this->setEnd($value);
                 break;
             case 3:
-                $this->setIdUserGroup($value);
+                $this->setValue($value);
                 break;
             case 4:
-                $this->setOrder($value);
+                $this->setActive($value);
                 break;
             case 5:
-                $this->setPolicy($value);
-                break;
-            case 6:
-                $this->setLabel($value);
-                break;
-            case 7:
-                $this->setEnabled($value);
-                break;
-            case 8:
                 $this->setCreatedAt($value);
                 break;
-            case 9:
+            case 6:
                 $this->setUpdatedAt($value);
                 break;
-            case 10:
+            case 7:
                 $this->setId($value);
                 break;
         } // switch()
@@ -1376,40 +1261,31 @@ abstract class Authorization implements ActiveRecordInterface
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_FIELDNAME)
     {
-        $keys = AuthorizationTableMap::getFieldNames($keyType);
+        $keys = CurrenciesRateValidityTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setUri($arr[$keys[0]]);
+            $this->setIdCurrency($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setMethod($arr[$keys[1]]);
+            $this->setStart($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setIdUser($arr[$keys[2]]);
+            $this->setEnd($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setIdUserGroup($arr[$keys[3]]);
+            $this->setValue($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setOrder($arr[$keys[4]]);
+            $this->setActive($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setPolicy($arr[$keys[5]]);
+            $this->setCreatedAt($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setLabel($arr[$keys[6]]);
+            $this->setUpdatedAt($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setEnabled($arr[$keys[7]]);
-        }
-        if (array_key_exists($keys[8], $arr)) {
-            $this->setCreatedAt($arr[$keys[8]]);
-        }
-        if (array_key_exists($keys[9], $arr)) {
-            $this->setUpdatedAt($arr[$keys[9]]);
-        }
-        if (array_key_exists($keys[10], $arr)) {
-            $this->setId($arr[$keys[10]]);
+            $this->setId($arr[$keys[7]]);
         }
     }
 
@@ -1430,7 +1306,7 @@ abstract class Authorization implements ActiveRecordInterface
      * @param string $data The source data to import from
      * @param string $keyType The type of keys the array uses.
      *
-     * @return $this|\App\Models\Authorization The current object, for fluid interface
+     * @return $this|\App\Models\CurrenciesRateValidity The current object, for fluid interface
      */
     public function importFrom($parser, $data, $keyType = TableMap::TYPE_FIELDNAME)
     {
@@ -1450,40 +1326,31 @@ abstract class Authorization implements ActiveRecordInterface
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(AuthorizationTableMap::DATABASE_NAME);
+        $criteria = new Criteria(CurrenciesRateValidityTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(AuthorizationTableMap::COL_URI)) {
-            $criteria->add(AuthorizationTableMap::COL_URI, $this->uri);
+        if ($this->isColumnModified(CurrenciesRateValidityTableMap::COL_ID_CURRENCY)) {
+            $criteria->add(CurrenciesRateValidityTableMap::COL_ID_CURRENCY, $this->id_currency);
         }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_METHOD)) {
-            $criteria->add(AuthorizationTableMap::COL_METHOD, $this->method);
+        if ($this->isColumnModified(CurrenciesRateValidityTableMap::COL_START)) {
+            $criteria->add(CurrenciesRateValidityTableMap::COL_START, $this->start);
         }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_ID_USER)) {
-            $criteria->add(AuthorizationTableMap::COL_ID_USER, $this->id_user);
+        if ($this->isColumnModified(CurrenciesRateValidityTableMap::COL_END)) {
+            $criteria->add(CurrenciesRateValidityTableMap::COL_END, $this->end);
         }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_ID_USER_GROUP)) {
-            $criteria->add(AuthorizationTableMap::COL_ID_USER_GROUP, $this->id_user_group);
+        if ($this->isColumnModified(CurrenciesRateValidityTableMap::COL_VALUE)) {
+            $criteria->add(CurrenciesRateValidityTableMap::COL_VALUE, $this->value);
         }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_ORDER)) {
-            $criteria->add(AuthorizationTableMap::COL_ORDER, $this->order);
+        if ($this->isColumnModified(CurrenciesRateValidityTableMap::COL_ACTIVE)) {
+            $criteria->add(CurrenciesRateValidityTableMap::COL_ACTIVE, $this->active);
         }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_POLICY)) {
-            $criteria->add(AuthorizationTableMap::COL_POLICY, $this->policy);
+        if ($this->isColumnModified(CurrenciesRateValidityTableMap::COL_CREATED_AT)) {
+            $criteria->add(CurrenciesRateValidityTableMap::COL_CREATED_AT, $this->created_at);
         }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_LABEL)) {
-            $criteria->add(AuthorizationTableMap::COL_LABEL, $this->label);
+        if ($this->isColumnModified(CurrenciesRateValidityTableMap::COL_UPDATED_AT)) {
+            $criteria->add(CurrenciesRateValidityTableMap::COL_UPDATED_AT, $this->updated_at);
         }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_ENABLED)) {
-            $criteria->add(AuthorizationTableMap::COL_ENABLED, $this->enabled);
-        }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_CREATED_AT)) {
-            $criteria->add(AuthorizationTableMap::COL_CREATED_AT, $this->created_at);
-        }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_UPDATED_AT)) {
-            $criteria->add(AuthorizationTableMap::COL_UPDATED_AT, $this->updated_at);
-        }
-        if ($this->isColumnModified(AuthorizationTableMap::COL_ID)) {
-            $criteria->add(AuthorizationTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(CurrenciesRateValidityTableMap::COL_ID)) {
+            $criteria->add(CurrenciesRateValidityTableMap::COL_ID, $this->id);
         }
 
         return $criteria;
@@ -1501,8 +1368,8 @@ abstract class Authorization implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = ChildAuthorizationQuery::create();
-        $criteria->add(AuthorizationTableMap::COL_ID, $this->id);
+        $criteria = ChildCurrenciesRateValidityQuery::create();
+        $criteria->add(CurrenciesRateValidityTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1564,21 +1431,18 @@ abstract class Authorization implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \App\Models\Authorization (or compatible) type.
+     * @param      object $copyObj An object of \App\Models\CurrenciesRateValidity (or compatible) type.
      * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setUri($this->getUri());
-        $copyObj->setMethod($this->getMethod());
-        $copyObj->setIdUser($this->getIdUser());
-        $copyObj->setIdUserGroup($this->getIdUserGroup());
-        $copyObj->setOrder($this->getOrder());
-        $copyObj->setPolicy($this->getPolicy());
-        $copyObj->setLabel($this->getLabel());
-        $copyObj->setEnabled($this->getEnabled());
+        $copyObj->setIdCurrency($this->getIdCurrency());
+        $copyObj->setStart($this->getStart());
+        $copyObj->setEnd($this->getEnd());
+        $copyObj->setValue($this->getValue());
+        $copyObj->setActive($this->getActive());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
         if ($makeNew) {
@@ -1596,7 +1460,7 @@ abstract class Authorization implements ActiveRecordInterface
      * objects.
      *
      * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \App\Models\Authorization Clone of current object.
+     * @return \App\Models\CurrenciesRateValidity Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1610,26 +1474,76 @@ abstract class Authorization implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildCurrency object.
+     *
+     * @param  ChildCurrency $v
+     * @return $this|\App\Models\CurrenciesRateValidity The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setCurrency(ChildCurrency $v = null)
+    {
+        if ($v === null) {
+            $this->setIdCurrency(NULL);
+        } else {
+            $this->setIdCurrency($v->getId());
+        }
+
+        $this->aCurrency = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildCurrency object, it will not be re-added.
+        if ($v !== null) {
+            $v->addCurrenciesRateValidity($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildCurrency object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildCurrency The associated ChildCurrency object.
+     * @throws PropelException
+     */
+    public function getCurrency(ConnectionInterface $con = null)
+    {
+        if ($this->aCurrency === null && ($this->id_currency !== null)) {
+            $this->aCurrency = ChildCurrencyQuery::create()->findPk($this->id_currency, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aCurrency->addCurrenciesRateValidities($this);
+             */
+        }
+
+        return $this->aCurrency;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
      */
     public function clear()
     {
-        $this->uri = null;
-        $this->method = null;
-        $this->id_user = null;
-        $this->id_user_group = null;
-        $this->order = null;
-        $this->policy = null;
-        $this->label = null;
-        $this->enabled = null;
+        if (null !== $this->aCurrency) {
+            $this->aCurrency->removeCurrenciesRateValidity($this);
+        }
+        $this->id_currency = null;
+        $this->start = null;
+        $this->end = null;
+        $this->value = null;
+        $this->active = null;
         $this->created_at = null;
         $this->updated_at = null;
         $this->id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
-        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
@@ -1648,6 +1562,7 @@ abstract class Authorization implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
+        $this->aCurrency = null;
     }
 
     /**
@@ -1657,7 +1572,7 @@ abstract class Authorization implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(AuthorizationTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(CurrenciesRateValidityTableMap::DEFAULT_STRING_FORMAT);
     }
 
     // timestampable behavior
@@ -1665,11 +1580,11 @@ abstract class Authorization implements ActiveRecordInterface
     /**
      * Mark the current object so that the update date doesn't get updated during next save
      *
-     * @return     $this|ChildAuthorization The current object (for fluent API support)
+     * @return     $this|ChildCurrenciesRateValidity The current object (for fluent API support)
      */
     public function keepUpdateDateUnchanged()
     {
-        $this->modifiedColumns[AuthorizationTableMap::COL_UPDATED_AT] = true;
+        $this->modifiedColumns[CurrenciesRateValidityTableMap::COL_UPDATED_AT] = true;
 
         return $this;
     }

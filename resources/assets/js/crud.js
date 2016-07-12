@@ -35,11 +35,8 @@ var crud = function(options) {
 			app.formSubmit($("#" + options.form).attr("action"), $("#" + options.form), {}, function(data) {
 				if(data.response) {
 					app.success("", "Saved!");
-					setTimeout(function() {
-						if(reload) app.reload();
-						if(href) app.href(href);
-					}, 500);
-					app.href();
+					if(reload) app.reload();
+					if(href) app.href(href);
 				} else {
 					app.warning("", data.message);
 				}

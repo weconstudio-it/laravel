@@ -19,7 +19,6 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildVariableQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildVariableQuery orderByGroup($order = Criteria::ASC) Order by the group column
  * @method     ChildVariableQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method     ChildVariableQuery orderByValue($order = Criteria::ASC) Order by the value column
@@ -29,8 +28,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVariableQuery orderByEnabled($order = Criteria::ASC) Order by the enabled column
  * @method     ChildVariableQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildVariableQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
+ * @method     ChildVariableQuery orderById($order = Criteria::ASC) Order by the id column
  *
- * @method     ChildVariableQuery groupById() Group by the id column
  * @method     ChildVariableQuery groupByGroup() Group by the group column
  * @method     ChildVariableQuery groupByName() Group by the name column
  * @method     ChildVariableQuery groupByValue() Group by the value column
@@ -40,6 +39,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVariableQuery groupByEnabled() Group by the enabled column
  * @method     ChildVariableQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildVariableQuery groupByUpdatedAt() Group by the updated_at column
+ * @method     ChildVariableQuery groupById() Group by the id column
  *
  * @method     ChildVariableQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildVariableQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -48,7 +48,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVariable findOne(ConnectionInterface $con = null) Return the first ChildVariable matching the query
  * @method     ChildVariable findOneOrCreate(ConnectionInterface $con = null) Return the first ChildVariable matching the query, or a new ChildVariable object populated from the query conditions when no match is found
  *
- * @method     ChildVariable findOneById(int $id) Return the first ChildVariable filtered by the id column
  * @method     ChildVariable findOneByGroup(string $group) Return the first ChildVariable filtered by the group column
  * @method     ChildVariable findOneByName(string $name) Return the first ChildVariable filtered by the name column
  * @method     ChildVariable findOneByValue(string $value) Return the first ChildVariable filtered by the value column
@@ -57,12 +56,12 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVariable findOneByDescription(string $description) Return the first ChildVariable filtered by the description column
  * @method     ChildVariable findOneByEnabled(boolean $enabled) Return the first ChildVariable filtered by the enabled column
  * @method     ChildVariable findOneByCreatedAt(string $created_at) Return the first ChildVariable filtered by the created_at column
- * @method     ChildVariable findOneByUpdatedAt(string $updated_at) Return the first ChildVariable filtered by the updated_at column *
+ * @method     ChildVariable findOneByUpdatedAt(string $updated_at) Return the first ChildVariable filtered by the updated_at column
+ * @method     ChildVariable findOneById(int $id) Return the first ChildVariable filtered by the id column *
 
  * @method     ChildVariable requirePk($key, ConnectionInterface $con = null) Return the ChildVariable by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVariable requireOne(ConnectionInterface $con = null) Return the first ChildVariable matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildVariable requireOneById(int $id) Return the first ChildVariable filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVariable requireOneByGroup(string $group) Return the first ChildVariable filtered by the group column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVariable requireOneByName(string $name) Return the first ChildVariable filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVariable requireOneByValue(string $value) Return the first ChildVariable filtered by the value column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -72,9 +71,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVariable requireOneByEnabled(boolean $enabled) Return the first ChildVariable filtered by the enabled column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVariable requireOneByCreatedAt(string $created_at) Return the first ChildVariable filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildVariable requireOneByUpdatedAt(string $updated_at) Return the first ChildVariable filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildVariable requireOneById(int $id) Return the first ChildVariable filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildVariable[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildVariable objects based on current ModelCriteria
- * @method     ChildVariable[]|ObjectCollection findById(int $id) Return ChildVariable objects filtered by the id column
  * @method     ChildVariable[]|ObjectCollection findByGroup(string $group) Return ChildVariable objects filtered by the group column
  * @method     ChildVariable[]|ObjectCollection findByName(string $name) Return ChildVariable objects filtered by the name column
  * @method     ChildVariable[]|ObjectCollection findByValue(string $value) Return ChildVariable objects filtered by the value column
@@ -84,6 +83,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildVariable[]|ObjectCollection findByEnabled(boolean $enabled) Return ChildVariable objects filtered by the enabled column
  * @method     ChildVariable[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildVariable objects filtered by the created_at column
  * @method     ChildVariable[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildVariable objects filtered by the updated_at column
+ * @method     ChildVariable[]|ObjectCollection findById(int $id) Return ChildVariable objects filtered by the id column
  * @method     ChildVariable[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -176,7 +176,7 @@ abstract class VariableQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, group, name, value, validFrom, validTo, description, enabled, created_at, updated_at FROM variable WHERE id = :p0';
+        $sql = 'SELECT group, name, value, validFrom, validTo, description, enabled, created_at, updated_at, id FROM variable WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -264,47 +264,6 @@ abstract class VariableQuery extends ModelCriteria
     {
 
         return $this->addUsingAlias(VariableTableMap::COL_ID, $keys, Criteria::IN);
-    }
-
-    /**
-     * Filter the query on the id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterById(1234); // WHERE id = 1234
-     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
-     * $query->filterById(array('min' => 12)); // WHERE id > 12
-     * </code>
-     *
-     * @param     mixed $id The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildVariableQuery The current query, for fluid interface
-     */
-    public function filterById($id = null, $comparison = null)
-    {
-        if (is_array($id)) {
-            $useMinMax = false;
-            if (isset($id['min'])) {
-                $this->addUsingAlias(VariableTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($id['max'])) {
-                $this->addUsingAlias(VariableTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(VariableTableMap::COL_ID, $id, $comparison);
     }
 
     /**
@@ -620,6 +579,47 @@ abstract class VariableQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(VariableTableMap::COL_UPDATED_AT, $updatedAt, $comparison);
+    }
+
+    /**
+     * Filter the query on the id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterById(1234); // WHERE id = 1234
+     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
+     * $query->filterById(array('min' => 12)); // WHERE id > 12
+     * </code>
+     *
+     * @param     mixed $id The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildVariableQuery The current query, for fluid interface
+     */
+    public function filterById($id = null, $comparison = null)
+    {
+        if (is_array($id)) {
+            $useMinMax = false;
+            if (isset($id['min'])) {
+                $this->addUsingAlias(VariableTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($id['max'])) {
+                $this->addUsingAlias(VariableTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(VariableTableMap::COL_ID, $id, $comparison);
     }
 
     /**

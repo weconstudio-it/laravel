@@ -63,12 +63,6 @@ abstract class Variable implements ActiveRecordInterface
     protected $virtualColumns = array();
 
     /**
-     * The value for the id field.
-     * @var        int
-     */
-    protected $id;
-
-    /**
      * The value for the group field.
      * Note: this column has a database default value of: 'generic'
      * @var        string
@@ -123,6 +117,12 @@ abstract class Variable implements ActiveRecordInterface
      * @var        \DateTime
      */
     protected $updated_at;
+
+    /**
+     * The value for the id field.
+     * @var        int
+     */
+    protected $id;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -364,16 +364,6 @@ abstract class Variable implements ActiveRecordInterface
     }
 
     /**
-     * Get the [id] column value.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * Get the [group] column value.
      *
      * @return string
@@ -514,24 +504,14 @@ abstract class Variable implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [id] column.
+     * Get the [id] column value.
      *
-     * @param int $v new value
-     * @return $this|\App\Models\Variable The current object (for fluent API support)
+     * @return int
      */
-    public function setId($v)
+    public function getId()
     {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->id !== $v) {
-            $this->id = $v;
-            $this->modifiedColumns[VariableTableMap::COL_ID] = true;
-        }
-
-        return $this;
-    } // setId()
+        return $this->id;
+    }
 
     /**
      * Set the value of [group] column.
@@ -722,6 +702,26 @@ abstract class Variable implements ActiveRecordInterface
     } // setUpdatedAt()
 
     /**
+     * Set the value of [id] column.
+     *
+     * @param int $v new value
+     * @return $this|\App\Models\Variable The current object (for fluent API support)
+     */
+    public function setId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->id !== $v) {
+            $this->id = $v;
+            $this->modifiedColumns[VariableTableMap::COL_ID] = true;
+        }
+
+        return $this;
+    } // setId()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -765,47 +765,47 @@ abstract class Variable implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : VariableTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : VariableTableMap::translateFieldName('Group', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : VariableTableMap::translateFieldName('Group', TableMap::TYPE_PHPNAME, $indexType)];
             $this->group = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : VariableTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : VariableTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
             $this->name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : VariableTableMap::translateFieldName('Value', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : VariableTableMap::translateFieldName('Value', TableMap::TYPE_PHPNAME, $indexType)];
             $this->value = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : VariableTableMap::translateFieldName('Validfrom', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : VariableTableMap::translateFieldName('Validfrom', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->validfrom = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : VariableTableMap::translateFieldName('Validto', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : VariableTableMap::translateFieldName('Validto', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->validto = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : VariableTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : VariableTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
             $this->description = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : VariableTableMap::translateFieldName('Enabled', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : VariableTableMap::translateFieldName('Enabled', TableMap::TYPE_PHPNAME, $indexType)];
             $this->enabled = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : VariableTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : VariableTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : VariableTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : VariableTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : VariableTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -1023,9 +1023,6 @@ abstract class Variable implements ActiveRecordInterface
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(VariableTableMap::COL_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'id';
-        }
         if ($this->isColumnModified(VariableTableMap::COL_GROUP)) {
             $modifiedColumns[':p' . $index++]  = 'group';
         }
@@ -1053,6 +1050,9 @@ abstract class Variable implements ActiveRecordInterface
         if ($this->isColumnModified(VariableTableMap::COL_UPDATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'updated_at';
         }
+        if ($this->isColumnModified(VariableTableMap::COL_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'id';
+        }
 
         $sql = sprintf(
             'INSERT INTO variable (%s) VALUES (%s)',
@@ -1064,9 +1064,6 @@ abstract class Variable implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'id':
-                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
-                        break;
                     case 'group':
                         $stmt->bindValue($identifier, $this->group, PDO::PARAM_STR);
                         break;
@@ -1093,6 +1090,9 @@ abstract class Variable implements ActiveRecordInterface
                         break;
                     case 'updated_at':
                         $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                        break;
+                    case 'id':
+                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1157,34 +1157,34 @@ abstract class Variable implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getId();
-                break;
-            case 1:
                 return $this->getGroup();
                 break;
-            case 2:
+            case 1:
                 return $this->getName();
                 break;
-            case 3:
+            case 2:
                 return $this->getValue();
                 break;
-            case 4:
+            case 3:
                 return $this->getValidfrom();
                 break;
-            case 5:
+            case 4:
                 return $this->getValidto();
                 break;
-            case 6:
+            case 5:
                 return $this->getDescription();
                 break;
-            case 7:
+            case 6:
                 return $this->getEnabled();
                 break;
-            case 8:
+            case 7:
                 return $this->getCreatedAt();
                 break;
-            case 9:
+            case 8:
                 return $this->getUpdatedAt();
+                break;
+            case 9:
+                return $this->getId();
                 break;
             default:
                 return null;
@@ -1215,41 +1215,41 @@ abstract class Variable implements ActiveRecordInterface
         $alreadyDumpedObjects['Variable'][$this->hashCode()] = true;
         $keys = VariableTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getId(),
-            $keys[1] => $this->getGroup(),
-            $keys[2] => $this->getName(),
-            $keys[3] => $this->getValue(),
-            $keys[4] => $this->getValidfrom(),
-            $keys[5] => $this->getValidto(),
-            $keys[6] => $this->getDescription(),
-            $keys[7] => $this->getEnabled(),
-            $keys[8] => $this->getCreatedAt(),
-            $keys[9] => $this->getUpdatedAt(),
+            $keys[0] => $this->getGroup(),
+            $keys[1] => $this->getName(),
+            $keys[2] => $this->getValue(),
+            $keys[3] => $this->getValidfrom(),
+            $keys[4] => $this->getValidto(),
+            $keys[5] => $this->getDescription(),
+            $keys[6] => $this->getEnabled(),
+            $keys[7] => $this->getCreatedAt(),
+            $keys[8] => $this->getUpdatedAt(),
+            $keys[9] => $this->getId(),
         );
 
         $utc = new \DateTimeZone('utc');
+        if ($result[$keys[3]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[3]];
+            $result[$keys[3]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+
         if ($result[$keys[4]] instanceof \DateTime) {
             // When changing timezone we don't want to change existing instances
             $dateTime = clone $result[$keys[4]];
             $result[$keys[4]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
 
-        if ($result[$keys[5]] instanceof \DateTime) {
+        if ($result[$keys[7]] instanceof \DateTime) {
             // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[5]];
-            $result[$keys[5]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+            $dateTime = clone $result[$keys[7]];
+            $result[$keys[7]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
 
         if ($result[$keys[8]] instanceof \DateTime) {
             // When changing timezone we don't want to change existing instances
             $dateTime = clone $result[$keys[8]];
             $result[$keys[8]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
-        }
-
-        if ($result[$keys[9]] instanceof \DateTime) {
-            // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[9]];
-            $result[$keys[9]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1291,34 +1291,34 @@ abstract class Variable implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setId($value);
-                break;
-            case 1:
                 $this->setGroup($value);
                 break;
-            case 2:
+            case 1:
                 $this->setName($value);
                 break;
-            case 3:
+            case 2:
                 $this->setValue($value);
                 break;
-            case 4:
+            case 3:
                 $this->setValidfrom($value);
                 break;
-            case 5:
+            case 4:
                 $this->setValidto($value);
                 break;
-            case 6:
+            case 5:
                 $this->setDescription($value);
                 break;
-            case 7:
+            case 6:
                 $this->setEnabled($value);
                 break;
-            case 8:
+            case 7:
                 $this->setCreatedAt($value);
                 break;
-            case 9:
+            case 8:
                 $this->setUpdatedAt($value);
+                break;
+            case 9:
+                $this->setId($value);
                 break;
         } // switch()
 
@@ -1347,34 +1347,34 @@ abstract class Variable implements ActiveRecordInterface
         $keys = VariableTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setId($arr[$keys[0]]);
+            $this->setGroup($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setGroup($arr[$keys[1]]);
+            $this->setName($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setName($arr[$keys[2]]);
+            $this->setValue($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setValue($arr[$keys[3]]);
+            $this->setValidfrom($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setValidfrom($arr[$keys[4]]);
+            $this->setValidto($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setValidto($arr[$keys[5]]);
+            $this->setDescription($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setDescription($arr[$keys[6]]);
+            $this->setEnabled($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setEnabled($arr[$keys[7]]);
+            $this->setCreatedAt($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setCreatedAt($arr[$keys[8]]);
+            $this->setUpdatedAt($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setUpdatedAt($arr[$keys[9]]);
+            $this->setId($arr[$keys[9]]);
         }
     }
 
@@ -1417,9 +1417,6 @@ abstract class Variable implements ActiveRecordInterface
     {
         $criteria = new Criteria(VariableTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(VariableTableMap::COL_ID)) {
-            $criteria->add(VariableTableMap::COL_ID, $this->id);
-        }
         if ($this->isColumnModified(VariableTableMap::COL_GROUP)) {
             $criteria->add(VariableTableMap::COL_GROUP, $this->group);
         }
@@ -1446,6 +1443,9 @@ abstract class Variable implements ActiveRecordInterface
         }
         if ($this->isColumnModified(VariableTableMap::COL_UPDATED_AT)) {
             $criteria->add(VariableTableMap::COL_UPDATED_AT, $this->updated_at);
+        }
+        if ($this->isColumnModified(VariableTableMap::COL_ID)) {
+            $criteria->add(VariableTableMap::COL_ID, $this->id);
         }
 
         return $criteria;
@@ -1577,7 +1577,6 @@ abstract class Variable implements ActiveRecordInterface
      */
     public function clear()
     {
-        $this->id = null;
         $this->group = null;
         $this->name = null;
         $this->value = null;
@@ -1587,6 +1586,7 @@ abstract class Variable implements ActiveRecordInterface
         $this->enabled = null;
         $this->created_at = null;
         $this->updated_at = null;
+        $this->id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();

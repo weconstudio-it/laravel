@@ -19,17 +19,17 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildFailedJobsQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildFailedJobsQuery orderByConnection($order = Criteria::ASC) Order by the connection column
  * @method     ChildFailedJobsQuery orderByQueue($order = Criteria::ASC) Order by the queue column
  * @method     ChildFailedJobsQuery orderByPayload($order = Criteria::ASC) Order by the payload column
  * @method     ChildFailedJobsQuery orderByFailedAt($order = Criteria::ASC) Order by the failed_at column
+ * @method     ChildFailedJobsQuery orderById($order = Criteria::ASC) Order by the id column
  *
- * @method     ChildFailedJobsQuery groupById() Group by the id column
  * @method     ChildFailedJobsQuery groupByConnection() Group by the connection column
  * @method     ChildFailedJobsQuery groupByQueue() Group by the queue column
  * @method     ChildFailedJobsQuery groupByPayload() Group by the payload column
  * @method     ChildFailedJobsQuery groupByFailedAt() Group by the failed_at column
+ * @method     ChildFailedJobsQuery groupById() Group by the id column
  *
  * @method     ChildFailedJobsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildFailedJobsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -38,27 +38,27 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFailedJobs findOne(ConnectionInterface $con = null) Return the first ChildFailedJobs matching the query
  * @method     ChildFailedJobs findOneOrCreate(ConnectionInterface $con = null) Return the first ChildFailedJobs matching the query, or a new ChildFailedJobs object populated from the query conditions when no match is found
  *
- * @method     ChildFailedJobs findOneById(int $id) Return the first ChildFailedJobs filtered by the id column
  * @method     ChildFailedJobs findOneByConnection(string $connection) Return the first ChildFailedJobs filtered by the connection column
  * @method     ChildFailedJobs findOneByQueue(string $queue) Return the first ChildFailedJobs filtered by the queue column
  * @method     ChildFailedJobs findOneByPayload(string $payload) Return the first ChildFailedJobs filtered by the payload column
- * @method     ChildFailedJobs findOneByFailedAt(string $failed_at) Return the first ChildFailedJobs filtered by the failed_at column *
+ * @method     ChildFailedJobs findOneByFailedAt(string $failed_at) Return the first ChildFailedJobs filtered by the failed_at column
+ * @method     ChildFailedJobs findOneById(int $id) Return the first ChildFailedJobs filtered by the id column *
 
  * @method     ChildFailedJobs requirePk($key, ConnectionInterface $con = null) Return the ChildFailedJobs by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildFailedJobs requireOne(ConnectionInterface $con = null) Return the first ChildFailedJobs matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildFailedJobs requireOneById(int $id) Return the first ChildFailedJobs filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildFailedJobs requireOneByConnection(string $connection) Return the first ChildFailedJobs filtered by the connection column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildFailedJobs requireOneByQueue(string $queue) Return the first ChildFailedJobs filtered by the queue column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildFailedJobs requireOneByPayload(string $payload) Return the first ChildFailedJobs filtered by the payload column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildFailedJobs requireOneByFailedAt(string $failed_at) Return the first ChildFailedJobs filtered by the failed_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildFailedJobs requireOneById(int $id) Return the first ChildFailedJobs filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildFailedJobs[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildFailedJobs objects based on current ModelCriteria
- * @method     ChildFailedJobs[]|ObjectCollection findById(int $id) Return ChildFailedJobs objects filtered by the id column
  * @method     ChildFailedJobs[]|ObjectCollection findByConnection(string $connection) Return ChildFailedJobs objects filtered by the connection column
  * @method     ChildFailedJobs[]|ObjectCollection findByQueue(string $queue) Return ChildFailedJobs objects filtered by the queue column
  * @method     ChildFailedJobs[]|ObjectCollection findByPayload(string $payload) Return ChildFailedJobs objects filtered by the payload column
  * @method     ChildFailedJobs[]|ObjectCollection findByFailedAt(string $failed_at) Return ChildFailedJobs objects filtered by the failed_at column
+ * @method     ChildFailedJobs[]|ObjectCollection findById(int $id) Return ChildFailedJobs objects filtered by the id column
  * @method     ChildFailedJobs[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -151,7 +151,7 @@ abstract class FailedJobsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, connection, queue, payload, failed_at FROM failed_jobs WHERE id = :p0';
+        $sql = 'SELECT connection, queue, payload, failed_at, id FROM failed_jobs WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -239,47 +239,6 @@ abstract class FailedJobsQuery extends ModelCriteria
     {
 
         return $this->addUsingAlias(FailedJobsTableMap::COL_ID, $keys, Criteria::IN);
-    }
-
-    /**
-     * Filter the query on the id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterById(1234); // WHERE id = 1234
-     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
-     * $query->filterById(array('min' => 12)); // WHERE id > 12
-     * </code>
-     *
-     * @param     mixed $id The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildFailedJobsQuery The current query, for fluid interface
-     */
-    public function filterById($id = null, $comparison = null)
-    {
-        if (is_array($id)) {
-            $useMinMax = false;
-            if (isset($id['min'])) {
-                $this->addUsingAlias(FailedJobsTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($id['max'])) {
-                $this->addUsingAlias(FailedJobsTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(FailedJobsTableMap::COL_ID, $id, $comparison);
     }
 
     /**
@@ -410,6 +369,47 @@ abstract class FailedJobsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(FailedJobsTableMap::COL_FAILED_AT, $failedAt, $comparison);
+    }
+
+    /**
+     * Filter the query on the id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterById(1234); // WHERE id = 1234
+     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
+     * $query->filterById(array('min' => 12)); // WHERE id > 12
+     * </code>
+     *
+     * @param     mixed $id The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildFailedJobsQuery The current query, for fluid interface
+     */
+    public function filterById($id = null, $comparison = null)
+    {
+        if (is_array($id)) {
+            $useMinMax = false;
+            if (isset($id['min'])) {
+                $this->addUsingAlias(FailedJobsTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($id['max'])) {
+                $this->addUsingAlias(FailedJobsTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(FailedJobsTableMap::COL_ID, $id, $comparison);
     }
 
     /**
