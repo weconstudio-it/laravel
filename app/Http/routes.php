@@ -23,7 +23,7 @@ Route::group(['middleware' => ['auth', 'enable']], function() {
 		Route::get('/home', 'HomeController@home');
 		Route::get('/dashboard', 'DashboardController@index');
 
-		Route::post('user/enable/{user}/{enable?}', 'UserController@enable');
+		Route::post('user/enable/{user}', 'UserController@enable');
 		Route::resource('user', 'UserController');
 	});
 });

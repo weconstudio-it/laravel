@@ -1,17 +1,17 @@
 var user = function(ajaxUrl) {
 
-	this.bindEvents = function() {
+	this.bindEvents = function(dataTable) {
 		$('[data-interaction=enable]').unbind('click').bind('click', function() {
 			var id = $(this).closest('tr').attr('data-id');
 			var disable = $(this).attr('data-disable');
-			var url = ajaxUrl + "/enable/" + id + (disable ? "/0" : "");
+			var url = ajaxUrl + "/enable/" + id + (disable ? "?enable=0" : "?enable=1");
 
 			app.block(1);
 			$.post(url)
 				.success(function(data) {
 					if(data.response) {
 						app.success('User ' + (disable ? 'disabled' : 'enabled'));
-						app.reload();
+						dataTable.table.draw('page');
 					} else {
 						app.warning('', data.message);
 					}

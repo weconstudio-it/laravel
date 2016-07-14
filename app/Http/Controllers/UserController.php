@@ -61,7 +61,7 @@ class UserController extends Controller
                 'field' => 'email_confirmed',
                 'sort' => true,
                 'filter' => true,
-                'formatter' => 'bool',
+                'formatterjs' => 'bool',
                 'align' => 'center'
             ],
             [
@@ -69,7 +69,7 @@ class UserController extends Controller
                 'field' => 'enabled',
                 'sort' => true,
                 'filter' => true,
-                'formatter' => 'user_enabled',
+                'formatterjs' => 'user_enabled',
                 'align' => 'center'
             ]
         ];
@@ -191,17 +191,17 @@ class UserController extends Controller
     {
         //
     }
-
+	
 	/**
 	 * Abilita/Disabilita manualmente un utente con email già confermata
 	 *
+	 * @param Request $request
 	 * @param User $user
-	 * @param int $enable
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function enable(User $user, $enable = 1) {
+	public function enable(Request $request, User $user) {
 		try {
-			$user->setEnabled($enable);
+			$user->setEnabled($request->input('enable', 1));
 			$user->save();
 			$response = true;
 			$message = $user->getId();

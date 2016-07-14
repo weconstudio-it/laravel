@@ -94,6 +94,9 @@ var dataTable = function (options) {
     // ajax Url per server processing
     this.ajaxUrl = this.$table.attr("data-dt-url");
 
+    this.ajaxUrlParameters = this.$table.attr("data-dt-url-parameters");
+
+
     // funzione per customizzare la stampa pdf
     this.printCallback = function (doc) {
         var colCount = [];
@@ -135,7 +138,7 @@ var dataTable = function (options) {
 
             if (typeof $(this).attr("data-dt-inline-button") != 'undefined') {
                 var colBtnVisible = false;
-                if($(this).attr("data-dt-inline-button")=="1") {
+                if ($(this).attr("data-dt-inline-button") == "1") {
                     // colonna bottoni inline
                     colBtnVisible = true;
                     var buttonsConfig = $(this).attr("data-dt-button") || 'edit|delete';
@@ -167,7 +170,7 @@ var dataTable = function (options) {
                 });
             } else {
                 // colonne dati
-                var formatterFunction = $(this).attr("data-dt-formatter") || undefined;
+                var formatterFunction = $(this).attr("data-dt-formatterjs") || undefined;
                 var align = $(this).attr("data-dt-align") || undefined;
                 if (!baseType) baseType = 'string';
                 if (doSort) {
@@ -182,11 +185,11 @@ var dataTable = function (options) {
                         objColumn = {"bSortable": false};
                     }
 
-                    if(align) {
+                    if (align) {
                         objColumn.sClass = "text-" + align
                     }
 
-                    if(formatterFunction) {
+                    if (formatterFunction) {
                         var formatterFunctionCallback = null;
 
                         try {
@@ -217,7 +220,7 @@ var dataTable = function (options) {
                                 console.warn("Callback '" + formatterFunction + "' not found (column index: " + index + ")");
                             }
                         }
-                        catch(err) {
+                        catch (err) {
                             console.warn("Callback '" + formatterFunction + "' not found (column index: " + index + ")");
                         }
                     }
@@ -280,11 +283,39 @@ var dataTable = function (options) {
         };
     };
 
+    /**
+     * Funzione da overridare
+     * @constructor
+     */
+    this.DTfnBeforeDrawCallback = function () {};
+
     this.DTfnDrawCallback = function () {
+        dataTable.DTfnBeforeDrawCallback();
         dataTable.bindEvents();
+        dataTable.DTfnAfterDrawCallback();
     };
 
+    /**
+     * Funzione da overridare
+     * @constructor
+     */
+    this.DTfnAfterDrawCallback = function () {};
+
+    /**
+     * Funzione da overridare
+     * @constructor
+     */
+    this.DTbeforeInitComplete = function(){};
+    /**
+     * Funzione da overridare
+     * @constructor
+     */
+    this.DTafterInitComplete = function(){};
+
     this.DTinitComplete = function () {
+
+        dataTable.DTbeforeInitComplete();
+
         this.api().columns().every(function (i) {
             if (dataTable.filterColumns[i]) {
                 var column = this;
@@ -348,14 +379,14 @@ var dataTable = function (options) {
                             cache: true,
                             templateResult: formatData,
                             templateSelection: formatDataSelection
-                        }).on("select2:unselecting", function(e) {
+                        }).on("select2:unselecting", function (e) {
                             $(this).data('state', 'unselected');
-                        }).on("select2:open", function(e) {
+                        }).on("select2:open", function (e) {
                             if ($(this).data('state') === 'unselected') {
                                 $(this).removeData('state');
 
                                 var self = $(this);
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     self.select2('close');
                                 }, 1);
                             }
@@ -383,6 +414,9 @@ var dataTable = function (options) {
                 // }
             }
         });
+
+        dataTable.DTafterInitComplete();
+
     };
 
     this.DTfnCreatedRow = function (nRow, aData) {
@@ -441,7 +475,7 @@ var dataTable = function (options) {
             }
         });
 
-        dataTable.$table.find('[data-interaction=delete]').unbind('click').bind('click', function() {
+        dataTable.$table.find('[data-interaction=delete]').unbind('click').bind('click', function () {
             var url = $(this).attr('data-url');
             var error = $(this).attr('data-error');
             var reload = $(this).attr('data-reload');
@@ -449,22 +483,22 @@ var dataTable = function (options) {
 
             app.block(1);
             $.delete(url)
-                .success(function(data) {
-                    if(data.response) {
-                        if(reload) app.reload();
-                        if(href) app.href(href);
+                .success(function (data) {
+                    if (data.response) {
+                        if (reload) app.reload();
+                        if (href) app.href(href);
                     } else {
                         app.warning("", data.message);
                     }
                     app.block(0);
                 })
-                .error(function() {
+                .error(function () {
                     app.block(0);
                     app.error('', 'Delete error!');
                 });
         });
 
-        dataTable.$table.find('.select2-search:before').bind('click', function() {
+        dataTable.$table.find('.select2-search:before').bind('click', function () {
             console.log("Click!!!");
         });
     };
@@ -483,7 +517,7 @@ var dataTable = function (options) {
             // gestione server side ajax
             processing: (typeof dataTable.ajaxUrl != 'undefined'),
             serverSide: (typeof dataTable.ajaxUrl != 'undefined'),
-            ajax: (typeof dataTable.ajaxUrl != 'undefined') ? dataTable.ajaxUrl + "?dt=1" : false,
+            ajax: (typeof dataTable.ajaxUrl != 'undefined') ? dataTable.ajaxUrl + "?dt=1" + (this.ajaxUrlParameters? "&" + this.ajaxUrlParameters : '') : false,
 
             footerCallback: dataTable.footerCallback,
             fnDrawCallback: dataTable.DTfnDrawCallback,
@@ -530,7 +564,7 @@ var dataTable = function (options) {
             dataTable.table.buttons().container().appendTo($("#" + dataTable.idTable + "_wrapper").find('.dataTables_filter'));
         }
 
-        if(typeof dataTable.ajaxUrl != 'undefined') {
+        if (typeof dataTable.ajaxUrl != 'undefined') {
             $("#" + dataTable.idTable + "_wrapper").find('.dataTables_filter').hide();
         }
 

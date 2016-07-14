@@ -18,14 +18,14 @@ use Weconstudio\Misc\U;
 						data-dt-delete-url="{{ $configuration->deleteUrl }}">
 				</th>
 				<?php foreach ($configuration->columns as $column):
-				$formatter = U::arrayIsSet($column, 'formatter', '');
+				$formatter = U::arrayIsSet($column, 'formatterjs', '');
 				$filter = U::arrayIsSet($column, 'filter', false) ? '1' : '0';
 				$sort = U::arrayIsSet($column, 'sort', false) ? '1' : '0';
 				$field = U::arrayIsSet($column, 'field', '');
 				$label = U::arrayIsSet($column, 'label', '');
 				$align = U::arrayIsSet($column, 'align', 'left');
 				?>
-				<th data-dt-formatter="{{ $formatter }}"
+				<th data-dt-formatterjs="{{ $formatter }}"
 					data-dt-filter="{{ $filter }}"
 					data-dt-sort="{{ $sort }}"
 					data-dt-align="{{ $align }}"
@@ -44,7 +44,7 @@ use Weconstudio\Misc\U;
 			var u = new user(dt.ajaxUrl);
 			dt.DTfnDrawCallback = function() {
 				dt.bindEvents();
-				u.bindEvents();
+				u.bindEvents(dt);
 			};
 			dt.make();
 		});
