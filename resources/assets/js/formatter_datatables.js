@@ -1,10 +1,10 @@
 var formatter = {
 
-    bool: function(cell_data, row_data) {
+    bool: function(table, td, cell_data, row_data, row_index, col_index) {
         return cell_data ? '<i style="color: green;" class="fa fa-circle"></i>' : '<i style="color: red;" class="fa fa-circle"></i>';
     },
 
-    user_enabled: function(cell_data) {
+    user_enabled: function(table, td, cell_data, row_data, row_index, col_index) {
         var ret = "";
 
         if(cell_data) {

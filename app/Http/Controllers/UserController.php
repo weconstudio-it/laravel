@@ -29,7 +29,7 @@ class UserController extends Controller
     {
         $configuration = new DataTableConfiguration();
         $configuration->model = User::class;
-        $configuration->inlineButton = 'edit';
+        $configuration->inlineButton = '';
 
         $configuration->columns = [
             [

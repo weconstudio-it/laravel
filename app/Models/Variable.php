@@ -23,9 +23,9 @@ class Variable extends BaseVariable
 	 * @param $name
 	 * @param string $group
 	 * @param $default
-	 * @return Variable
+	 * @return string
 	 */
-	public static function getTagValue($name, $group = "generic" , $default = "") {
+	public static function getTagValue($name , $default = "", $group = "generic") {
 		$ret = VariableQuery::create()
 			->filterByGroup($group)
 			->filterByName($name)

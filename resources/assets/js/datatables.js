@@ -213,8 +213,8 @@ var dataTable = function (options) {
                             }
 
                             if (typeof formatterFunctionCallback == 'function') {
-                                objColumn.createdCell = function (td, cell_data, row_data) {
-                                    $(td).html(formatterFunctionCallback(cell_data, row_data));
+                                objColumn.createdCell = function (td, cell_data, row_data, row_index, col_index) {
+                                    $(td).html(formatterFunctionCallback(dataTable.table, td, cell_data, row_data, row_index, col_index));
                                 };
                             } else {
                                 console.warn("Callback '" + formatterFunction + "' not found (column index: " + index + ")");

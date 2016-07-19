@@ -1,6 +1,3 @@
-<?php
-use \Weconstudio\Misc\U;
-?>
 @extends('login')
 
 @section('content')
