@@ -41,6 +41,11 @@ class User extends BaseUser implements AuthenticatableContract, CanResetPassword
 		return $this->getName();
 	}
 	
+	public function forceFill($params){
+		$this->fromArray($params);
+		return $this;
+	}
+	
 	/**
 	 * Restituisce il livello dell'utente corrente
 	 * @return int
