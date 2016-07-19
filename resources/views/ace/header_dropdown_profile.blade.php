@@ -19,7 +19,7 @@
         </li>
 
         <li>
-            <a href="#page/profile">
+            <a href="#user/{{ \Auth::user()->getId() }}/edit">
                 <i class="ace-icon fa fa-user"></i>
                 Profile
             </a>

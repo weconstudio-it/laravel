@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<database name="default" defaultIdMethod="native" defaultPhpNamingMethod="underscore" namespace="App\Models">
+    <behavior name="auto_add_pk"/>
+
+    <table name="currency" idMethod="native" >
+        <column name="symbol" type="VARCHAR" size="3" required="true"/>
+        <column name="name" type="VARCHAR" size="100" required="true"/>
+        <column name="short_name" type="VARCHAR" size="20" required="true"/>
+
+        <unique name="currency_name">
+            <unique-column name="name"/>
+        </unique>
+
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+    </table>
+
+    <table name="currencies_rate_validity" idMethod="native" >
+        <column name="id_currency" type="INTEGER" required="true"/>
+        <column name="start" type="DATE" required="true"/>
+        <column name="end" type="DATE" required="true"/>
+        <column name="value" type="DECIMAL" size="10" scale="2" required="true"/>
+        <column name="active" type="BOOLEAN" required="true"/>
+
+        <behavior name="timestampable" />
+
+        <foreign-key foreignTable="currency" name="currencies_rate_validity_currency" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference local="id_currency" foreign="id"/>
+        </foreign-key>
+
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+    </table>
+</database>

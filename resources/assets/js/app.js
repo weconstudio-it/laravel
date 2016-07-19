@@ -377,7 +377,7 @@ var app = {
 		//if (noBlockUI == 0)
 		//	app.blockUI(true);
 
-		url = url.replace("#", "");
+		if(url) url = url.replace("#", "");
 		if(url.indexOf(app.baseUrl) < 0) {
 			if(url[0] == "/") url = url.substring(1, url.length);
 			url = app.baseUrl + "/" + url;

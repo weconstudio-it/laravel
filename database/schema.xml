@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <database name="default" defaultIdMethod="native" defaultPhpNamingMethod="underscore" namespace="App\Models">
+    <behavior name="auto_add_pk"/>
+
     <table name="user" idMethod="native" >
-        <column name="id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
         <column name="id_user_group" type="INTEGER" required="true"/>
         <column name="name" type="VARCHAR" size="255" required="true"/>
         <column name="email" type="VARCHAR" size="255" required="true"/>
@@ -9,6 +10,10 @@
         <column name="password" type="VARCHAR" size="255" required="true"/>
         <column name="remember_token" type="VARCHAR" size="100"/>
         <column name="enabled" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+        <column name="email_confirmed" type="BOOLEAN" size="1" required="true" defaultValue="false"/>
+        <column name="id_subject" type="INTEGER" required="true"/>
+        <column name="id_language" type="INTEGER" required="false" skipSql="true"/>
+        <column name="id_currency" type="INTEGER" required="false" skipSql="true"/>
         <behavior name="timestampable" />
 
         <foreign-key foreignTable="user_group" name="user_user_group_fk" onDelete="CASCADE" onUpdate="CASCADE">
@@ -16,6 +21,27 @@
         </foreign-key>
         <index name="user_user_group_idx">
             <index-column name="id_user_group"/>
+        </index>
+
+        <foreign-key foreignTable="subject" name="user_subject_fk" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference local="id_subject" foreign="id"/>
+        </foreign-key>
+        <index name="user_subject_idx">
+            <index-column name="id_subject"/>
+        </index>
+
+        <foreign-key foreignTable="language" name="user_language_fk">
+            <reference local="id_language" foreign="id"/>
+        </foreign-key>
+        <index name="user_language_idx">
+            <index-column name="id_language"/>
+        </index>
+
+        <foreign-key foreignTable="currency" name="user_currency_fk">
+            <reference local="id_currency" foreign="id"/>
+        </foreign-key>
+        <index name="user_currency_idx">
+            <index-column name="id_currency"/>
         </index>
 
         <unique name="user_username_uq">
@@ -28,7 +54,6 @@
     </table>
 
     <table name="user_group" idMethod="native" >
-        <column name="id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
         <column name="label" type="VARCHAR" size="45" required="true"/>
         <column name="level" type="INTEGER" required="true"/>
         <column name="visible" type="BOOLEAN"  size="1" required="true" defaultValue="true"/>
@@ -44,8 +69,47 @@
         </vendor>
     </table>
 
+    <table name="subject" idMethod="native">
+        <column name="active" type="BOOLEAN"  size="1" required="true" defaultValue="true"/>
+        <column name="first_name" type="VARCHAR" size="255" required="true"/>
+        <column name="last_name" type="VARCHAR" size="255" required="true"/>
+        <column name="address" type="VARCHAR" size="255"/>
+        <column name="zip" type="VARCHAR" size="20"/>
+        <column name="city" type="VARCHAR" size="100"/>
+        <column name="province" type="VARCHAR" size="100"/>
+        <column name="country" type="VARCHAR" size="100"/>
+        <column name="phone" type="VARCHAR" size="100"/>
+        <column name="fax" type="VARCHAR" size="100"/>
+        <column name="notes" type="LONGVARCHAR"/>
+
+        <index name="subject_active_idx">
+            <index-column name="active"/>
+        </index>
+
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+        <behavior name="timestampable"/>
+    </table>
+
+    <table name="password_resets" idMethod="native" >
+        <column name="email" type="VARCHAR" size="255" required="true"/>
+        <column name="token" type="VARCHAR" size="255" required="true"/>
+        <behavior name="timestampable" />
+
+        <index name="password_resets_email_idx">
+            <index-column name="email"/>
+        </index>
+        <index name="password_resets_token_idx">
+            <index-column name="token"/>
+        </index>
+
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+    </table>
+
     <table name="jobs" idMethod="native">
-        <column name="id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
         <column name="queue" type="VARCHAR" size="255" required="true"/>
         <column name="payload" type="CLOB" required="true"/>
         <column name="attempts" type="TINYINT" size="3" sqlType="tinyint(3) unsigned" required="true"/>
@@ -58,13 +122,13 @@
             <index-column name="reserved"/>
             <index-column name="reserved_at"/>
         </index>
+
         <vendor type="mysql">
             <parameter name="Engine" value="InnoDB"/>
         </vendor>
     </table>
 
-    <table name="failed_jobs" idMethod="native" phpName="FailedJobs">
-        <column name="id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <table name="failed_jobs" idMethod="native">
         <column name="connection" type="LONGVARCHAR" required="true"/>
         <column name="queue" type="LONGVARCHAR" required="true"/>
         <column name="payload" type="CLOB" required="true"/>
@@ -73,4 +137,50 @@
             <parameter name="Engine" value="InnoDB"/>
         </vendor>
     </table>
+
+    <table name="variable" idMethod="native">
+        <column name="group" type="VARCHAR" size="255" defaultValue="generic"/>
+        <column name="name" type="VARCHAR" size="255"/>
+        <column name="value" type="VARCHAR" size="255"/>
+        <column name="validFrom" type="TIMESTAMP"/>
+        <column name="validTo" type="TIMESTAMP"/>
+        <column name="description" type="VARCHAR" size="255"/>
+        <column name="enabled" type="BOOLEAN"  size="1" required="true" defaultValue="true"/>
+        <behavior name="timestampable"/>
+
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+    </table>
+
+    <table name="authorization" idMethod="native">
+        <column name="uri" type="VARCHAR" size="255" required="true"/>
+        <column name="method" type="VARCHAR" size="255"/>
+        <column name="id_user" type="INTEGER"/>
+        <column name="id_user_group" type="INTEGER"/>
+        <column name="order" type="INTEGER"/>
+        <column name="policy" type="BOOLEAN"  size="1" required="true" defaultValue="true"/>
+        <column name="label" type="VARCHAR" size="255"/>
+        <column name="enabled" type="BOOLEAN"  size="1" required="true" defaultValue="true"/>
+        <behavior name="timestampable"/>
+
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+    </table>
+
+    <table name="language" idMethod="native">
+        <column name="iso639_1" type="VARCHAR" size="2"/>
+        <column name="i18n" type="VARCHAR" size="10"/>
+        <column name="code" type="VARCHAR" size="10"/>
+        <column name="description" type="VARCHAR" size="20"/>
+        <column name="active" type="BOOLEAN" default="1"/>
+
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
+        <behavior name="timestampable"/>
+    </table>
+
+    <external-schema filename="database/schema_currencies.xml" referenceOnly="false"/>
 </database>

@@ -66,12 +66,6 @@ abstract class UserGroup implements ActiveRecordInterface
     protected $virtualColumns = array();
 
     /**
-     * The value for the id field.
-     * @var        int
-     */
-    protected $id;
-
-    /**
      * The value for the label field.
      * @var        string
      */
@@ -108,6 +102,12 @@ abstract class UserGroup implements ActiveRecordInterface
      * @var        \DateTime
      */
     protected $updated_at;
+
+    /**
+     * The value for the id field.
+     * @var        int
+     */
+    protected $id;
 
     /**
      * @var        ObjectCollection|ChildUser[] Collection to store aggregation of ChildUser objects.
@@ -361,16 +361,6 @@ abstract class UserGroup implements ActiveRecordInterface
     }
 
     /**
-     * Get the [id] column value.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * Get the [label] column value.
      *
      * @return string
@@ -471,24 +461,14 @@ abstract class UserGroup implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [id] column.
+     * Get the [id] column value.
      *
-     * @param int $v new value
-     * @return $this|\App\Models\UserGroup The current object (for fluent API support)
+     * @return int
      */
-    public function setId($v)
+    public function getId()
     {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->id !== $v) {
-            $this->id = $v;
-            $this->modifiedColumns[UserGroupTableMap::COL_ID] = true;
-        }
-
-        return $this;
-    } // setId()
+        return $this->id;
+    }
 
     /**
      * Set the value of [label] column.
@@ -627,6 +607,26 @@ abstract class UserGroup implements ActiveRecordInterface
     } // setUpdatedAt()
 
     /**
+     * Set the value of [id] column.
+     *
+     * @param int $v new value
+     * @return $this|\App\Models\UserGroup The current object (for fluent API support)
+     */
+    public function setId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->id !== $v) {
+            $this->id = $v;
+            $this->modifiedColumns[UserGroupTableMap::COL_ID] = true;
+        }
+
+        return $this;
+    } // setId()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -670,32 +670,32 @@ abstract class UserGroup implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : UserGroupTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : UserGroupTableMap::translateFieldName('Label', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : UserGroupTableMap::translateFieldName('Label', TableMap::TYPE_PHPNAME, $indexType)];
             $this->label = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : UserGroupTableMap::translateFieldName('Level', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : UserGroupTableMap::translateFieldName('Level', TableMap::TYPE_PHPNAME, $indexType)];
             $this->level = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : UserGroupTableMap::translateFieldName('Visible', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : UserGroupTableMap::translateFieldName('Visible', TableMap::TYPE_PHPNAME, $indexType)];
             $this->visible = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : UserGroupTableMap::translateFieldName('Enabled', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : UserGroupTableMap::translateFieldName('Enabled', TableMap::TYPE_PHPNAME, $indexType)];
             $this->enabled = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : UserGroupTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : UserGroupTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : UserGroupTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : UserGroupTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : UserGroupTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -932,9 +932,6 @@ abstract class UserGroup implements ActiveRecordInterface
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(UserGroupTableMap::COL_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'id';
-        }
         if ($this->isColumnModified(UserGroupTableMap::COL_LABEL)) {
             $modifiedColumns[':p' . $index++]  = 'label';
         }
@@ -953,6 +950,9 @@ abstract class UserGroup implements ActiveRecordInterface
         if ($this->isColumnModified(UserGroupTableMap::COL_UPDATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'updated_at';
         }
+        if ($this->isColumnModified(UserGroupTableMap::COL_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'id';
+        }
 
         $sql = sprintf(
             'INSERT INTO user_group (%s) VALUES (%s)',
@@ -964,9 +964,6 @@ abstract class UserGroup implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'id':
-                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
-                        break;
                     case 'label':
                         $stmt->bindValue($identifier, $this->label, PDO::PARAM_STR);
                         break;
@@ -984,6 +981,9 @@ abstract class UserGroup implements ActiveRecordInterface
                         break;
                     case 'updated_at':
                         $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                        break;
+                    case 'id':
+                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1048,25 +1048,25 @@ abstract class UserGroup implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getId();
-                break;
-            case 1:
                 return $this->getLabel();
                 break;
-            case 2:
+            case 1:
                 return $this->getLevel();
                 break;
-            case 3:
+            case 2:
                 return $this->getVisible();
                 break;
-            case 4:
+            case 3:
                 return $this->getEnabled();
                 break;
-            case 5:
+            case 4:
                 return $this->getCreatedAt();
                 break;
-            case 6:
+            case 5:
                 return $this->getUpdatedAt();
+                break;
+            case 6:
+                return $this->getId();
                 break;
             default:
                 return null;
@@ -1098,26 +1098,26 @@ abstract class UserGroup implements ActiveRecordInterface
         $alreadyDumpedObjects['UserGroup'][$this->hashCode()] = true;
         $keys = UserGroupTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getId(),
-            $keys[1] => $this->getLabel(),
-            $keys[2] => $this->getLevel(),
-            $keys[3] => $this->getVisible(),
-            $keys[4] => $this->getEnabled(),
-            $keys[5] => $this->getCreatedAt(),
-            $keys[6] => $this->getUpdatedAt(),
+            $keys[0] => $this->getLabel(),
+            $keys[1] => $this->getLevel(),
+            $keys[2] => $this->getVisible(),
+            $keys[3] => $this->getEnabled(),
+            $keys[4] => $this->getCreatedAt(),
+            $keys[5] => $this->getUpdatedAt(),
+            $keys[6] => $this->getId(),
         );
 
         $utc = new \DateTimeZone('utc');
+        if ($result[$keys[4]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[4]];
+            $result[$keys[4]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+
         if ($result[$keys[5]] instanceof \DateTime) {
             // When changing timezone we don't want to change existing instances
             $dateTime = clone $result[$keys[5]];
             $result[$keys[5]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
-        }
-
-        if ($result[$keys[6]] instanceof \DateTime) {
-            // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[6]];
-            $result[$keys[6]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1176,25 +1176,25 @@ abstract class UserGroup implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setId($value);
-                break;
-            case 1:
                 $this->setLabel($value);
                 break;
-            case 2:
+            case 1:
                 $this->setLevel($value);
                 break;
-            case 3:
+            case 2:
                 $this->setVisible($value);
                 break;
-            case 4:
+            case 3:
                 $this->setEnabled($value);
                 break;
-            case 5:
+            case 4:
                 $this->setCreatedAt($value);
                 break;
-            case 6:
+            case 5:
                 $this->setUpdatedAt($value);
+                break;
+            case 6:
+                $this->setId($value);
                 break;
         } // switch()
 
@@ -1223,25 +1223,25 @@ abstract class UserGroup implements ActiveRecordInterface
         $keys = UserGroupTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setId($arr[$keys[0]]);
+            $this->setLabel($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setLabel($arr[$keys[1]]);
+            $this->setLevel($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setLevel($arr[$keys[2]]);
+            $this->setVisible($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setVisible($arr[$keys[3]]);
+            $this->setEnabled($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setEnabled($arr[$keys[4]]);
+            $this->setCreatedAt($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setCreatedAt($arr[$keys[5]]);
+            $this->setUpdatedAt($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setUpdatedAt($arr[$keys[6]]);
+            $this->setId($arr[$keys[6]]);
         }
     }
 
@@ -1284,9 +1284,6 @@ abstract class UserGroup implements ActiveRecordInterface
     {
         $criteria = new Criteria(UserGroupTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(UserGroupTableMap::COL_ID)) {
-            $criteria->add(UserGroupTableMap::COL_ID, $this->id);
-        }
         if ($this->isColumnModified(UserGroupTableMap::COL_LABEL)) {
             $criteria->add(UserGroupTableMap::COL_LABEL, $this->label);
         }
@@ -1304,6 +1301,9 @@ abstract class UserGroup implements ActiveRecordInterface
         }
         if ($this->isColumnModified(UserGroupTableMap::COL_UPDATED_AT)) {
             $criteria->add(UserGroupTableMap::COL_UPDATED_AT, $this->updated_at);
+        }
+        if ($this->isColumnModified(UserGroupTableMap::COL_ID)) {
+            $criteria->add(UserGroupTableMap::COL_ID, $this->id);
         }
 
         return $criteria;
@@ -1673,6 +1673,81 @@ abstract class UserGroup implements ActiveRecordInterface
         return $this;
     }
 
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this UserGroup is new, it will return
+     * an empty collection; or if this UserGroup has previously
+     * been saved, it will retrieve related Users from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in UserGroup.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildUser[] List of ChildUser objects
+     */
+    public function getUsersJoinSubject(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildUserQuery::create(null, $criteria);
+        $query->joinWith('Subject', $joinBehavior);
+
+        return $this->getUsers($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this UserGroup is new, it will return
+     * an empty collection; or if this UserGroup has previously
+     * been saved, it will retrieve related Users from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in UserGroup.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildUser[] List of ChildUser objects
+     */
+    public function getUsersJoinLanguage(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildUserQuery::create(null, $criteria);
+        $query->joinWith('Language', $joinBehavior);
+
+        return $this->getUsers($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this UserGroup is new, it will return
+     * an empty collection; or if this UserGroup has previously
+     * been saved, it will retrieve related Users from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in UserGroup.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildUser[] List of ChildUser objects
+     */
+    public function getUsersJoinCurrency(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildUserQuery::create(null, $criteria);
+        $query->joinWith('Currency', $joinBehavior);
+
+        return $this->getUsers($query, $con);
+    }
+
     /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
@@ -1680,13 +1755,13 @@ abstract class UserGroup implements ActiveRecordInterface
      */
     public function clear()
     {
-        $this->id = null;
         $this->label = null;
         $this->level = null;
         $this->visible = null;
         $this->enabled = null;
         $this->created_at = null;
         $this->updated_at = null;
+        $this->id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();

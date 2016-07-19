@@ -20,21 +20,21 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  *
- * @method     ChildUserGroupQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildUserGroupQuery orderByLabel($order = Criteria::ASC) Order by the label column
  * @method     ChildUserGroupQuery orderByLevel($order = Criteria::ASC) Order by the level column
  * @method     ChildUserGroupQuery orderByVisible($order = Criteria::ASC) Order by the visible column
  * @method     ChildUserGroupQuery orderByEnabled($order = Criteria::ASC) Order by the enabled column
  * @method     ChildUserGroupQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildUserGroupQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
+ * @method     ChildUserGroupQuery orderById($order = Criteria::ASC) Order by the id column
  *
- * @method     ChildUserGroupQuery groupById() Group by the id column
  * @method     ChildUserGroupQuery groupByLabel() Group by the label column
  * @method     ChildUserGroupQuery groupByLevel() Group by the level column
  * @method     ChildUserGroupQuery groupByVisible() Group by the visible column
  * @method     ChildUserGroupQuery groupByEnabled() Group by the enabled column
  * @method     ChildUserGroupQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildUserGroupQuery groupByUpdatedAt() Group by the updated_at column
+ * @method     ChildUserGroupQuery groupById() Group by the id column
  *
  * @method     ChildUserGroupQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildUserGroupQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -49,33 +49,33 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserGroup findOne(ConnectionInterface $con = null) Return the first ChildUserGroup matching the query
  * @method     ChildUserGroup findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUserGroup matching the query, or a new ChildUserGroup object populated from the query conditions when no match is found
  *
- * @method     ChildUserGroup findOneById(int $id) Return the first ChildUserGroup filtered by the id column
  * @method     ChildUserGroup findOneByLabel(string $label) Return the first ChildUserGroup filtered by the label column
  * @method     ChildUserGroup findOneByLevel(int $level) Return the first ChildUserGroup filtered by the level column
  * @method     ChildUserGroup findOneByVisible(boolean $visible) Return the first ChildUserGroup filtered by the visible column
  * @method     ChildUserGroup findOneByEnabled(boolean $enabled) Return the first ChildUserGroup filtered by the enabled column
  * @method     ChildUserGroup findOneByCreatedAt(string $created_at) Return the first ChildUserGroup filtered by the created_at column
- * @method     ChildUserGroup findOneByUpdatedAt(string $updated_at) Return the first ChildUserGroup filtered by the updated_at column *
+ * @method     ChildUserGroup findOneByUpdatedAt(string $updated_at) Return the first ChildUserGroup filtered by the updated_at column
+ * @method     ChildUserGroup findOneById(int $id) Return the first ChildUserGroup filtered by the id column *
 
  * @method     ChildUserGroup requirePk($key, ConnectionInterface $con = null) Return the ChildUserGroup by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUserGroup requireOne(ConnectionInterface $con = null) Return the first ChildUserGroup matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildUserGroup requireOneById(int $id) Return the first ChildUserGroup filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUserGroup requireOneByLabel(string $label) Return the first ChildUserGroup filtered by the label column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUserGroup requireOneByLevel(int $level) Return the first ChildUserGroup filtered by the level column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUserGroup requireOneByVisible(boolean $visible) Return the first ChildUserGroup filtered by the visible column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUserGroup requireOneByEnabled(boolean $enabled) Return the first ChildUserGroup filtered by the enabled column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUserGroup requireOneByCreatedAt(string $created_at) Return the first ChildUserGroup filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUserGroup requireOneByUpdatedAt(string $updated_at) Return the first ChildUserGroup filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUserGroup requireOneById(int $id) Return the first ChildUserGroup filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildUserGroup[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildUserGroup objects based on current ModelCriteria
- * @method     ChildUserGroup[]|ObjectCollection findById(int $id) Return ChildUserGroup objects filtered by the id column
  * @method     ChildUserGroup[]|ObjectCollection findByLabel(string $label) Return ChildUserGroup objects filtered by the label column
  * @method     ChildUserGroup[]|ObjectCollection findByLevel(int $level) Return ChildUserGroup objects filtered by the level column
  * @method     ChildUserGroup[]|ObjectCollection findByVisible(boolean $visible) Return ChildUserGroup objects filtered by the visible column
  * @method     ChildUserGroup[]|ObjectCollection findByEnabled(boolean $enabled) Return ChildUserGroup objects filtered by the enabled column
  * @method     ChildUserGroup[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildUserGroup objects filtered by the created_at column
  * @method     ChildUserGroup[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildUserGroup objects filtered by the updated_at column
+ * @method     ChildUserGroup[]|ObjectCollection findById(int $id) Return ChildUserGroup objects filtered by the id column
  * @method     ChildUserGroup[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -168,7 +168,7 @@ abstract class UserGroupQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, label, level, visible, enabled, created_at, updated_at FROM user_group WHERE id = :p0';
+        $sql = 'SELECT label, level, visible, enabled, created_at, updated_at, id FROM user_group WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -256,47 +256,6 @@ abstract class UserGroupQuery extends ModelCriteria
     {
 
         return $this->addUsingAlias(UserGroupTableMap::COL_ID, $keys, Criteria::IN);
-    }
-
-    /**
-     * Filter the query on the id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterById(1234); // WHERE id = 1234
-     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
-     * $query->filterById(array('min' => 12)); // WHERE id > 12
-     * </code>
-     *
-     * @param     mixed $id The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildUserGroupQuery The current query, for fluid interface
-     */
-    public function filterById($id = null, $comparison = null)
-    {
-        if (is_array($id)) {
-            $useMinMax = false;
-            if (isset($id['min'])) {
-                $this->addUsingAlias(UserGroupTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($id['max'])) {
-                $this->addUsingAlias(UserGroupTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(UserGroupTableMap::COL_ID, $id, $comparison);
     }
 
     /**
@@ -507,6 +466,47 @@ abstract class UserGroupQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UserGroupTableMap::COL_UPDATED_AT, $updatedAt, $comparison);
+    }
+
+    /**
+     * Filter the query on the id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterById(1234); // WHERE id = 1234
+     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
+     * $query->filterById(array('min' => 12)); // WHERE id > 12
+     * </code>
+     *
+     * @param     mixed $id The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildUserGroupQuery The current query, for fluid interface
+     */
+    public function filterById($id = null, $comparison = null)
+    {
+        if (is_array($id)) {
+            $useMinMax = false;
+            if (isset($id['min'])) {
+                $this->addUsingAlias(UserGroupTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($id['max'])) {
+                $this->addUsingAlias(UserGroupTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(UserGroupTableMap::COL_ID, $id, $comparison);
     }
 
     /**

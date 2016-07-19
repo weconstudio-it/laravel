@@ -4,6 +4,11 @@ $menu_items = [
         'href' => 'dashboard',
         'icon' => 'fa-tachometer',
         'minimum_level' => 0
+    ],
+    'User' => [
+        'href' => 'user',
+        'icon' => 'fa-users',
+        'minimum_level' => \App\Models\UserGroup::LEVEL_SUPER_ADMIN
     ]
 ];
 
@@ -25,7 +30,7 @@ function canIAccess($item = []) {
     } else {
         $minimum = (isset($item['minimum_level'])) ? intval($item['minimum_level']) : 0;
         if($minimum) {
-            if($level <= $minimum) {
+            if($level >= $minimum) {
                 $ret = true;
             } else {
                 $ret = false;

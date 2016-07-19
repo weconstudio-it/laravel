@@ -72,11 +72,6 @@ class UserGroupTableMap extends TableMap
     const NUM_HYDRATE_COLUMNS = 7;
 
     /**
-     * the column name for the id field
-     */
-    const COL_ID = 'user_group.id';
-
-    /**
      * the column name for the label field
      */
     const COL_LABEL = 'user_group.label';
@@ -107,6 +102,11 @@ class UserGroupTableMap extends TableMap
     const COL_UPDATED_AT = 'user_group.updated_at';
 
     /**
+     * the column name for the id field
+     */
+    const COL_ID = 'user_group.id';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -118,10 +118,10 @@ class UserGroupTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Label', 'Level', 'Visible', 'Enabled', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('id', 'label', 'level', 'visible', 'enabled', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(UserGroupTableMap::COL_ID, UserGroupTableMap::COL_LABEL, UserGroupTableMap::COL_LEVEL, UserGroupTableMap::COL_VISIBLE, UserGroupTableMap::COL_ENABLED, UserGroupTableMap::COL_CREATED_AT, UserGroupTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('id', 'label', 'level', 'visible', 'enabled', 'created_at', 'updated_at', ),
+        self::TYPE_PHPNAME       => array('Label', 'Level', 'Visible', 'Enabled', 'CreatedAt', 'UpdatedAt', 'Id', ),
+        self::TYPE_CAMELNAME     => array('label', 'level', 'visible', 'enabled', 'createdAt', 'updatedAt', 'id', ),
+        self::TYPE_COLNAME       => array(UserGroupTableMap::COL_LABEL, UserGroupTableMap::COL_LEVEL, UserGroupTableMap::COL_VISIBLE, UserGroupTableMap::COL_ENABLED, UserGroupTableMap::COL_CREATED_AT, UserGroupTableMap::COL_UPDATED_AT, UserGroupTableMap::COL_ID, ),
+        self::TYPE_FIELDNAME     => array('label', 'level', 'visible', 'enabled', 'created_at', 'updated_at', 'id', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
     );
 
@@ -132,10 +132,10 @@ class UserGroupTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Label' => 1, 'Level' => 2, 'Visible' => 3, 'Enabled' => 4, 'CreatedAt' => 5, 'UpdatedAt' => 6, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'label' => 1, 'level' => 2, 'visible' => 3, 'enabled' => 4, 'createdAt' => 5, 'updatedAt' => 6, ),
-        self::TYPE_COLNAME       => array(UserGroupTableMap::COL_ID => 0, UserGroupTableMap::COL_LABEL => 1, UserGroupTableMap::COL_LEVEL => 2, UserGroupTableMap::COL_VISIBLE => 3, UserGroupTableMap::COL_ENABLED => 4, UserGroupTableMap::COL_CREATED_AT => 5, UserGroupTableMap::COL_UPDATED_AT => 6, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'label' => 1, 'level' => 2, 'visible' => 3, 'enabled' => 4, 'created_at' => 5, 'updated_at' => 6, ),
+        self::TYPE_PHPNAME       => array('Label' => 0, 'Level' => 1, 'Visible' => 2, 'Enabled' => 3, 'CreatedAt' => 4, 'UpdatedAt' => 5, 'Id' => 6, ),
+        self::TYPE_CAMELNAME     => array('label' => 0, 'level' => 1, 'visible' => 2, 'enabled' => 3, 'createdAt' => 4, 'updatedAt' => 5, 'id' => 6, ),
+        self::TYPE_COLNAME       => array(UserGroupTableMap::COL_LABEL => 0, UserGroupTableMap::COL_LEVEL => 1, UserGroupTableMap::COL_VISIBLE => 2, UserGroupTableMap::COL_ENABLED => 3, UserGroupTableMap::COL_CREATED_AT => 4, UserGroupTableMap::COL_UPDATED_AT => 5, UserGroupTableMap::COL_ID => 6, ),
+        self::TYPE_FIELDNAME     => array('label' => 0, 'level' => 1, 'visible' => 2, 'enabled' => 3, 'created_at' => 4, 'updated_at' => 5, 'id' => 6, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
     );
 
@@ -156,13 +156,13 @@ class UserGroupTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('label', 'Label', 'VARCHAR', true, 45, null);
         $this->addColumn('level', 'Level', 'INTEGER', true, null, null);
         $this->addColumn('visible', 'Visible', 'BOOLEAN', true, 1, true);
         $this->addColumn('enabled', 'Enabled', 'BOOLEAN', true, 1, true);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
     } // initialize()
 
     /**
@@ -189,6 +189,7 @@ class UserGroupTableMap extends TableMap
     {
         return array(
             'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
+            'auto_add_pk' => array('name' => 'id', 'autoIncrement' => 'true', 'type' => 'INTEGER', ),
         );
     } // getBehaviors()
     /**
@@ -217,11 +218,11 @@ class UserGroupTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -240,7 +241,7 @@ class UserGroupTableMap extends TableMap
     {
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 0 + $offset
+                ? 6 + $offset
                 : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
@@ -342,21 +343,21 @@ class UserGroupTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(UserGroupTableMap::COL_ID);
             $criteria->addSelectColumn(UserGroupTableMap::COL_LABEL);
             $criteria->addSelectColumn(UserGroupTableMap::COL_LEVEL);
             $criteria->addSelectColumn(UserGroupTableMap::COL_VISIBLE);
             $criteria->addSelectColumn(UserGroupTableMap::COL_ENABLED);
             $criteria->addSelectColumn(UserGroupTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(UserGroupTableMap::COL_UPDATED_AT);
+            $criteria->addSelectColumn(UserGroupTableMap::COL_ID);
         } else {
-            $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.label');
             $criteria->addSelectColumn($alias . '.level');
             $criteria->addSelectColumn($alias . '.visible');
             $criteria->addSelectColumn($alias . '.enabled');
             $criteria->addSelectColumn($alias . '.created_at');
             $criteria->addSelectColumn($alias . '.updated_at');
+            $criteria->addSelectColumn($alias . '.id');
         }
     }
 

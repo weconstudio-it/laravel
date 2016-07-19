@@ -21,7 +21,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 class User extends BaseUser implements AuthenticatableContract, CanResetPasswordContract {
 	
 	use Authenticatable, CanResetPassword;
-	
+
 	/**
 	 * Get the e-mail address where password reset links are sent.
 	 *
@@ -58,5 +58,10 @@ class User extends BaseUser implements AuthenticatableContract, CanResetPassword
 		}
 		
 		return PHP_INT_MAX;
+	}
+
+	public function forceFill($data) {
+		$this->fromArray($data);
+		return $this;
 	}
 }

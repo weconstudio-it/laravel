@@ -41,7 +41,9 @@ elixir(function(mix) {
         '../../components/leaflet-geosearch/src/css/l.geosearch.css',
         '../../components/dropzone/dist/min/dropzone.min.css',
         '../../components/_mod/jqgrid/ui.jqgrid.css',
-        '../../components/fuelux/dist/css/fuelux.min.css'
+        '../../components/fuelux/dist/css/fuelux.min.css',
+        '../../components/select2/dist/css/select2.min.css',
+        '../../components/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css'
     ], 'public/css/components-all.css');
 
     // basic CSS components - IE lte9 version
@@ -84,7 +86,9 @@ elixir(function(mix) {
         '../../components/leaflet-geosearch/src/js/l.geosearch.provider.google.js',
         '../../components/blockUI/jquery.blockUI.js',
         '../../components/dropzone/dist/min/dropzone.min.js',
-        '../../components/_mod/fuelux/tree.js'
+        '../../components/_mod/fuelux/tree.js',
+		'../../components/select2/dist/js/select2.full.min.js',
+		'../../components/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js'
     ], 'public/js/components-all.js');
 
     // it localization scripts
@@ -115,10 +119,24 @@ elixir(function(mix) {
     // LEAFLET
     //mix.copy('resources/components/leaflet/dist/images/*.*', 'public/imgs/leaflet/');
 
+    // script applicazione
     mix.scriptsIn('resources/assets/js', 'public/js/custom-all.js');
+    mix.scriptsIn('resources/assets/js/user', 'public/js/user-all.js');
+    mix.scriptsIn('resources/assets/js/manager', 'public/js/manager-all.js');
+    mix.scriptsIn('resources/assets/js/admin', 'public/js/admin-all.js');
+    mix.scriptsIn('resources/assets/js/superadmin', 'public/js/superadmin-all.js');
+
+    mix.copy('resources/assets/js/user/*.*', 'public/js/');
+    mix.copy('resources/assets/js/manager/*.*', 'public/js/');
+    mix.copy('resources/assets/js/admin/*.*', 'public/js/');
+    mix.copy('resources/assets/js/superadmin/*.*', 'public/js/');
 
     mix.version([
         'css/app.css',
-        'js/custom-all.js'
+        'js/custom-all.js',
+        'js/user-all.js',
+        'js/manager-all.js',
+        'js/admin-all.js',
+        'js/superadmin-all.js'
     ]);
 });

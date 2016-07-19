@@ -166,10 +166,8 @@
 		<?php endif; ?>
 		<script>
 			$(function() {
-				@if(\Auth::check())
-					app.baseUrl = "{{ url('/') }}";
-					app.init();
-				@endif
+				app.baseUrl = "{{ url('/') }}";
+				app.init();
 			});
 		</script>
 	</body>

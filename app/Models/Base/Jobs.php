@@ -63,12 +63,6 @@ abstract class Jobs implements ActiveRecordInterface
     protected $virtualColumns = array();
 
     /**
-     * The value for the id field.
-     * @var        int
-     */
-    protected $id;
-
-    /**
      * The value for the queue field.
      * @var        string
      */
@@ -115,6 +109,12 @@ abstract class Jobs implements ActiveRecordInterface
      * @var        \DateTime
      */
     protected $updated_at;
+
+    /**
+     * The value for the id field.
+     * @var        int
+     */
+    protected $id;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -342,16 +342,6 @@ abstract class Jobs implements ActiveRecordInterface
     }
 
     /**
-     * Get the [id] column value.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * Get the [queue] column value.
      *
      * @return string
@@ -452,24 +442,14 @@ abstract class Jobs implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [id] column.
+     * Get the [id] column value.
      *
-     * @param int $v new value
-     * @return $this|\App\Models\Jobs The current object (for fluent API support)
+     * @return int
      */
-    public function setId($v)
+    public function getId()
     {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->id !== $v) {
-            $this->id = $v;
-            $this->modifiedColumns[JobsTableMap::COL_ID] = true;
-        }
-
-        return $this;
-    } // setId()
+        return $this->id;
+    }
 
     /**
      * Set the value of [queue] column.
@@ -632,6 +612,26 @@ abstract class Jobs implements ActiveRecordInterface
     } // setUpdatedAt()
 
     /**
+     * Set the value of [id] column.
+     *
+     * @param int $v new value
+     * @return $this|\App\Models\Jobs The current object (for fluent API support)
+     */
+    public function setId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->id !== $v) {
+            $this->id = $v;
+            $this->modifiedColumns[JobsTableMap::COL_ID] = true;
+        }
+
+        return $this;
+    } // setId()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -667,38 +667,38 @@ abstract class Jobs implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : JobsTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : JobsTableMap::translateFieldName('Queue', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : JobsTableMap::translateFieldName('Queue', TableMap::TYPE_PHPNAME, $indexType)];
             $this->queue = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : JobsTableMap::translateFieldName('Payload', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : JobsTableMap::translateFieldName('Payload', TableMap::TYPE_PHPNAME, $indexType)];
             $this->payload = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : JobsTableMap::translateFieldName('Attempts', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : JobsTableMap::translateFieldName('Attempts', TableMap::TYPE_PHPNAME, $indexType)];
             $this->attempts = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : JobsTableMap::translateFieldName('Reserved', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : JobsTableMap::translateFieldName('Reserved', TableMap::TYPE_PHPNAME, $indexType)];
             $this->reserved = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : JobsTableMap::translateFieldName('ReservedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : JobsTableMap::translateFieldName('ReservedAt', TableMap::TYPE_PHPNAME, $indexType)];
             $this->reserved_at = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : JobsTableMap::translateFieldName('AvailableAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : JobsTableMap::translateFieldName('AvailableAt', TableMap::TYPE_PHPNAME, $indexType)];
             $this->available_at = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : JobsTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : JobsTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : JobsTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : JobsTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : JobsTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -916,9 +916,6 @@ abstract class Jobs implements ActiveRecordInterface
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(JobsTableMap::COL_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'id';
-        }
         if ($this->isColumnModified(JobsTableMap::COL_QUEUE)) {
             $modifiedColumns[':p' . $index++]  = 'queue';
         }
@@ -943,6 +940,9 @@ abstract class Jobs implements ActiveRecordInterface
         if ($this->isColumnModified(JobsTableMap::COL_UPDATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'updated_at';
         }
+        if ($this->isColumnModified(JobsTableMap::COL_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'id';
+        }
 
         $sql = sprintf(
             'INSERT INTO jobs (%s) VALUES (%s)',
@@ -954,9 +954,6 @@ abstract class Jobs implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'id':
-                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
-                        break;
                     case 'queue':
                         $stmt->bindValue($identifier, $this->queue, PDO::PARAM_STR);
                         break;
@@ -980,6 +977,9 @@ abstract class Jobs implements ActiveRecordInterface
                         break;
                     case 'updated_at':
                         $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                        break;
+                    case 'id':
+                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1044,31 +1044,31 @@ abstract class Jobs implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getId();
-                break;
-            case 1:
                 return $this->getQueue();
                 break;
-            case 2:
+            case 1:
                 return $this->getPayload();
                 break;
-            case 3:
+            case 2:
                 return $this->getAttempts();
                 break;
-            case 4:
+            case 3:
                 return $this->getReserved();
                 break;
-            case 5:
+            case 4:
                 return $this->getReservedAt();
                 break;
-            case 6:
+            case 5:
                 return $this->getAvailableAt();
                 break;
-            case 7:
+            case 6:
                 return $this->getCreatedAt();
                 break;
-            case 8:
+            case 7:
                 return $this->getUpdatedAt();
+                break;
+            case 8:
+                return $this->getId();
                 break;
             default:
                 return null;
@@ -1099,28 +1099,28 @@ abstract class Jobs implements ActiveRecordInterface
         $alreadyDumpedObjects['Jobs'][$this->hashCode()] = true;
         $keys = JobsTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getId(),
-            $keys[1] => $this->getQueue(),
-            $keys[2] => $this->getPayload(),
-            $keys[3] => $this->getAttempts(),
-            $keys[4] => $this->getReserved(),
-            $keys[5] => $this->getReservedAt(),
-            $keys[6] => $this->getAvailableAt(),
-            $keys[7] => $this->getCreatedAt(),
-            $keys[8] => $this->getUpdatedAt(),
+            $keys[0] => $this->getQueue(),
+            $keys[1] => $this->getPayload(),
+            $keys[2] => $this->getAttempts(),
+            $keys[3] => $this->getReserved(),
+            $keys[4] => $this->getReservedAt(),
+            $keys[5] => $this->getAvailableAt(),
+            $keys[6] => $this->getCreatedAt(),
+            $keys[7] => $this->getUpdatedAt(),
+            $keys[8] => $this->getId(),
         );
 
         $utc = new \DateTimeZone('utc');
+        if ($result[$keys[6]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[6]];
+            $result[$keys[6]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+
         if ($result[$keys[7]] instanceof \DateTime) {
             // When changing timezone we don't want to change existing instances
             $dateTime = clone $result[$keys[7]];
             $result[$keys[7]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
-        }
-
-        if ($result[$keys[8]] instanceof \DateTime) {
-            // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[8]];
-            $result[$keys[8]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1162,31 +1162,31 @@ abstract class Jobs implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setId($value);
-                break;
-            case 1:
                 $this->setQueue($value);
                 break;
-            case 2:
+            case 1:
                 $this->setPayload($value);
                 break;
-            case 3:
+            case 2:
                 $this->setAttempts($value);
                 break;
-            case 4:
+            case 3:
                 $this->setReserved($value);
                 break;
-            case 5:
+            case 4:
                 $this->setReservedAt($value);
                 break;
-            case 6:
+            case 5:
                 $this->setAvailableAt($value);
                 break;
-            case 7:
+            case 6:
                 $this->setCreatedAt($value);
                 break;
-            case 8:
+            case 7:
                 $this->setUpdatedAt($value);
+                break;
+            case 8:
+                $this->setId($value);
                 break;
         } // switch()
 
@@ -1215,31 +1215,31 @@ abstract class Jobs implements ActiveRecordInterface
         $keys = JobsTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setId($arr[$keys[0]]);
+            $this->setQueue($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setQueue($arr[$keys[1]]);
+            $this->setPayload($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setPayload($arr[$keys[2]]);
+            $this->setAttempts($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setAttempts($arr[$keys[3]]);
+            $this->setReserved($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setReserved($arr[$keys[4]]);
+            $this->setReservedAt($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setReservedAt($arr[$keys[5]]);
+            $this->setAvailableAt($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setAvailableAt($arr[$keys[6]]);
+            $this->setCreatedAt($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setCreatedAt($arr[$keys[7]]);
+            $this->setUpdatedAt($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setUpdatedAt($arr[$keys[8]]);
+            $this->setId($arr[$keys[8]]);
         }
     }
 
@@ -1282,9 +1282,6 @@ abstract class Jobs implements ActiveRecordInterface
     {
         $criteria = new Criteria(JobsTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(JobsTableMap::COL_ID)) {
-            $criteria->add(JobsTableMap::COL_ID, $this->id);
-        }
         if ($this->isColumnModified(JobsTableMap::COL_QUEUE)) {
             $criteria->add(JobsTableMap::COL_QUEUE, $this->queue);
         }
@@ -1308,6 +1305,9 @@ abstract class Jobs implements ActiveRecordInterface
         }
         if ($this->isColumnModified(JobsTableMap::COL_UPDATED_AT)) {
             $criteria->add(JobsTableMap::COL_UPDATED_AT, $this->updated_at);
+        }
+        if ($this->isColumnModified(JobsTableMap::COL_ID)) {
+            $criteria->add(JobsTableMap::COL_ID, $this->id);
         }
 
         return $criteria;
@@ -1438,7 +1438,6 @@ abstract class Jobs implements ActiveRecordInterface
      */
     public function clear()
     {
-        $this->id = null;
         $this->queue = null;
         $this->payload = null;
         $this->attempts = null;
@@ -1447,6 +1446,7 @@ abstract class Jobs implements ActiveRecordInterface
         $this->available_at = null;
         $this->created_at = null;
         $this->updated_at = null;
+        $this->id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();
