@@ -60,8 +60,4 @@ class User extends BaseUser implements AuthenticatableContract, CanResetPassword
 		return PHP_INT_MAX;
 	}
 
-	public function forceFill($data) {
-		$this->fromArray($data);
-		return $this;
-	}
 }
