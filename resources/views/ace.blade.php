@@ -144,6 +144,33 @@
 
 		<!-- basic scripts -->
 
+		<script>
+			// array di traduzioni js
+			var datatable_lang = {
+				"sEmptyTable": "<?php echo U::T_("Nessun dato presente nella tabella"); ?>",
+				"sInfo": "<?php echo U::T_("Vista da")?> _START_ <?php echo U::T_("a")?> _END_ <?php echo U::T_("di")?> _TOTAL_ <?php echo U::T_("elementi")?>",
+				"sInfoEmpty": "<?php echo U::T_("Nessun record trovato")?>",
+				"sInfoFiltered": "<?php echo U::T_("(filtrati da _MAX_ elementi totali)")?>",
+				"sInfoPostFix": "",
+				"sInfoThousands": ".",
+				"sLengthMenu": "<?php echo U::T_("Visualizza _MENU_ elementi")?>",
+				"sLoadingRecords": "<?php echo U::T_("Caricamento...")?>",
+				"sProcessing": "<?php echo U::T_("Elaborazione...")?>",
+				"sSearch": "<?php echo U::T_("Cerca:")?>",
+				"sZeroRecords": "<?php echo U::T_("La ricerca non ha portato alcun risultato.")?>",
+				"oPaginate": {
+					"sFirst": "<?php echo U::T_("Inizio")?>",
+					"sPrevious": "<?php echo U::T_("Precedente")?>",
+					"sNext": "<?php echo U::T_("Successivo")?>",
+					"sLast": "<?php echo U::T_("Fine")?>"
+				},
+				"oAria": {
+					"sSortAscending": "<?php echo U::T_(": attiva per ordinare la colonna in ordine crescente")?>",
+					"sSortDescending": "<?php echo U::T_(": attiva per ordinare la colonna in ordine decrescente")?>"
+				}
+			};
+		</script>
+
 		<!--[if !IE]> -->
 		<script src="{{ url('js/components-all.js') }}"></script>
 		<!-- <![endif]-->

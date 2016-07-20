@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'failed' => 'Credenziali errate.',
-    'throttle' => 'Troppe richieste di login. Riprova tra :seconds secondi.',
+    'failed'   => 'Credenziali non corrispondenti ai dati registrati.',
+    'throttle' => 'Troppi tentativi di accesso. Riprova tra :seconds secondi.',
 
 ];

@@ -70,6 +70,14 @@ var dataTable = function (options) {
 
     var dataTable = this;
 
+    /**
+     * Oggetto contenente le Traduzioni
+     * @type {{}}
+     */
+    this.T = {
+        askDelete: undefined
+    };
+
     this.idTable = "";
     this.subTableTemplate = "subTableTemplate";
     this.subBodyTemplate = "subBodyTemplate";
@@ -82,8 +90,7 @@ var dataTable = function (options) {
     this.columns = options.columns || undefined;
     this.filterColumns = options.filterColumns || undefined;
     this.lenghtMenu = options.lenghtMenu || [[10, 50, 100, -1], ["10", "50", "100", "---"]];
-    this.footerCallback = options.footerCallback || function () {
-        };
+    this.footerCallback = options.footerCallback || function () {};
 
     this.$table = $("#" + dataTable.idTable);
 
@@ -114,7 +121,7 @@ var dataTable = function (options) {
         }
     };
     // override funzione stampa
-    if (this.$table.attr("data-dt-print")) this.printCallback = this.$table.attr("data-dt-print");
+    if(window[this.$table.attr("data-dt-print")] == 'function') this.printCallback = this.$table.attr("data-dt-print");
 
     // funzione per customizzare l'export
     this.exportCallback = this.$table.attr("data-dt-export");
@@ -128,30 +135,40 @@ var dataTable = function (options) {
         var sort = undefined;
         var filter = undefined;
         var type = undefined;
+        var preload = undefined;
         var baseType = undefined;
 
         dataTable.$table.find("thead").find("tr").find("th").each(function (index) {
             type = $(this).attr("data-dt-type");
+            preload = $(this).attr("data-dt-preload");
             sort = $(this).attr("data-dt-sort");
             filter = $(this).attr("data-dt-filter");
             baseType = $(this).attr("data-dt-baseType");
 
             if (typeof $(this).attr("data-dt-inline-button") != 'undefined') {
                 var colBtnVisible = false;
+                var subgridParam = $(this).attr("data-dt-subgrid") || undefined;
+                var buttons = "";
+                if (typeof subgridParam != 'undefined') {
+                    var subPar = JSON.parse(subgridParam);
+                    colBtnVisible = true;
+                    $.each(subPar, function(index, obj){
+                        buttons = buttons + '<button data-interaction="subgrid" data-url="' + obj.url + '" class="btn btn-xs btn-warning"><i data-class-close="' + (obj.icon||'fa fa-minus') + '" data-class-open="' + (obj.icon||'fa fa-plus') + '" class="' + (obj.icon||'fa fa-plus') + '"></i></button>';
+                    });
+                }
                 if ($(this).attr("data-dt-inline-button") == "1") {
                     // colonna bottoni inline
                     colBtnVisible = true;
                     var buttonsConfig = $(this).attr("data-dt-button") || 'edit|delete';
                     var editUrl = $(this).attr("data-dt-edit-url") || dataTable.ajaxUrl;
                     var deleteUrl = $(this).attr("data-dt-delete-url") || dataTable.ajaxUrl;
-                    var buttons = "";
                     $.each(buttonsConfig.split("|"), function (index, obj) {
                         switch (obj) {
                             case "edit":
                                 buttons = buttons + '<a data-interaction="edit" href="' + editUrl + '" class="btn btn-xs btn-warning"><i class="fa fa-pencil"></i></a>';
                                 break;
                             case "delete":
-                                buttons = buttons + '<button data-interaction="delete" data-url="' + deleteUrl + '" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>';
+                                buttons = buttons + '<button data-reload="true" data-interaction="delete" data-url="' + deleteUrl + '" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>';
                                 break;
                         }
                     });
@@ -164,6 +181,7 @@ var dataTable = function (options) {
                     orderable: false,
                     visible: colBtnVisible,
                     createdCell: function (td, cellData) {
+                        $(td).find('[data-interaction=subgrid]').attr("data-url", $(td).find('[data-interaction=subgrid]').attr("data-url") + "/" + cellData[0]);
                         $(td).find('[data-interaction=delete]').attr("data-url", deleteUrl + "/" + cellData[0]);
                         $(td).find('[data-interaction=edit]').attr("href", editUrl + "/" + cellData[0] + "/edit");
                     }
@@ -230,8 +248,8 @@ var dataTable = function (options) {
                 }
 
                 if (doFilter) {
-                    if (filter !== undefined && filter != undefined && typeof filter != "undefined" && filter != "false" && filter != "0") {
-                        dataTable.filterColumns[index] = {index: index, type: type};
+                    if (typeof filter != "undefined" && filter != "false" && filter != "0") {
+                        dataTable.filterColumns[index] = {index: index, type: type, preload: preload};
                     }
                 }
             }
@@ -283,34 +301,28 @@ var dataTable = function (options) {
         };
     };
 
-    /**
-     * Funzione da overridare
-     * @constructor
-     */
     this.DTfnBeforeDrawCallback = function () {};
-
     this.DTfnDrawCallback = function () {
         dataTable.DTfnBeforeDrawCallback();
         dataTable.bindEvents();
         dataTable.DTfnAfterDrawCallback();
     };
-
-    /**
-     * Funzione da overridare
-     * @constructor
-     */
     this.DTfnAfterDrawCallback = function () {};
 
     /**
      * Funzione da overridare
      * @constructor
      */
-    this.DTbeforeInitComplete = function(){};
+    this.DTbeforeInitComplete = function(){
+
+    };
     /**
      * Funzione da overridare
      * @constructor
      */
-    this.DTafterInitComplete = function(){};
+    this.DTafterInitComplete = function(){
+
+    };
 
     this.DTinitComplete = function () {
 
@@ -345,7 +357,7 @@ var dataTable = function (options) {
                     if (typeof $field != 'undefined') {
                         $search.select2({
                             ajax: {
-                                url: $fieldUrl + "&op=autocomplete&autocomplete=" + $field,
+                                url: $fieldUrl + "&op=autocomplete&autocomplete=" + $field + (dataTable.ajaxUrlParameters? "&" + dataTable.ajaxUrlParameters : ''),
                                 dataType: 'json',
                                 delay: 250,
 
@@ -369,14 +381,14 @@ var dataTable = function (options) {
                                          }*/
                                     };
                                 },
-                                cache: true
+                                // cache: true
                             },
                             escapeMarkup: function (markup) {
                                 return markup;
                             }, // let our custom formatter work
                             minimumInputLength: 1,
                             allowClear: true,
-                            cache: true,
+                            // cache: true,
                             templateResult: formatData,
                             templateSelection: formatDataSelection
                         }).on("select2:unselecting", function (e) {
@@ -389,12 +401,15 @@ var dataTable = function (options) {
                                 setTimeout(function () {
                                     self.select2('close');
                                 }, 1);
+                            } else {
+                                if(dataTable.filterColumns[i].preload) {
+                                    $search.data('select2').trigger('query', {term:"%"});
+                                }
                             }
                         });
-                        function formatData(data) {
-                            if (data.loading) return data.text;
 
-                            return data.text;// + "<p>" + data.otherData + "</p>";;
+                        function formatData(data) {
+                            return data.text;
                         }
 
                         function formatDataSelection(data) {
@@ -436,7 +451,17 @@ var dataTable = function (options) {
             dataTable.bindEvents();
         });
 
-        dataTable.$table.find('[data-interaction="subTable"]').unbind("click").bind("click", function () {
+        dataTable.$table.find('[data-interaction="subgrid"]').unbind("click").bind("click", function () {
+
+            var objI = $(this).find('i');
+            if(objI.hasClass(objI.attr('data-class-open'))){
+                objI.removeClass(objI.attr('data-class-open'));
+                objI.addClass(objI.attr('data-class-close'));
+            }else{
+                objI.removeClass(objI.attr('data-class-close'));
+                objI.addClass(objI.attr('data-class-open'));
+            }
+
             var $tr = $(this).closest('tr');
             var id = $(this).attr("data-id");
             var url = $(this).attr("data-url");
@@ -456,14 +481,14 @@ var dataTable = function (options) {
                 row.child.hide();
                 $tr.removeClass('shown');
             } else {
-                app.blockUI(1);
+                app.blockUI(1, "Loading...");
                 $.post(url, {id: id})
                     .success(function (data) {
-                        if (data.response) {
+                        if (data) {
                             if (callback) {
                                 eval(callbackName)(row, data);
                             } else {
-                                row.child(dataTable.setSubTable(data.message)).show();
+                                row.child(data).show();
                                 $tr.addClass('shown');
                             }
                         }
@@ -480,22 +505,25 @@ var dataTable = function (options) {
             var error = $(this).attr('data-error');
             var reload = $(this).attr('data-reload');
             var href = $(this).attr('data-href');
+            var conferma = dataTable.T.askDelete || 'Eliminare la riga selezionata?';
 
-            app.block(1);
-            $.delete(url)
-                .success(function (data) {
-                    if (data.response) {
-                        if (reload) app.reload();
-                        if (href) app.href(href);
-                    } else {
-                        app.warning("", data.message);
-                    }
-                    app.block(0);
-                })
-                .error(function () {
-                    app.block(0);
-                    app.error('', 'Delete error!');
-                });
+            if(confirm(conferma)) {
+                app.block(1);
+                $.delete(url)
+                    .success(function (data) {
+                        if (data.response) {
+                            if (reload) app.reload();
+                            if (href) app.href(href);
+                        } else {
+                            app.warning("", data.message);
+                        }
+                        app.block(0);
+                    })
+                    .error(function () {
+                        app.block(0);
+                        app.error('', 'Delete error!');
+                    });
+            }
         });
 
         dataTable.$table.find('.select2-search:before').bind('click', function () {
@@ -504,6 +532,30 @@ var dataTable = function (options) {
     };
 
     this.makeDT = function () {
+        var language = typeof datatable_lang != 'undefined' ? datatable_lang : {
+            "sEmptyTable":     "Nessun dato presente nella tabella",
+            "sInfo":           "Vista da _START_ a _END_ di _TOTAL_ elementi",
+            "sInfoEmpty":      "Vista da 0 a 0 di 0 elementi",
+            "sInfoFiltered":   "(filtrati da _MAX_ elementi totali)",
+            "sInfoPostFix":    "",
+            "sInfoThousands":  ".",
+            "sLengthMenu":     "Visualizza _MENU_ elementi",
+            "sLoadingRecords": "Caricamento...",
+            "sProcessing":     "Elaborazione...",
+            "sSearch":         "Cerca:",
+            "sZeroRecords":    "La ricerca non ha portato alcun risultato.",
+            "oPaginate": {
+                "sFirst":      "Inizio",
+                "sPrevious":   "Precedente",
+                "sNext":       "Successivo",
+                "sLast":       "Fine"
+            },
+            "oAria": {
+                "sSortAscending":  ": attiva per ordinare la colonna in ordine crescente",
+                "sSortDescending": ": attiva per ordinare la colonna in ordine decrescente"
+            }
+        };
+
         dataTable.table = dataTable.$table.DataTable({
             bAutoWidth: false,
             aoColumns: dataTable.columns,
@@ -513,6 +565,9 @@ var dataTable = function (options) {
             bPaginate: true,
             select: true,
             responsive: true,
+
+            // language: prende la variabile globale datatable_lang oppure valori di default
+            language: language,
 
             // gestione server side ajax
             processing: (typeof dataTable.ajaxUrl != 'undefined'),
@@ -532,29 +587,65 @@ var dataTable = function (options) {
         var buttons = [];
 
         if (dataTable.csv) {
-            buttons.push({
-                extend: "csvHtml5",
-                text: "<i class='fa fa-database bigger-110 orange'></i> <span class='hidden'>Export to CSV</span>",
-                className: "btn btn-white btn-primary btn-bold",
-                fieldBoundary: "",
-                charset: false,
-                footer: true,
-                fieldSeparator: ";",
-                customize: eval(dataTable.exportCallback)
-            });
+            if(typeof dataTable.ajaxUrl != 'undefined') {
+                buttons.push({
+                    text: "<i class='fa fa-database bigger-110 orange'></i> <span class='hidden'>Export to CSV</span>",
+                    className: "btn btn-white btn-primary btn-bold",
+                    action: function() {
+                        var url = dataTable.ajaxUrl + "?dt=1&op=export&type=csv";
+                        var params = dataTable.table.ajax.params();
+                        params.start = 0;
+                        params.length = -1;
+
+                        app.block(1);
+                        $.ajax({
+                            url: url,
+                            async: false,
+                            data: params
+                        })
+                            .success(function(data) {
+                                app.block(0);
+                                if(data.response) {
+                                    app.locationHref(data.message, true);
+                                } else {
+                                    app.warning("", data.message);
+                                }
+                            })
+                            .error(function() {
+                                app.block(0);
+                                app.error("", "Errore esportazione CSV!");
+                            });
+                    }
+                });
+            } else {
+                buttons.push({
+                    extend: "csvHtml5",
+                    text: "<i class='fa fa-database bigger-110 orange'></i> <span class='hidden'>Export to CSV</span>",
+                    className: "btn btn-white btn-primary btn-bold",
+                    fieldBoundary: "",
+                    charset: false,
+                    footer: true,
+                    fieldSeparator: ";",
+                    customize: eval(dataTable.exportCallback)
+                });
+            }
         }
 
         if (dataTable.pdf) {
-            buttons.push({
-                extend: "pdf",
-                text: "<i class='fa fa-print bigger-110 grey'></i> <span class='hidden'>Print</span>",
-                className: "btn btn-white btn-primary btn-bold",
-                autoPrint: false,
-                footer: true,
-                orientation: 'landscape',
-                title: title,
-                customize: eval(dataTable.printCallback)
-            });
+            if(typeof dataTable.ajaxUrl != 'undefined') {
+
+            } else {
+                buttons.push({
+                    extend: "pdf",
+                    text: "<i class='fa fa-print bigger-110 grey'></i> <span class='hidden'>Print</span>",
+                    className: "btn btn-white btn-primary btn-bold",
+                    autoPrint: false,
+                    footer: true,
+                    orientation: 'landscape',
+                    title: title,
+                    customize: eval(dataTable.printCallback)
+                });
+            }
         }
 
         if (dataTable.csv || dataTable.pdf) {
@@ -565,31 +656,10 @@ var dataTable = function (options) {
         }
 
         if (typeof dataTable.ajaxUrl != 'undefined') {
-            $("#" + dataTable.idTable + "_wrapper").find('.dataTables_filter').hide();
+            $("#" + dataTable.idTable + "_wrapper").find('.dataTables_filter').find('label').hide();
         }
 
         dataTable.bindEvents();
-    };
-
-    this.setSubTable = function (data) {
-        var $subTable = $("[data-interaction=" + dataTable.subTableTemplate + "]").clone();
-        var $tmpTable = $('<table></table>');
-        for (var i = 0; i < data.length; i++) {
-            var $subBody = $('[data-interaction="' + dataTable.subBodyTemplate + '"]').clone();
-            $subBody.removeAttr("data-interaction");
-            $subBody.find('[data-interaction="subTableField"]').each(function () {
-                var target = $(this).attr("data-target");
-                target = target || "";
-
-                if (data[i][target] !== undefined && data[i][target] != undefined && typeof data[i][target] != "undefined") {
-                    $(this).html(data[i][target]);
-                }
-            });
-            $tmpTable.append($subBody);
-        }
-
-        $subTable.find("tbody").html($tmpTable.html());
-        return $subTable.html();
     };
 
     this.make = function () {

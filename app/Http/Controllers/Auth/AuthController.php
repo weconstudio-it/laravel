@@ -118,11 +118,12 @@ class AuthController extends Controller
 		try {
 			// creo il profilo da legare all'account
 			$subject = new Subject();
-			$subject->fromArray($request->all());
+			$data = $request->all();
+			$data["full_name"] = $data["last_name"] . " " . $data["first_name"];
+			$subject->fromArray($data);
 			$subject->save();
 
 			// creo l'utente
-			$data = $request->all();
 			$data['id_subject'] = $subject->getId();
 			$data['name'] = $request->input('first_name', '') . " " . $request->input('last_name', '');
 			// currency

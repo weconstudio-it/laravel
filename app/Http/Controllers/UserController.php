@@ -36,25 +36,31 @@ class UserController extends Controller
                 'label' => U::T_("Name"),
                 'field' => 'name',
                 'sort' => true,
-                'filter' => true
+                'filter' => true,
+				'filterPreload' => true,
+				'hide' => false,
+				'export' => true
             ],
             [
                 'label' => U::T_("Group"),
                 'field' => 'user_group.label',
                 'sort' => true,
-                'filter' => true
+                'filter' => true,
+				'export' => true
             ],
             [
                 'label' => U::T_("Email"),
                 'field' => 'email',
                 'sort' => true,
-                'filter' => true
+                'filter' => true,
+				'export' => true
             ],
             [
                 'label' => U::T_("Username"),
                 'field' => 'username',
                 'sort' => true,
-                'filter' => false
+                'filter' => false,
+				'export' => true
             ],
             [
                 'label' => U::T_("Email confirmed"),
@@ -62,7 +68,8 @@ class UserController extends Controller
                 'sort' => true,
                 'filter' => true,
                 'formatterjs' => 'bool',
-                'align' => 'center'
+                'align' => 'center',
+				'export' => true
             ],
             [
                 'label' => U::T_("Enabled"),
@@ -70,7 +77,8 @@ class UserController extends Controller
                 'sort' => true,
                 'filter' => true,
                 'formatterjs' => 'user_enabled',
-                'align' => 'center'
+                'align' => 'center',
+				'export' => true
             ]
         ];
 
@@ -152,10 +160,11 @@ class UserController extends Controller
 		try {
 			$subject = $user->getSubject();
 			if(!$subject instanceof Subject) throw new \Exception(U::T_("Soggetto non valido!"));
-			$subject->fromArray($request->all());
+			$data = $request->all();
+			$data["full_name"] = $data["last_name"] . " " . $data["first_name"];
+			$subject->fromArray($data);
 			$subject->save();
 
-			$data = $request->all();
 			$data['id_subject'] = $subject->getId();
 			$data['name'] = $request->input('first_name', '') . " " . $request->input('last_name', '');
 			unset($data['username']);

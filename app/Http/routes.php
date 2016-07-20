@@ -17,6 +17,9 @@ Route::get('/register/error', 'Auth\AuthController@error');
 Route::get('/confirm', 'Auth\AuthController@confirm');
 Route::get("/error", "ErrorController@index");
 
+// Download
+Route::get("/download", "DownloadController@download");
+
 Route::group(['middleware' => ['auth', 'enable']], function() {
 	Route::group(['middleware' => ['ajax']], function() {
 		Route::get('/', 'HomeController@index');

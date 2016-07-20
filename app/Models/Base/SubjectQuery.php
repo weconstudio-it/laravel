@@ -23,6 +23,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSubjectQuery orderByActive($order = Criteria::ASC) Order by the active column
  * @method     ChildSubjectQuery orderByFirstName($order = Criteria::ASC) Order by the first_name column
  * @method     ChildSubjectQuery orderByLastName($order = Criteria::ASC) Order by the last_name column
+ * @method     ChildSubjectQuery orderByFullName($order = Criteria::ASC) Order by the full_name column
  * @method     ChildSubjectQuery orderByAddress($order = Criteria::ASC) Order by the address column
  * @method     ChildSubjectQuery orderByZip($order = Criteria::ASC) Order by the zip column
  * @method     ChildSubjectQuery orderByCity($order = Criteria::ASC) Order by the city column
@@ -38,6 +39,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSubjectQuery groupByActive() Group by the active column
  * @method     ChildSubjectQuery groupByFirstName() Group by the first_name column
  * @method     ChildSubjectQuery groupByLastName() Group by the last_name column
+ * @method     ChildSubjectQuery groupByFullName() Group by the full_name column
  * @method     ChildSubjectQuery groupByAddress() Group by the address column
  * @method     ChildSubjectQuery groupByZip() Group by the zip column
  * @method     ChildSubjectQuery groupByCity() Group by the city column
@@ -66,6 +68,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSubject findOneByActive(boolean $active) Return the first ChildSubject filtered by the active column
  * @method     ChildSubject findOneByFirstName(string $first_name) Return the first ChildSubject filtered by the first_name column
  * @method     ChildSubject findOneByLastName(string $last_name) Return the first ChildSubject filtered by the last_name column
+ * @method     ChildSubject findOneByFullName(string $full_name) Return the first ChildSubject filtered by the full_name column
  * @method     ChildSubject findOneByAddress(string $address) Return the first ChildSubject filtered by the address column
  * @method     ChildSubject findOneByZip(string $zip) Return the first ChildSubject filtered by the zip column
  * @method     ChildSubject findOneByCity(string $city) Return the first ChildSubject filtered by the city column
@@ -84,6 +87,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSubject requireOneByActive(boolean $active) Return the first ChildSubject filtered by the active column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSubject requireOneByFirstName(string $first_name) Return the first ChildSubject filtered by the first_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSubject requireOneByLastName(string $last_name) Return the first ChildSubject filtered by the last_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSubject requireOneByFullName(string $full_name) Return the first ChildSubject filtered by the full_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSubject requireOneByAddress(string $address) Return the first ChildSubject filtered by the address column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSubject requireOneByZip(string $zip) Return the first ChildSubject filtered by the zip column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSubject requireOneByCity(string $city) Return the first ChildSubject filtered by the city column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -100,6 +104,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSubject[]|ObjectCollection findByActive(boolean $active) Return ChildSubject objects filtered by the active column
  * @method     ChildSubject[]|ObjectCollection findByFirstName(string $first_name) Return ChildSubject objects filtered by the first_name column
  * @method     ChildSubject[]|ObjectCollection findByLastName(string $last_name) Return ChildSubject objects filtered by the last_name column
+ * @method     ChildSubject[]|ObjectCollection findByFullName(string $full_name) Return ChildSubject objects filtered by the full_name column
  * @method     ChildSubject[]|ObjectCollection findByAddress(string $address) Return ChildSubject objects filtered by the address column
  * @method     ChildSubject[]|ObjectCollection findByZip(string $zip) Return ChildSubject objects filtered by the zip column
  * @method     ChildSubject[]|ObjectCollection findByCity(string $city) Return ChildSubject objects filtered by the city column
@@ -203,7 +208,7 @@ abstract class SubjectQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT active, first_name, last_name, address, zip, city, province, country, phone, fax, notes, created_at, updated_at, id FROM subject WHERE id = :p0';
+        $sql = 'SELECT active, first_name, last_name, full_name, address, zip, city, province, country, phone, fax, notes, created_at, updated_at, id FROM subject WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -376,6 +381,35 @@ abstract class SubjectQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(SubjectTableMap::COL_LAST_NAME, $lastName, $comparison);
+    }
+
+    /**
+     * Filter the query on the full_name column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByFullName('fooValue');   // WHERE full_name = 'fooValue'
+     * $query->filterByFullName('%fooValue%'); // WHERE full_name LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $fullName The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildSubjectQuery The current query, for fluid interface
+     */
+    public function filterByFullName($fullName = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($fullName)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $fullName)) {
+                $fullName = str_replace('*', '%', $fullName);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(SubjectTableMap::COL_FULL_NAME, $fullName, $comparison);
     }
 
     /**

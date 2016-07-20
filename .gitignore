@@ -10,3 +10,4 @@ composer.phar
 resources/components
 /.phpstorm.meta.php
 /_ide_helper.php
+.DS_Store

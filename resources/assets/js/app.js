@@ -30,18 +30,18 @@ var app = {
 
 		// ACE Ajax manager
 		$('#page-content-section').
-			ace_ajax({
-				content_url: function(hash) {
+		ace_ajax({
+			content_url: function(hash) {
 
-					//debugger
+				//debugger
 
-					//hash is the value from document url hash
-					//take "url" param and return the relevant url to load
-					return hash;
-				},
-				default_url: app.default_url,
-				loading_icon: "fa fa-cog fa-2x blue fa-spin"
-			})
+				//hash is the value from document url hash
+				//take "url" param and return the relevant url to load
+				return hash;
+			},
+			default_url: app.default_url,
+			loading_icon: "fa fa-cog fa-2x blue fa-spin"
+		})
 			.on('ajaxloadcomplete', function(e, params) {
 				app.runBind();
 			})
@@ -72,14 +72,14 @@ var app = {
 		var _arr = jQuery.map(arr, function(scr) {
 			return jQuery.getScript( (path||"") + scr );
 		});
-	
+
 		_arr.push(jQuery.Deferred(function( deferred ){
 			jQuery( deferred.resolve );
 		}));
-	
+
 		return jQuery.when.apply(jQuery, _arr);
 	},
-	
+
 	/**
 	 *
 	 * @param nome
@@ -179,7 +179,7 @@ var app = {
 
 			var url = $(this).attr('data-url');
 			url = url || "geoname";
-			
+
 			var callback = $(this).attr('data-callback');
 
 			function getTextValueFromResponseAutocomplete(obj) {
@@ -330,6 +330,15 @@ var app = {
 			allowTimes: arrTime
 		});
 
+
+		$("[data-interaction=toggleEditDiv]").unbind("change").bind("change", app.runToggleEditDiv);
+		app.runToggleEditDiv();
+
+		// TODO: da rimuovere!
+		$(".chosen").chosen();
+
+		$(".select2").select2();
+
 		$("[data-interaction=dropzone]").each(function () {
 			var url = $(this).attr("data-url");
 			var parameters = $(this).attr("data-parameters") || "";
@@ -370,6 +379,21 @@ var app = {
 
 	},
 
+	runToggleEditDiv: function(){
+		$("[data-interaction=toggleEditDiv]").each(function () {
+			var idDiv = $(this).attr("data-ref");
+			if ($(this).is(":checked")) {
+				$("#" + idDiv).find('input, select').prop('disabled', false);
+			} else {
+				$("#" + idDiv).find('input, select').prop('disabled', true);
+			}
+			$("#" + idDiv).find('select.chosen').trigger("chosen:updated");
+
+			$(this).prop('disabled', false);
+			$(this).removeAttr('disabled');
+		});
+	},
+
 	locationHref: function (url, withBlank) {
 
 		withBlank = withBlank || 0;
@@ -377,7 +401,7 @@ var app = {
 		//if (noBlockUI == 0)
 		//	app.blockUI(true);
 
-		if(url) url = url.replace("#", "");
+		url = url.replace("#", "");
 		if(url.indexOf(app.baseUrl) < 0) {
 			if(url[0] == "/") url = url.substring(1, url.length);
 			url = app.baseUrl + "/" + url;
@@ -655,8 +679,8 @@ var app = {
 			return app.platform.detection() != "desktop";
 		}
 	},
-	
-	formSubmit: function(url, form, params, success, error) {
+
+	formSubmit: function(url, form, additionslParams, success, error) {
 		success = success || function() {};
 		error = error || function() {};
 		form = form || undefined;
@@ -682,14 +706,14 @@ var app = {
 		$form.find('.error-block').removeClass('show');
 
 		var aParam = lib.formSerialize($form);
-		aParam = $.extend({}, aParam, params);
+		aParam = $.extend({}, aParam, additionslParams);
 
 		$method(url, aParam)
 			.success(function(data) {
 				success(data);
 			})
 			.error(function(data) {
-				if(data.status = 422) {
+				if(data.status == 422) {
 					var errors = data.responseJSON;
 					Object.keys(errors).forEach(function(k) {
 						var $error = undefined;
@@ -707,7 +731,7 @@ var app = {
 							var $field = $('[name="' + name + '"]');
 							if($field) {
 								var $parent = $field.parent();
-								$error = $('<span class="error-block show" data-name="' + name + '">' + errors[k] + '</span>');
+								$error = $('<span class="error-block text-danger show" data-name="' + name + '">' + errors[k] + '</span>');
 								$parent.append($error);
 							}
 						}
@@ -728,7 +752,7 @@ jQuery.each( [ "put", "delete" ], function( i, method ) {
 			callback = data;
 			data = undefined;
 		}
-		
+
 		return jQuery.ajax({
 			url: url,
 			type: method,

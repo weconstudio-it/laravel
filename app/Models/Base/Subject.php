@@ -85,6 +85,12 @@ abstract class Subject implements ActiveRecordInterface
     protected $last_name;
 
     /**
+     * The value for the full_name field.
+     * @var        string
+     */
+    protected $full_name;
+
+    /**
      * The value for the address field.
      * @var        string
      */
@@ -441,6 +447,16 @@ abstract class Subject implements ActiveRecordInterface
     }
 
     /**
+     * Get the [full_name] column value.
+     *
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->full_name;
+    }
+
+    /**
      * Get the [address] column value.
      *
      * @return string
@@ -637,6 +653,26 @@ abstract class Subject implements ActiveRecordInterface
 
         return $this;
     } // setLastName()
+
+    /**
+     * Set the value of [full_name] column.
+     *
+     * @param string $v new value
+     * @return $this|\App\Models\Subject The current object (for fluent API support)
+     */
+    public function setFullName($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->full_name !== $v) {
+            $this->full_name = $v;
+            $this->modifiedColumns[SubjectTableMap::COL_FULL_NAME] = true;
+        }
+
+        return $this;
+    } // setFullName()
 
     /**
      * Set the value of [address] column.
@@ -907,43 +943,46 @@ abstract class Subject implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : SubjectTableMap::translateFieldName('LastName', TableMap::TYPE_PHPNAME, $indexType)];
             $this->last_name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : SubjectTableMap::translateFieldName('Address', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : SubjectTableMap::translateFieldName('FullName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->full_name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : SubjectTableMap::translateFieldName('Address', TableMap::TYPE_PHPNAME, $indexType)];
             $this->address = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : SubjectTableMap::translateFieldName('Zip', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : SubjectTableMap::translateFieldName('Zip', TableMap::TYPE_PHPNAME, $indexType)];
             $this->zip = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : SubjectTableMap::translateFieldName('City', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : SubjectTableMap::translateFieldName('City', TableMap::TYPE_PHPNAME, $indexType)];
             $this->city = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : SubjectTableMap::translateFieldName('Province', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : SubjectTableMap::translateFieldName('Province', TableMap::TYPE_PHPNAME, $indexType)];
             $this->province = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : SubjectTableMap::translateFieldName('Country', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : SubjectTableMap::translateFieldName('Country', TableMap::TYPE_PHPNAME, $indexType)];
             $this->country = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : SubjectTableMap::translateFieldName('Phone', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : SubjectTableMap::translateFieldName('Phone', TableMap::TYPE_PHPNAME, $indexType)];
             $this->phone = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : SubjectTableMap::translateFieldName('Fax', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : SubjectTableMap::translateFieldName('Fax', TableMap::TYPE_PHPNAME, $indexType)];
             $this->fax = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : SubjectTableMap::translateFieldName('Notes', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : SubjectTableMap::translateFieldName('Notes', TableMap::TYPE_PHPNAME, $indexType)];
             $this->notes = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : SubjectTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : SubjectTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : SubjectTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : SubjectTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : SubjectTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : SubjectTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
@@ -953,7 +992,7 @@ abstract class Subject implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 14; // 14 = SubjectTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 15; // 15 = SubjectTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\App\\Models\\Subject'), 0, $e);
@@ -1190,6 +1229,9 @@ abstract class Subject implements ActiveRecordInterface
         if ($this->isColumnModified(SubjectTableMap::COL_LAST_NAME)) {
             $modifiedColumns[':p' . $index++]  = 'last_name';
         }
+        if ($this->isColumnModified(SubjectTableMap::COL_FULL_NAME)) {
+            $modifiedColumns[':p' . $index++]  = 'full_name';
+        }
         if ($this->isColumnModified(SubjectTableMap::COL_ADDRESS)) {
             $modifiedColumns[':p' . $index++]  = 'address';
         }
@@ -1242,6 +1284,9 @@ abstract class Subject implements ActiveRecordInterface
                         break;
                     case 'last_name':
                         $stmt->bindValue($identifier, $this->last_name, PDO::PARAM_STR);
+                        break;
+                    case 'full_name':
+                        $stmt->bindValue($identifier, $this->full_name, PDO::PARAM_STR);
                         break;
                     case 'address':
                         $stmt->bindValue($identifier, $this->address, PDO::PARAM_STR);
@@ -1348,36 +1393,39 @@ abstract class Subject implements ActiveRecordInterface
                 return $this->getLastName();
                 break;
             case 3:
-                return $this->getAddress();
+                return $this->getFullName();
                 break;
             case 4:
-                return $this->getZip();
+                return $this->getAddress();
                 break;
             case 5:
-                return $this->getCity();
+                return $this->getZip();
                 break;
             case 6:
-                return $this->getProvince();
+                return $this->getCity();
                 break;
             case 7:
-                return $this->getCountry();
+                return $this->getProvince();
                 break;
             case 8:
-                return $this->getPhone();
+                return $this->getCountry();
                 break;
             case 9:
-                return $this->getFax();
+                return $this->getPhone();
                 break;
             case 10:
-                return $this->getNotes();
+                return $this->getFax();
                 break;
             case 11:
-                return $this->getCreatedAt();
+                return $this->getNotes();
                 break;
             case 12:
-                return $this->getUpdatedAt();
+                return $this->getCreatedAt();
                 break;
             case 13:
+                return $this->getUpdatedAt();
+                break;
+            case 14:
                 return $this->getId();
                 break;
             default:
@@ -1413,30 +1461,31 @@ abstract class Subject implements ActiveRecordInterface
             $keys[0] => $this->getActive(),
             $keys[1] => $this->getFirstName(),
             $keys[2] => $this->getLastName(),
-            $keys[3] => $this->getAddress(),
-            $keys[4] => $this->getZip(),
-            $keys[5] => $this->getCity(),
-            $keys[6] => $this->getProvince(),
-            $keys[7] => $this->getCountry(),
-            $keys[8] => $this->getPhone(),
-            $keys[9] => $this->getFax(),
-            $keys[10] => $this->getNotes(),
-            $keys[11] => $this->getCreatedAt(),
-            $keys[12] => $this->getUpdatedAt(),
-            $keys[13] => $this->getId(),
+            $keys[3] => $this->getFullName(),
+            $keys[4] => $this->getAddress(),
+            $keys[5] => $this->getZip(),
+            $keys[6] => $this->getCity(),
+            $keys[7] => $this->getProvince(),
+            $keys[8] => $this->getCountry(),
+            $keys[9] => $this->getPhone(),
+            $keys[10] => $this->getFax(),
+            $keys[11] => $this->getNotes(),
+            $keys[12] => $this->getCreatedAt(),
+            $keys[13] => $this->getUpdatedAt(),
+            $keys[14] => $this->getId(),
         );
 
         $utc = new \DateTimeZone('utc');
-        if ($result[$keys[11]] instanceof \DateTime) {
-            // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[11]];
-            $result[$keys[11]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
-        }
-
         if ($result[$keys[12]] instanceof \DateTime) {
             // When changing timezone we don't want to change existing instances
             $dateTime = clone $result[$keys[12]];
             $result[$keys[12]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+
+        if ($result[$keys[13]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[13]];
+            $result[$keys[13]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1504,36 +1553,39 @@ abstract class Subject implements ActiveRecordInterface
                 $this->setLastName($value);
                 break;
             case 3:
-                $this->setAddress($value);
+                $this->setFullName($value);
                 break;
             case 4:
-                $this->setZip($value);
+                $this->setAddress($value);
                 break;
             case 5:
-                $this->setCity($value);
+                $this->setZip($value);
                 break;
             case 6:
-                $this->setProvince($value);
+                $this->setCity($value);
                 break;
             case 7:
-                $this->setCountry($value);
+                $this->setProvince($value);
                 break;
             case 8:
-                $this->setPhone($value);
+                $this->setCountry($value);
                 break;
             case 9:
-                $this->setFax($value);
+                $this->setPhone($value);
                 break;
             case 10:
-                $this->setNotes($value);
+                $this->setFax($value);
                 break;
             case 11:
-                $this->setCreatedAt($value);
+                $this->setNotes($value);
                 break;
             case 12:
-                $this->setUpdatedAt($value);
+                $this->setCreatedAt($value);
                 break;
             case 13:
+                $this->setUpdatedAt($value);
+                break;
+            case 14:
                 $this->setId($value);
                 break;
         } // switch()
@@ -1572,37 +1624,40 @@ abstract class Subject implements ActiveRecordInterface
             $this->setLastName($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setAddress($arr[$keys[3]]);
+            $this->setFullName($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setZip($arr[$keys[4]]);
+            $this->setAddress($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setCity($arr[$keys[5]]);
+            $this->setZip($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setProvince($arr[$keys[6]]);
+            $this->setCity($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setCountry($arr[$keys[7]]);
+            $this->setProvince($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setPhone($arr[$keys[8]]);
+            $this->setCountry($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setFax($arr[$keys[9]]);
+            $this->setPhone($arr[$keys[9]]);
         }
         if (array_key_exists($keys[10], $arr)) {
-            $this->setNotes($arr[$keys[10]]);
+            $this->setFax($arr[$keys[10]]);
         }
         if (array_key_exists($keys[11], $arr)) {
-            $this->setCreatedAt($arr[$keys[11]]);
+            $this->setNotes($arr[$keys[11]]);
         }
         if (array_key_exists($keys[12], $arr)) {
-            $this->setUpdatedAt($arr[$keys[12]]);
+            $this->setCreatedAt($arr[$keys[12]]);
         }
         if (array_key_exists($keys[13], $arr)) {
-            $this->setId($arr[$keys[13]]);
+            $this->setUpdatedAt($arr[$keys[13]]);
+        }
+        if (array_key_exists($keys[14], $arr)) {
+            $this->setId($arr[$keys[14]]);
         }
     }
 
@@ -1653,6 +1708,9 @@ abstract class Subject implements ActiveRecordInterface
         }
         if ($this->isColumnModified(SubjectTableMap::COL_LAST_NAME)) {
             $criteria->add(SubjectTableMap::COL_LAST_NAME, $this->last_name);
+        }
+        if ($this->isColumnModified(SubjectTableMap::COL_FULL_NAME)) {
+            $criteria->add(SubjectTableMap::COL_FULL_NAME, $this->full_name);
         }
         if ($this->isColumnModified(SubjectTableMap::COL_ADDRESS)) {
             $criteria->add(SubjectTableMap::COL_ADDRESS, $this->address);
@@ -1776,6 +1834,7 @@ abstract class Subject implements ActiveRecordInterface
         $copyObj->setActive($this->getActive());
         $copyObj->setFirstName($this->getFirstName());
         $copyObj->setLastName($this->getLastName());
+        $copyObj->setFullName($this->getFullName());
         $copyObj->setAddress($this->getAddress());
         $copyObj->setZip($this->getZip());
         $copyObj->setCity($this->getCity());
@@ -2147,6 +2206,7 @@ abstract class Subject implements ActiveRecordInterface
         $this->active = null;
         $this->first_name = null;
         $this->last_name = null;
+        $this->full_name = null;
         $this->address = null;
         $this->zip = null;
         $this->city = null;

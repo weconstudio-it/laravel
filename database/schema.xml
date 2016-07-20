@@ -71,8 +71,9 @@
 
     <table name="subject" idMethod="native">
         <column name="active" type="BOOLEAN"  size="1" required="true" defaultValue="true"/>
-        <column name="first_name" type="VARCHAR" size="255" required="true"/>
-        <column name="last_name" type="VARCHAR" size="255" required="true"/>
+        <column name="first_name" type="VARCHAR" size="120" required="true"/>
+        <column name="last_name" type="VARCHAR" size="120" required="true"/>
+        <column name="full_name" type="VARCHAR" size="255" required="true"/>
         <column name="address" type="VARCHAR" size="255"/>
         <column name="zip" type="VARCHAR" size="20"/>
         <column name="city" type="VARCHAR" size="100"/>

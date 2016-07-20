@@ -59,7 +59,7 @@ class SubjectTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 14;
+    const NUM_COLUMNS = 15;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class SubjectTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 14;
+    const NUM_HYDRATE_COLUMNS = 15;
 
     /**
      * the column name for the active field
@@ -85,6 +85,11 @@ class SubjectTableMap extends TableMap
      * the column name for the last_name field
      */
     const COL_LAST_NAME = 'subject.last_name';
+
+    /**
+     * the column name for the full_name field
+     */
+    const COL_FULL_NAME = 'subject.full_name';
 
     /**
      * the column name for the address field
@@ -153,11 +158,11 @@ class SubjectTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Active', 'FirstName', 'LastName', 'Address', 'Zip', 'City', 'Province', 'Country', 'Phone', 'Fax', 'Notes', 'CreatedAt', 'UpdatedAt', 'Id', ),
-        self::TYPE_CAMELNAME     => array('active', 'firstName', 'lastName', 'address', 'zip', 'city', 'province', 'country', 'phone', 'fax', 'notes', 'createdAt', 'updatedAt', 'id', ),
-        self::TYPE_COLNAME       => array(SubjectTableMap::COL_ACTIVE, SubjectTableMap::COL_FIRST_NAME, SubjectTableMap::COL_LAST_NAME, SubjectTableMap::COL_ADDRESS, SubjectTableMap::COL_ZIP, SubjectTableMap::COL_CITY, SubjectTableMap::COL_PROVINCE, SubjectTableMap::COL_COUNTRY, SubjectTableMap::COL_PHONE, SubjectTableMap::COL_FAX, SubjectTableMap::COL_NOTES, SubjectTableMap::COL_CREATED_AT, SubjectTableMap::COL_UPDATED_AT, SubjectTableMap::COL_ID, ),
-        self::TYPE_FIELDNAME     => array('active', 'first_name', 'last_name', 'address', 'zip', 'city', 'province', 'country', 'phone', 'fax', 'notes', 'created_at', 'updated_at', 'id', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
+        self::TYPE_PHPNAME       => array('Active', 'FirstName', 'LastName', 'FullName', 'Address', 'Zip', 'City', 'Province', 'Country', 'Phone', 'Fax', 'Notes', 'CreatedAt', 'UpdatedAt', 'Id', ),
+        self::TYPE_CAMELNAME     => array('active', 'firstName', 'lastName', 'fullName', 'address', 'zip', 'city', 'province', 'country', 'phone', 'fax', 'notes', 'createdAt', 'updatedAt', 'id', ),
+        self::TYPE_COLNAME       => array(SubjectTableMap::COL_ACTIVE, SubjectTableMap::COL_FIRST_NAME, SubjectTableMap::COL_LAST_NAME, SubjectTableMap::COL_FULL_NAME, SubjectTableMap::COL_ADDRESS, SubjectTableMap::COL_ZIP, SubjectTableMap::COL_CITY, SubjectTableMap::COL_PROVINCE, SubjectTableMap::COL_COUNTRY, SubjectTableMap::COL_PHONE, SubjectTableMap::COL_FAX, SubjectTableMap::COL_NOTES, SubjectTableMap::COL_CREATED_AT, SubjectTableMap::COL_UPDATED_AT, SubjectTableMap::COL_ID, ),
+        self::TYPE_FIELDNAME     => array('active', 'first_name', 'last_name', 'full_name', 'address', 'zip', 'city', 'province', 'country', 'phone', 'fax', 'notes', 'created_at', 'updated_at', 'id', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
     );
 
     /**
@@ -167,11 +172,11 @@ class SubjectTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Active' => 0, 'FirstName' => 1, 'LastName' => 2, 'Address' => 3, 'Zip' => 4, 'City' => 5, 'Province' => 6, 'Country' => 7, 'Phone' => 8, 'Fax' => 9, 'Notes' => 10, 'CreatedAt' => 11, 'UpdatedAt' => 12, 'Id' => 13, ),
-        self::TYPE_CAMELNAME     => array('active' => 0, 'firstName' => 1, 'lastName' => 2, 'address' => 3, 'zip' => 4, 'city' => 5, 'province' => 6, 'country' => 7, 'phone' => 8, 'fax' => 9, 'notes' => 10, 'createdAt' => 11, 'updatedAt' => 12, 'id' => 13, ),
-        self::TYPE_COLNAME       => array(SubjectTableMap::COL_ACTIVE => 0, SubjectTableMap::COL_FIRST_NAME => 1, SubjectTableMap::COL_LAST_NAME => 2, SubjectTableMap::COL_ADDRESS => 3, SubjectTableMap::COL_ZIP => 4, SubjectTableMap::COL_CITY => 5, SubjectTableMap::COL_PROVINCE => 6, SubjectTableMap::COL_COUNTRY => 7, SubjectTableMap::COL_PHONE => 8, SubjectTableMap::COL_FAX => 9, SubjectTableMap::COL_NOTES => 10, SubjectTableMap::COL_CREATED_AT => 11, SubjectTableMap::COL_UPDATED_AT => 12, SubjectTableMap::COL_ID => 13, ),
-        self::TYPE_FIELDNAME     => array('active' => 0, 'first_name' => 1, 'last_name' => 2, 'address' => 3, 'zip' => 4, 'city' => 5, 'province' => 6, 'country' => 7, 'phone' => 8, 'fax' => 9, 'notes' => 10, 'created_at' => 11, 'updated_at' => 12, 'id' => 13, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
+        self::TYPE_PHPNAME       => array('Active' => 0, 'FirstName' => 1, 'LastName' => 2, 'FullName' => 3, 'Address' => 4, 'Zip' => 5, 'City' => 6, 'Province' => 7, 'Country' => 8, 'Phone' => 9, 'Fax' => 10, 'Notes' => 11, 'CreatedAt' => 12, 'UpdatedAt' => 13, 'Id' => 14, ),
+        self::TYPE_CAMELNAME     => array('active' => 0, 'firstName' => 1, 'lastName' => 2, 'fullName' => 3, 'address' => 4, 'zip' => 5, 'city' => 6, 'province' => 7, 'country' => 8, 'phone' => 9, 'fax' => 10, 'notes' => 11, 'createdAt' => 12, 'updatedAt' => 13, 'id' => 14, ),
+        self::TYPE_COLNAME       => array(SubjectTableMap::COL_ACTIVE => 0, SubjectTableMap::COL_FIRST_NAME => 1, SubjectTableMap::COL_LAST_NAME => 2, SubjectTableMap::COL_FULL_NAME => 3, SubjectTableMap::COL_ADDRESS => 4, SubjectTableMap::COL_ZIP => 5, SubjectTableMap::COL_CITY => 6, SubjectTableMap::COL_PROVINCE => 7, SubjectTableMap::COL_COUNTRY => 8, SubjectTableMap::COL_PHONE => 9, SubjectTableMap::COL_FAX => 10, SubjectTableMap::COL_NOTES => 11, SubjectTableMap::COL_CREATED_AT => 12, SubjectTableMap::COL_UPDATED_AT => 13, SubjectTableMap::COL_ID => 14, ),
+        self::TYPE_FIELDNAME     => array('active' => 0, 'first_name' => 1, 'last_name' => 2, 'full_name' => 3, 'address' => 4, 'zip' => 5, 'city' => 6, 'province' => 7, 'country' => 8, 'phone' => 9, 'fax' => 10, 'notes' => 11, 'created_at' => 12, 'updated_at' => 13, 'id' => 14, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
     );
 
     /**
@@ -192,8 +197,9 @@ class SubjectTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addColumn('active', 'Active', 'BOOLEAN', true, 1, true);
-        $this->addColumn('first_name', 'FirstName', 'VARCHAR', true, 255, null);
-        $this->addColumn('last_name', 'LastName', 'VARCHAR', true, 255, null);
+        $this->addColumn('first_name', 'FirstName', 'VARCHAR', true, 120, null);
+        $this->addColumn('last_name', 'LastName', 'VARCHAR', true, 120, null);
+        $this->addColumn('full_name', 'FullName', 'VARCHAR', true, 255, null);
         $this->addColumn('address', 'Address', 'VARCHAR', false, 255, null);
         $this->addColumn('zip', 'Zip', 'VARCHAR', false, 20, null);
         $this->addColumn('city', 'City', 'VARCHAR', false, 100, null);
@@ -260,11 +266,11 @@ class SubjectTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 13 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 14 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 13 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+        return (string) $row[TableMap::TYPE_NUM == $indexType ? 14 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -283,7 +289,7 @@ class SubjectTableMap extends TableMap
     {
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 13 + $offset
+                ? 14 + $offset
                 : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
@@ -388,6 +394,7 @@ class SubjectTableMap extends TableMap
             $criteria->addSelectColumn(SubjectTableMap::COL_ACTIVE);
             $criteria->addSelectColumn(SubjectTableMap::COL_FIRST_NAME);
             $criteria->addSelectColumn(SubjectTableMap::COL_LAST_NAME);
+            $criteria->addSelectColumn(SubjectTableMap::COL_FULL_NAME);
             $criteria->addSelectColumn(SubjectTableMap::COL_ADDRESS);
             $criteria->addSelectColumn(SubjectTableMap::COL_ZIP);
             $criteria->addSelectColumn(SubjectTableMap::COL_CITY);
@@ -403,6 +410,7 @@ class SubjectTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.active');
             $criteria->addSelectColumn($alias . '.first_name');
             $criteria->addSelectColumn($alias . '.last_name');
+            $criteria->addSelectColumn($alias . '.full_name');
             $criteria->addSelectColumn($alias . '.address');
             $criteria->addSelectColumn($alias . '.zip');
             $criteria->addSelectColumn($alias . '.city');
