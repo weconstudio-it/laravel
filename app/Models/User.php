@@ -59,5 +59,25 @@ class User extends BaseUser implements AuthenticatableContract, CanResetPassword
 		
 		return PHP_INT_MAX;
 	}
+	
+	/**
+	 * Restituisce la lingua i18n dell'utente corrente
+	 *
+	 * @return string
+	 */
+	public function getLocale() {
+		$locale = \LaravelGettext::getLocale();
+		
+		try {
+			$language = $this->getLanguage();
+			if($language instanceof Language){
+				$locale = $language->getI18n();
+			}
+		} catch (\Exception $e) {
+			
+		}
+		
+		return $locale;
+	}
 
 }
