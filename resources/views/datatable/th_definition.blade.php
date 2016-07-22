@@ -20,6 +20,14 @@ $label = U::arrayIsSet($column, 'label', '');
 $align = U::arrayIsSet($column, 'align', 'left');
 $hide = U::arrayIsSet($column, 'hide', false);
 $preload = U::arrayIsSet($column, 'filterPreload', true);
+$initValue = "";
+$initText = "";
+$init = U::arrayIsSet($column, 'filterInitValue', []);
+if(count($init)) {
+        $initValue = U::arrayIsSet($init, 'id', '');
+        $initText = U::arrayIsSet($init, 'text', '');
+}
+if($initText == "") $initText = $initValue;
 ?>
 <?php if(!$hide) : ?>
 <th data-dt-formatterjs="{{ $formatter }}"
@@ -27,6 +35,8 @@ $preload = U::arrayIsSet($column, 'filterPreload', true);
     data-dt-sort="{{ $sort }}"
     data-dt-align="{{ $align }}"
     data-dt-preload="{{ $preload }}"
+    data-dt-init-value="{{ $initValue }}"
+    data-dt-init-text="{{ $initText }}"
     data-dt-field="{{ $field }}">{{ $label }}</th>
 <?php endif; ?>
 <?php endforeach; ?>

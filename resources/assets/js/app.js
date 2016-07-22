@@ -343,6 +343,8 @@ var app = {
 			var url = $(this).attr("data-url");
 			var parameters = $(this).attr("data-parameters") || "";
 			var callback = $(this).attr("data-callback") || null;
+			var initCallback = $(this).attr("data-init-callback") || null;
+			var errorCallback = $(this).attr("data-error-callback") || null;
 
 			if(!$(this).attr('dropzoned')) {
 				$(this).attr('dropzoned', 'true');
@@ -352,6 +354,9 @@ var app = {
 						url: url + parameters,
 						headers: $.ajaxSetup().headers,
 						previewTemplate : '<div style="display:none"></div>',
+						init: initCallback ? eval(initCallback) : function() {
+							if(typeof window[initCallback] == 'function') initCallback();
+						},
 						success: function (file, data) {
 							app.blockUI(0);
 							$('.dz-preview').detach();
@@ -367,8 +372,12 @@ var app = {
 
 						},
 						error: function () {
-							app.blockUI(0);
-							app.error("Errore in fase di caricamento");
+							if(typeof window[errorCallback] == 'function') {
+								errorCallback();
+							} else {
+								app.blockUI(0);
+								app.error("Errore in fase di caricamento");
+							}
 						}
 					}
 				);
@@ -714,6 +723,7 @@ var app = {
 			})
 			.error(function(data) {
 				if(data.status == 422) {
+					$form.find(".error-block").hide();
 					var errors = data.responseJSON;
 					Object.keys(errors).forEach(function(k) {
 						var $error = undefined;

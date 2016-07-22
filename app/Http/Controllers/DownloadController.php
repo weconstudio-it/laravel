@@ -10,7 +10,7 @@ class DownloadController extends Controller
 {
 	
 	public function download(Request $request) {
-		return response()->download($request->input('file', ''));
+		return response()->download(storage_path() . $request->input('file', ''));
 	}
 	
 }
