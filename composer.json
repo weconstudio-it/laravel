@@ -8,7 +8,7 @@
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
         "propel/propel-laravel": "dev-develop",
-        "weconstudio/weconstudio-laravel": "dev-dev",
+        "weconstudio/laravel-integration": "dev-dev",
         "barryvdh/laravel-ide-helper": "^2.1",
         "weconstudio/laravel-gettext-52": "dev-master",
         "maatwebsite/excel": "~2.1.0"
