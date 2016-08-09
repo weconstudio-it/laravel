@@ -61,7 +61,7 @@
 	"repositories": [
         {
             "type": "git",
-            "url": "ssh://git@git.weconstudio.it/git/weconstudio-laravel"
+            "url": "https://git.weconstudio.it/weconstudio/laravel-integration.git"
         },
         {
             "type": "git",
