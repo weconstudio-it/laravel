@@ -30,18 +30,18 @@ var app = {
 
 		// ACE Ajax manager
 		$('#page-content-section').
-			ace_ajax({
-				content_url: function(hash) {
+		ace_ajax({
+			content_url: function(hash) {
 
-					//debugger
+				//debugger
 
-					//hash is the value from document url hash
-					//take "url" param and return the relevant url to load
-					return hash;
-				},
-				default_url: app.default_url,
-				loading_icon: "fa fa-cog fa-2x blue fa-spin"
-			})
+				//hash is the value from document url hash
+				//take "url" param and return the relevant url to load
+				return hash;
+			},
+			default_url: app.default_url,
+			loading_icon: "fa fa-cog fa-2x blue fa-spin"
+		})
 			.on('ajaxloadcomplete', function(e, params) {
 				app.runBind();
 			})
@@ -72,14 +72,14 @@ var app = {
 		var _arr = jQuery.map(arr, function(scr) {
 			return jQuery.getScript( (path||"") + scr );
 		});
-	
+
 		_arr.push(jQuery.Deferred(function( deferred ){
 			jQuery( deferred.resolve );
 		}));
-	
+
 		return jQuery.when.apply(jQuery, _arr);
 	},
-	
+
 	/**
 	 *
 	 * @param nome
@@ -179,7 +179,7 @@ var app = {
 
 			var url = $(this).attr('data-url');
 			url = url || "geoname";
-			
+
 			var callback = $(this).attr('data-callback');
 
 			function getTextValueFromResponseAutocomplete(obj) {
@@ -330,10 +330,21 @@ var app = {
 			allowTimes: arrTime
 		});
 
+
+		$("[data-interaction=toggleEditDiv]").unbind("change").bind("change", app.runToggleEditDiv);
+		app.runToggleEditDiv();
+
+		// TODO: da rimuovere!
+		$(".chosen").chosen();
+
+		$(".select2").select2();
+
 		$("[data-interaction=dropzone]").each(function () {
 			var url = $(this).attr("data-url");
 			var parameters = $(this).attr("data-parameters") || "";
 			var callback = $(this).attr("data-callback") || null;
+			var initCallback = $(this).attr("data-init-callback") || null;
+			var errorCallback = $(this).attr("data-error-callback") || null;
 
 			if(!$(this).attr('dropzoned')) {
 				$(this).attr('dropzoned', 'true');
@@ -343,6 +354,9 @@ var app = {
 						url: url + parameters,
 						headers: $.ajaxSetup().headers,
 						previewTemplate : '<div style="display:none"></div>',
+						init: initCallback ? eval(initCallback) : function() {
+							if(typeof window[initCallback] == 'function') initCallback();
+						},
 						success: function (file, data) {
 							app.blockUI(0);
 							$('.dz-preview').detach();
@@ -358,8 +372,12 @@ var app = {
 
 						},
 						error: function () {
-							app.blockUI(0);
-							app.error("Errore in fase di caricamento");
+							if(typeof window[errorCallback] == 'function') {
+								errorCallback();
+							} else {
+								app.blockUI(0);
+								app.error("Errore in fase di caricamento");
+							}
 						}
 					}
 				);
@@ -370,6 +388,21 @@ var app = {
 
 	},
 
+	runToggleEditDiv: function(){
+		$("[data-interaction=toggleEditDiv]").each(function () {
+			var idDiv = $(this).attr("data-ref");
+			if ($(this).is(":checked")) {
+				$("#" + idDiv).find('input, select').prop('disabled', false);
+			} else {
+				$("#" + idDiv).find('input, select').prop('disabled', true);
+			}
+			$("#" + idDiv).find('select.chosen').trigger("chosen:updated");
+
+			$(this).prop('disabled', false);
+			$(this).removeAttr('disabled');
+		});
+	},
+
 	locationHref: function (url, withBlank) {
 
 		withBlank = withBlank || 0;
@@ -377,7 +410,7 @@ var app = {
 		//if (noBlockUI == 0)
 		//	app.blockUI(true);
 
-		if(url) url = url.replace("#", "");
+		url = url.replace("#", "");
 		if(url.indexOf(app.baseUrl) < 0) {
 			if(url[0] == "/") url = url.substring(1, url.length);
 			url = app.baseUrl + "/" + url;
@@ -655,8 +688,8 @@ var app = {
 			return app.platform.detection() != "desktop";
 		}
 	},
-	
-	formSubmit: function(url, form, params, success, error) {
+
+	formSubmit: function(url, form, additionslParams, success, error) {
 		success = success || function() {};
 		error = error || function() {};
 		form = form || undefined;
@@ -682,14 +715,15 @@ var app = {
 		$form.find('.error-block').removeClass('show');
 
 		var aParam = lib.formSerialize($form);
-		aParam = $.extend({}, aParam, params);
+		aParam = $.extend({}, aParam, additionslParams);
 
 		$method(url, aParam)
 			.success(function(data) {
 				success(data);
 			})
 			.error(function(data) {
-				if(data.status = 422) {
+				if(data.status == 422) {
+					$form.find(".error-block").hide();
 					var errors = data.responseJSON;
 					Object.keys(errors).forEach(function(k) {
 						var $error = undefined;
@@ -707,7 +741,7 @@ var app = {
 							var $field = $('[name="' + name + '"]');
 							if($field) {
 								var $parent = $field.parent();
-								$error = $('<span class="error-block show" data-name="' + name + '">' + errors[k] + '</span>');
+								$error = $('<span class="error-block text-danger show" data-name="' + name + '">' + errors[k] + '</span>');
 								$parent.append($error);
 							}
 						}
@@ -728,7 +762,7 @@ jQuery.each( [ "put", "delete" ], function( i, method ) {
 			callback = data;
 			data = undefined;
 		}
-		
+
 		return jQuery.ajax({
 			url: url,
 			type: method,
@@ -930,6 +964,8 @@ var crud = function(options) {
 	this.bindEvents();
 
 };
+var sel2 = null;
+
 /**
  * This plug-in for DataTables represents the ultimate option in extensibility
  * for sorting date / time strings correctly. It uses
@@ -1020,6 +1056,7 @@ var dataTable = function (options) {
     this.pdf = options.pdf || false;
     this.idTable = options.idTable || "";
     this.columns = options.columns || undefined;
+    this.searchCols = options.searchCols || undefined;
     this.filterColumns = options.filterColumns || undefined;
     this.lenghtMenu = options.lenghtMenu || [[10, 50, 100, -1], ["10", "50", "100", "---"]];
     this.footerCallback = options.footerCallback || function () {};
@@ -1063,12 +1100,16 @@ var dataTable = function (options) {
         var doSort = (dataTable.columns === undefined || dataTable.columns == undefined);
         var doFilter = (dataTable.filterColumns === undefined || dataTable.filterColumns == undefined);
         if (doSort) dataTable.columns = [];
+        if (doSort) dataTable.searchCols = [];
         if (doFilter) dataTable.filterColumns = [];
         var sort = undefined;
         var filter = undefined;
         var type = undefined;
         var preload = undefined;
+        var initValue = undefined;
+        var initText = undefined;
         var baseType = undefined;
+        var field = undefined;
 
         dataTable.$table.find("thead").find("tr").find("th").each(function (index) {
             type = $(this).attr("data-dt-type");
@@ -1076,6 +1117,10 @@ var dataTable = function (options) {
             sort = $(this).attr("data-dt-sort");
             filter = $(this).attr("data-dt-filter");
             baseType = $(this).attr("data-dt-baseType");
+            initValue = $(this).attr("data-dt-init-value");
+            initText = $(this).attr("data-dt-init-text");
+            field = $(this).attr("data-dt-field");
+
 
             if (typeof $(this).attr("data-dt-inline-button") != 'undefined') {
                 var colBtnVisible = false;
@@ -1085,7 +1130,7 @@ var dataTable = function (options) {
                     var subPar = JSON.parse(subgridParam);
                     colBtnVisible = true;
                     $.each(subPar, function(index, obj){
-                        buttons = buttons + '<button data-interaction="subgrid" data-url="' + obj.url + '" class="btn btn-xs btn-warning"><i class="' + (obj.icon||'fa fa-plus') + '"></i></button>';
+                        buttons = buttons + '<button data-interaction="subgrid" data-url="' + obj.url + '" class="btn btn-xs btn-warning"><i data-class-close="' + (obj.icon||'fa fa-minus') + '" data-class-open="' + (obj.icon||'fa fa-plus') + '" class="' + (obj.icon||'fa fa-plus') + '"></i></button>';
                     });
                 }
                 if ($(this).attr("data-dt-inline-button") == "1") {
@@ -1097,10 +1142,10 @@ var dataTable = function (options) {
                     $.each(buttonsConfig.split("|"), function (index, obj) {
                         switch (obj) {
                             case "edit":
-                                buttons = buttons + '<a data-interaction="edit" href="' + editUrl + '" class="btn btn-xs btn-warning"><i class="fa fa-pencil"></i></a>';
+                                buttons = buttons + '<a data-dt-inline-button="1" data-interaction="edit" href="' + editUrl + '" class="btn btn-xs btn-warning"><i class="fa fa-pencil"></i></a>';
                                 break;
                             case "delete":
-                                buttons = buttons + '<button data-reload="true" data-interaction="delete" data-url="' + deleteUrl + '" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>';
+                                buttons = buttons + '<button data-dt-inline-button="1" data-reload="true" data-interaction="delete" data-url="' + deleteUrl + '" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>';
                                 break;
                         }
                     });
@@ -1118,6 +1163,7 @@ var dataTable = function (options) {
                         $(td).find('[data-interaction=edit]').attr("href", editUrl + "/" + cellData[0] + "/edit");
                     }
                 });
+                dataTable.searchCols.push(null);
             } else {
                 // colonne dati
                 var formatterFunction = $(this).attr("data-dt-formatterjs") || undefined;
@@ -1125,6 +1171,7 @@ var dataTable = function (options) {
                 if (!baseType) baseType = 'string';
                 if (doSort) {
                     var objColumn = {};
+
                     if (sort !== undefined && sort != undefined && typeof sort != "undefined" && sort != "false" && sort != "0") {
                         if (type) {
                             objColumn = {"bSortable": true, "orderDataType": type, "type": baseType};
@@ -1138,6 +1185,8 @@ var dataTable = function (options) {
                     if (align) {
                         objColumn.sClass = "text-" + align
                     }
+
+                    objColumn.field = field;
 
                     if (formatterFunction) {
                         var formatterFunctionCallback = null;
@@ -1177,11 +1226,18 @@ var dataTable = function (options) {
 
 
                     dataTable.columns.push(objColumn);
+                    if($.trim(initValue) != "") {
+                        dataTable.searchCols.push({
+                            search: "" + initValue
+                        });
+                    } else {
+                        dataTable.searchCols.push(null);
+                    }
                 }
 
                 if (doFilter) {
                     if (typeof filter != "undefined" && filter != "false" && filter != "0") {
-                        dataTable.filterColumns[index] = {index: index, type: type, preload: preload};
+                        dataTable.filterColumns[index] = {index: index, type: type, preload: preload, initValue: initValue, initText: initText};
                     }
                 }
             }
@@ -1233,13 +1289,13 @@ var dataTable = function (options) {
         };
     };
 
-    this.DTfnBeforeDrawCallback = function () {};
-    this.DTfnDrawCallback = function () {
-        dataTable.DTfnBeforeDrawCallback();
+    this.DTfnBeforeDrawCallback = function (settings) {};
+    this.DTfnDrawCallback = function (settings) {
+        dataTable.DTfnBeforeDrawCallback(settings);
         dataTable.bindEvents();
-        dataTable.DTfnAfterDrawCallback();
+        dataTable.DTfnAfterDrawCallback(settings);
     };
-    this.DTfnAfterDrawCallback = function () {};
+    this.DTfnAfterDrawCallback = function (settings) {};
 
     /**
      * Funzione da overridare
@@ -1270,7 +1326,7 @@ var dataTable = function (options) {
                     }
                 } else {
                     // Select 2
-                    $search = $('<select class="chosen-select" style="width: 100%;" data-placeholder=" "><option value=""></option></select>')
+                    $search = $('<select class="select2" style="width: 100%;" data-placeholder=" "><option value=""></option></select>')
                         .appendTo($("[data-filter='" + i + "']").empty())
                         .on('change', function () {
                             // var val = $.fn.dataTable.util.escapeRegex($(this).val());
@@ -1279,7 +1335,11 @@ var dataTable = function (options) {
                         });
 
                     column.data().unique().sort().each(function (d) {
-                        $search.append('<option value="' + d + '">' + d + '</option>')
+                        if(dataTable.filterColumns[i].initValue && dataTable.filterColumns[i].initText) {
+                            $search.append('<option value="' + dataTable.filterColumns[i].initValue + '">' + dataTable.filterColumns[i].initText + '</option>')
+                        } else {
+                            $search.append('<option value="' + d + '">' + d + '</option>')
+                        }
                     });
 
                     var $field = $(column.header()).attr("data-dt-field") || undefined;
@@ -1289,7 +1349,7 @@ var dataTable = function (options) {
                     if (typeof $field != 'undefined') {
                         $search.select2({
                             ajax: {
-                                url: $fieldUrl + "&op=autocomplete&autocomplete=" + $field,
+                                url: $fieldUrl + "&op=autocomplete&autocomplete=" + $field + (dataTable.ajaxUrlParameters? "&" + dataTable.ajaxUrlParameters : ''),
                                 dataType: 'json',
                                 delay: 250,
 
@@ -1340,6 +1400,12 @@ var dataTable = function (options) {
                             }
                         });
 
+                        if(dataTable.filterColumns[i].initValue) {
+                            sel2 = $search;
+                            $search.val(dataTable.filterColumns[i].initValue).trigger("change");
+
+                        }
+
                         function formatData(data) {
                             return data.text;
                         }
@@ -1361,6 +1427,8 @@ var dataTable = function (options) {
                 // }
             }
         });
+
+
 
         dataTable.DTafterInitComplete();
 
@@ -1384,6 +1452,16 @@ var dataTable = function (options) {
         });
 
         dataTable.$table.find('[data-interaction="subgrid"]').unbind("click").bind("click", function () {
+
+            var objI = $(this).find('i');
+            if(objI.hasClass(objI.attr('data-class-open'))){
+                objI.removeClass(objI.attr('data-class-open'));
+                objI.addClass(objI.attr('data-class-close'));
+            }else{
+                objI.removeClass(objI.attr('data-class-close'));
+                objI.addClass(objI.attr('data-class-open'));
+            }
+
             var $tr = $(this).closest('tr');
             var id = $(this).attr("data-id");
             var url = $(this).attr("data-url");
@@ -1422,20 +1500,32 @@ var dataTable = function (options) {
             }
         });
 
-        dataTable.$table.find('[data-interaction=delete]').unbind('click').bind('click', function () {
+        dataTable.$table.find('[data-dt-inline-button="1"][data-interaction=delete]').unbind('click').bind('click', function () {
             var url = $(this).attr('data-url');
-            var error = $(this).attr('data-error');
-            var reload = $(this).attr('data-reload');
-            var href = $(this).attr('data-href');
             var conferma = dataTable.T.askDelete || 'Eliminare la riga selezionata?';
+
+            var objButton = $(this);
+
+            // formattazione stringa richiesta parsando le {}
+            $.each(dataTable.columns, function(index, obj){
+                if (typeof obj.field != 'undefined') {
+                    if (conferma.indexOf("{" + obj.field + "}") != -1){
+
+                        var idRiga = objButton.parents("tr[data-id]").attr("data-id");
+                        var valInCell = dataTable.table.cell("[data-id=" + idRiga + "] td:eq(" + index + ")").data();
+
+                        // recupero il campo nella colonna alla riga attuale
+                        conferma = conferma.replace("{" + obj.field + "}", valInCell);
+                    }
+                }
+            });
 
             if(confirm(conferma)) {
                 app.block(1);
                 $.delete(url)
                     .success(function (data) {
                         if (data.response) {
-                            if (reload) app.reload();
-                            if (href) app.href(href);
+                            dataTable.table.draw('page');
                         } else {
                             app.warning("", data.message);
                         }
@@ -1447,22 +1537,46 @@ var dataTable = function (options) {
                     });
             }
         });
-
-        dataTable.$table.find('.select2-search:before').bind('click', function () {
-            console.log("Click!!!");
-        });
     };
 
     this.makeDT = function () {
+        var language = typeof datatable_lang != 'undefined' ? datatable_lang : {
+            "sEmptyTable":     "Nessun dato presente nella tabella",
+            "sInfo":           "Vista da _START_ a _END_ di _TOTAL_ elementi",
+            "sInfoEmpty":      "Vista da 0 a 0 di 0 elementi",
+            "sInfoFiltered":   "(filtrati da _MAX_ elementi totali)",
+            "sInfoPostFix":    "",
+            "sInfoThousands":  ".",
+            "sLengthMenu":     "Visualizza _MENU_ elementi",
+            "sLoadingRecords": "Caricamento...",
+            "sProcessing":     "Elaborazione...",
+            "sSearch":         "Cerca:",
+            "sZeroRecords":    "La ricerca non ha portato alcun risultato.",
+            "oPaginate": {
+                "sFirst":      "Inizio",
+                "sPrevious":   "Precedente",
+                "sNext":       "Successivo",
+                "sLast":       "Fine"
+            },
+            "oAria": {
+                "sSortAscending":  ": attiva per ordinare la colonna in ordine crescente",
+                "sSortDescending": ": attiva per ordinare la colonna in ordine decrescente"
+            }
+        };
+
         dataTable.table = dataTable.$table.DataTable({
             bAutoWidth: false,
             aoColumns: dataTable.columns,
+            searchCols: dataTable.searchCols,
             aaSorting: [],
             aLengthMenu: dataTable.lenghtMenu,
             bLengthChange: true,
             bPaginate: true,
             select: true,
             responsive: true,
+
+            // language: prende la variabile globale datatable_lang oppure valori di default
+            language: language,
 
             // gestione server side ajax
             processing: (typeof dataTable.ajaxUrl != 'undefined'),
