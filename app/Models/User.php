@@ -7,6 +7,7 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Weconstudio\Misc\U;
 
 /**
  * Skeleton subclass for representing a row from the 'user' table.
@@ -78,6 +79,24 @@ class User extends BaseUser implements AuthenticatableContract, CanResetPassword
 		}
 		
 		return $locale;
+	}
+	
+	/**
+	 * Restituisce l'array per la visualizzazione delle scelte nella select di filter datatable
+	 *
+	 * @return array
+	 */
+	public static function autocomplete_enabled() {
+		return [
+			[
+				'id' => "1",
+				'text' => U::T_("Si")
+			],
+			[
+				'id' => "0",
+				'text' => U::T_("No")
+			]
+		];
 	}
 
 }

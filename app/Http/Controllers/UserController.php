@@ -76,6 +76,7 @@ class UserController extends Controller
                 'field' => 'enabled',
                 'sort' => true,
                 'filter' => true,
+				'autocomplete' => 'enabled',
                 'formatterjs' => 'user_enabled',
                 'align' => 'center',
 				'export' => true
