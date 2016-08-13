@@ -163,6 +163,7 @@ return [
         Propel\PropelLaravel\PropelIntegrationServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Weconstudio\WeconstudioServiceProvider::class,
+		Weconstudio\WeconstudioMailServiceProvider::class,
 		Xinax\LaravelGettext\LaravelGettextServiceProvider::class,
 		Maatwebsite\Excel\ExcelServiceProvider::class
 

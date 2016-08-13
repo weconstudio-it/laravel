@@ -1,3 +1,4 @@
+<?php use Weconstudio\Misc\U; ?>
 <!DOCTYPE html>
 <html lang="it">
 	<head>

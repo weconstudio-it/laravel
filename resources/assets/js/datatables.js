@@ -571,10 +571,6 @@ var dataTable = function (options) {
                     });
             }
         });
-
-        dataTable.$table.find('.select2-search:before').bind('click', function () {
-            console.log("Click!!!");
-        });
     };
 
     this.makeDT = function () {
